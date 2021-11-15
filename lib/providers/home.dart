@@ -35,16 +35,19 @@ class Home with ChangeNotifier {
   bool Feed_image_loading = false; // 데이터 로딩 완료
   bool Feed_reply_loading = false; // 데이터 로딩 완료
   bool Feed_bookmark_loading = false; // 데이터 로딩 완료
+  bool Feed_profileimage_loading = false; // 데이터 로딩 완료
 
   bool Freetalk_like_loading = false; // 데이터 로딩 완료
   bool Freetalk_image_loading = false; // 데이터 로딩 완료
   bool Freetalk_reply_loading = false; // 데이터 로딩 완료
   bool Freetalk_bookmark_loading = false; // 데이터 로딩 완료
+  bool Freetalk_profileimage_loading = false; // 데이터 로딩 완료
 
   bool Recipe_like_loading = false; // 데이터 로딩 완료
-  bool Recipe_image_loading = false; // 데이터 로딩 완료
+  bool Recipe_content_loading = false; // 데이터 로딩 완료
   bool Recipe_reply_loading = false; // 데이터 로딩 완료
   bool Recipe_bookmark_loading = false; // 데이터 로딩 완료
+  bool Recipe_profileimage_loading = false; // 데이터 로딩 완료
 
   List<dynamic> Ingredients = []; // Ingredients 데이터 호출
 
@@ -119,21 +122,25 @@ class Home with ChangeNotifier {
     Feed_like_loading = false; // iike 데이터 로딩 완료
     Feed_reply_loading = false; // reply 데이터 로딩 완료
     Feed_bookmark_loading = false; // reply 데이터 로딩 완료
+    Feed_profileimage_loading = false; // profileimage 데이터 로딩 완료
 
     Freetalk_image_loading = false; // image 데이터 로딩 완료
     Freetalk_like_loading = false; // iike 데이터 로딩 완료
     Freetalk_reply_loading = false; // reply 데이터 로딩 완료
     Freetalk_bookmark_loading = false; // reply 데이터 로딩 완료
+    Freetalk_profileimage_loading = false; // profileimage 데이터 로딩 완료
 
-    Recipe_image_loading = false; // image 데이터 로딩 완료
+    Recipe_content_loading = false; // image 데이터 로딩 완료
     Recipe_like_loading = false; // iike 데이터 로딩 완료
     Recipe_reply_loading = false; // reply 데이터 로딩 완료
     Recipe_bookmark_loading = false; // reply 데이터 로딩 완료
+    Recipe_profileimage_loading = false; // profileimage 데이터 로딩 완료
   }
 
-  void get_data(auth) async {
+  void get_data(email) async {
     //init
     data_init();
+    print("2 : ${email}");
 
     // 피드 데이터 가져오기
     await firestore
@@ -148,6 +155,8 @@ class Home with ChangeNotifier {
         getFeedreply(Feed_doc, Feed_index);
         getFeedfilter(Feed_doc, Feed_index);
         getFeedbookmark(Feed_doc, Feed_index);
+        // User의 프로필 이미지는 변경될 수 있으니 연동해서 가져오기
+        getFeedprofileimage(Feed_doc, Feed_index);
         Feed_index += 1;
       }
     });
@@ -165,6 +174,8 @@ class Home with ChangeNotifier {
         getFreetalkreply(Freetalk_doc, Freetalk_index);
         getFreetalkfilter(Freetalk_doc, Freetalk_index);
         getFreetalkbookmark(Freetalk_doc, Freetalk_index);
+        // User의 프로필 이미지는 변경될 수 있으니 연동해서 가져오기
+        getFreetalkprofileimage(Freetalk_doc, Freetalk_index);
         Freetalk_index += 1;
       }
     });
@@ -177,11 +188,15 @@ class Home with ChangeNotifier {
       for (var Recipe_doc in querySnapshot.docs) {
         Recipe.add(Recipe_doc.data());
         // subcollection data 호출
-        getRecipeimage(Recipe_doc, Recipe_index);
+        getRecipecontent(Recipe_doc, Recipe_index);
+        getRecipeprimary(Recipe_doc, Recipe_index);
+        getRecipesecondary(Recipe_doc, Recipe_index);
         getRecipelike(Recipe_doc, Recipe_index);
         getRecipereply(Recipe_doc, Recipe_index);
         getRecipefilter(Recipe_doc, Recipe_index);
         getRecipebookmark(Recipe_doc, Recipe_index);
+        // User의 프로필 이미지는 변경될 수 있으니 연동해서 가져오기
+        getRecipeprofileimage(Recipe_doc, Recipe_index);
         Recipe_index += 1;
       }
     });
@@ -220,21 +235,23 @@ class Home with ChangeNotifier {
     // 유저 타입 데이터 가져오기
     await firestore
         .collection("User")
-        .where('email', isEqualTo: auth.currentUser?.email)
+        .where('email', isEqualTo: email)
         .get()
         .then((QuerySnapshot querySnapshot) {
       for (var User_doc in querySnapshot.docs) {
         User.add(User_doc.data());
       }
     });
-    print(Feed);
+
     // print(Feed[0]['user'].id);
-    //print(Freetalk);
-    // print(Recipe);
+
+    print(Feed);
+    print(Freetalk);
+    print(Recipe);
     //Meal.forEach((data) => {print(data['value'])});
     // print(Ingredients_id);
     // print(Type);
-    print(User);
+
     // 구독 widget에게 변화 알려서 re-build
     notifyListeners();
   }
@@ -322,6 +339,26 @@ class Home with ChangeNotifier {
     // 구독 widget에게 변화 알려서 re-build
     notifyListeners();
   }
+
+  void getFeedprofileimage(Feed_doc, Feed_index) async {
+    // init => init 안하면 null error
+    Feed[Feed_index]['profileimage'] = [];
+    // Feed > data > filter 데이터 호출
+    await firestore
+        .collection('User')
+        .where('email', isEqualTo: Feed[Feed_index]['user'])
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      for (var Feedprofileimage_doc in querySnapshot.docs) {
+        // object 유형은 ['']이 안되서 Map으로 바꿔주기
+        var data = Feedprofileimage_doc.data() as Map;
+        Feed[Feed_index]['profileimage'].add(data['profileimage']);
+      }
+    });
+    // 구독 widget에게 변화 알려서 re-build
+    notifyListeners();
+    Feed_profileimage_loading = true; // 데이터 로딩 완료
+  }
   // Feed sub collection 호출 끝
 
   // Freetalk sub collection 호출 시작
@@ -407,6 +444,26 @@ class Home with ChangeNotifier {
     // 구독 widget에게 변화 알려서 re-build
     notifyListeners();
   }
+
+  void getFreetalkprofileimage(Freetalk_doc, Freetalk_index) async {
+    // init => init 안하면 null error
+    Freetalk[Freetalk_index]['profileimage'] = [];
+    // Feed > data > filter 데이터 호출
+    await firestore
+        .collection('User')
+        .where('email', isEqualTo: Freetalk[Freetalk_index]['user'])
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      for (var Freetalkprofileimage_doc in querySnapshot.docs) {
+        // object 유형은 ['']이 안되서 Map으로 바꿔주기
+        var data = Freetalkprofileimage_doc.data() as Map;
+        Freetalk[Freetalk_index]['profileimage'].add(data['profileimage']);
+      }
+    });
+    // 구독 widget에게 변화 알려서 re-build
+    notifyListeners();
+    Freetalk_profileimage_loading = true; // 데이터 로딩 완료
+  }
   // Freetalk sub collection 호출 끝
 
   // Recipe sub collection 호출 시작
@@ -427,21 +484,56 @@ class Home with ChangeNotifier {
     Recipe_like_loading = true; // 데이터 로딩 완료
   }
 
-  void getRecipeimage(Recipe_doc, Recipe_index) async {
+// 메인 식재료
+  void getRecipeprimary(Recipe_doc, Recipe_index) async {
+    // init => init 안하면 null error
+    Recipe[Recipe_index]['primary'] = [];
     // Recipe > data > image 데이터 호출
     await firestore
-        .collection('Recipe/' + Recipe_doc.id + '/image')
+        .collection('Recipe/' + Recipe_doc.id + '/primary')
         .get()
         .then((QuerySnapshot querySnapshot) {
-      for (var Recipeimage_doc in querySnapshot.docs) {
-        // init => init 안하면 null error
-        Recipe[Recipe_index]['image'] = [];
-        Recipe[Recipe_index]['image'].add(Recipeimage_doc.data());
+      for (var Recipeprimary_doc in querySnapshot.docs) {
+        Recipe[Recipe_index]['primary'].add(Recipeprimary_doc.data());
       }
     });
     // 구독 widget에게 변화 알려서 re-build
     notifyListeners();
-    Recipe_image_loading = true; // 데이터 로딩 완료
+  }
+
+  // 양념소스 식재료
+  void getRecipesecondary(Recipe_doc, Recipe_index) async {
+    // init => init 안하면 null error
+    Recipe[Recipe_index]['secondary'] = [];
+    // Recipe > data > image 데이터 호출
+    await firestore
+        .collection('Recipe/' + Recipe_doc.id + '/secondary')
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      for (var Recipesecondary_doc in querySnapshot.docs) {
+        Recipe[Recipe_index]['secondary'].add(Recipesecondary_doc.data());
+      }
+    });
+    // 구독 widget에게 변화 알려서 re-build
+    notifyListeners();
+  }
+
+  // 레시피 내부 컨텐츠 + 이미지 가져오기
+  void getRecipecontent(Recipe_doc, Recipe_index) async {
+    // init => init 안하면 null error
+    Recipe[Recipe_index]['content'] = [];
+    // Recipe > data > image 데이터 호출
+    await firestore
+        .collection('Recipe/' + Recipe_doc.id + '/content')
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      for (var Recipecontent_doc in querySnapshot.docs) {
+        Recipe[Recipe_index]['content'].add(Recipecontent_doc.data());
+      }
+    });
+    // 구독 widget에게 변화 알려서 re-build
+    notifyListeners();
+    Recipe_content_loading = true; // 데이터 로딩 완료
   }
 
   void getRecipereply(Recipe_doc, Recipe_index) async {
@@ -492,6 +584,26 @@ class Home with ChangeNotifier {
     // 구독 widget에게 변화 알려서 re-build
     notifyListeners();
   }
+
+  void getRecipeprofileimage(Recipe_doc, Recipe_index) async {
+    // init => init 안하면 null error
+    Recipe[Recipe_index]['profileimage'] = [];
+    // Feed > data > filter 데이터 호출
+    await firestore
+        .collection('User')
+        .where('email', isEqualTo: Recipe[Recipe_index]['user'])
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      for (var Recipeprofileimage_doc in querySnapshot.docs) {
+        // object 유형은 ['']이 안되서 Map으로 바꿔주기
+        var data = Recipeprofileimage_doc.data() as Map;
+        Recipe[Recipe_index]['profileimage'].add(data['profileimage']);
+      }
+    });
+    // 구독 widget에게 변화 알려서 re-build
+    notifyListeners();
+    Recipe_profileimage_loading = true; // 데이터 로딩 완료
+  }
   // Recipe sub collection 호출 끝
 
   // like add
@@ -521,7 +633,7 @@ class Home with ChangeNotifier {
       });
     }
     // 구독 widget에게 변화 알려서 re-build
-    get_data(auth);
+    get_data(user_email);
     notifyListeners();
   }
 
@@ -548,7 +660,7 @@ class Home with ChangeNotifier {
           .delete();
     }
     // 구독 widget에게 변화 알려서 re-build
-    get_data(auth);
+    get_data(user_email);
     notifyListeners();
   }
 
@@ -591,7 +703,7 @@ class Home with ChangeNotifier {
       });
     }
     // 구독 widget에게 변화 알려서 re-build
-    get_data(auth);
+    get_data(user_email);
     notifyListeners();
   }
 
@@ -628,7 +740,7 @@ class Home with ChangeNotifier {
           .delete();
     }
     // 구독 widget에게 변화 알려서 re-build
-    get_data(auth);
+    get_data(user_email);
     notifyListeners();
   }
 

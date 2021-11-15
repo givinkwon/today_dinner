@@ -760,7 +760,7 @@ class _MywritePageState extends State<MywritePage> {
       // print(auth.currentUser!.email);
     }
 
-    context.read<Mypage>().get_data(auth);
+    context.read<Mypage>().get_data(auth.currentUser?.email);
     // listener를 추가하여 비동기 변경이 발생했을 때 수정할 수 있도록 changeNotifier를 듣고 있음
     Provider.of<Mypage>(context, listen: false).addListener(() => setState(() {
           print("리렌더링2");

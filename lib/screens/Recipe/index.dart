@@ -82,12 +82,12 @@ class _RecipePageState extends State<RecipePage> {
         child: Container(
           child: Column(
             children: <Widget>[
-              if (context.read<Recipe>().Selected_data['image'] !=
+              if (context.read<Recipe>().Selected_data['mainimage'] !=
                   null) // null일 때 예외 처리
                 Padding(
                   padding: EdgeInsets.only(top: 10),
                   child: Image.network(
-                    context.read<Recipe>().Selected_data['image'][0]['value'],
+                    context.read<Recipe>().Selected_data['mainimage'],
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -115,67 +115,146 @@ class _RecipePageState extends State<RecipePage> {
                       Radius.circular(10.0) //         <--- border radius here
                       ),
                 ),
-                child: RichText(
-                  textAlign: TextAlign.left,
-                  text: TextSpan(
-                    text:
-                        "난이도 : 중\n조리시간 : 20분\n분류 : 다이어트\n분량 : 2인분\n메인 재료 : 된장, 두부, 애호박, 돼지고기\n부재료 : 뀨?",
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 18,
-                      fontWeight: FontWeight.normal,
+                child: Column(children: [
+                  // 난이도
+                  RichText(
+                    textAlign: TextAlign.left,
+                    text: TextSpan(
+                      text:
+                          "난이도 : ${context.read<Recipe>().Selected_data['difficulty']}",
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 18,
+                        fontWeight: FontWeight.normal,
+                      ),
                     ),
                   ),
-                ),
+                  // 소요시간
+                  RichText(
+                    textAlign: TextAlign.left,
+                    text: TextSpan(
+                      text:
+                          "소요시간 : ${context.read<Recipe>().Selected_data['spendtime']}",
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 18,
+                        fontWeight: FontWeight.normal,
+                      ),
+                    ),
+                  ),
+                  // 인분
+                  RichText(
+                    textAlign: TextAlign.left,
+                    text: TextSpan(
+                      text:
+                          "인분 : ${context.read<Recipe>().Selected_data['serving']}",
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 18,
+                        fontWeight: FontWeight.normal,
+                      ),
+                    ),
+                  ),
+                ]),
               ),
 
-              // 본문 이미지 1
-              Padding(
-                padding: EdgeInsets.only(top: 10),
-                child: Image(
-                  image: AssetImage('assets/main.jpg'),
-                  fit: BoxFit.cover,
-                ),
-              ),
-              // 본문 글 1
+              // 재료 소개 => 기본재료
               Container(
-                child: RichText(
-                  textAlign: TextAlign.left,
-                  text: TextSpan(
-                    text:
-                        "유찡이가 만든 된장찌게 예~이!\n유찡이가 만든 된장찌게 예~이!\n유찡이가 만든 된장찌게 예~이!\n유찡이가 만든 된장찌게 예~이!\n유찡이가 만든 된장찌게 예~이!\n",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
+                alignment: Alignment.topLeft,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.all(
+                      Radius.circular(10.0) //         <--- border radius here
+                      ),
+                ),
+                child: Column(children: [
+                  // 제목
+                  RichText(
+                    textAlign: TextAlign.left,
+                    text: TextSpan(
+                      text:
+                          "기본재료 : ${context.read<Recipe>().Selected_data['serving']}",
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 18,
+                        fontWeight: FontWeight.normal,
+                      ),
                     ),
                   ),
-                ),
+
+                  // 내용
+                  for (var primary_data
+                      in context.read<Recipe>().Selected_data['primary'])
+                    ListTile(
+                      title: new Text(primary_data['title']),
+                      onTap: () async {},
+                      trailing: new Text(primary_data['content']),
+                    ),
+                ]),
               ),
 
-              // 본문 이미지 2
-              Padding(
-                padding: EdgeInsets.only(top: 10),
-                child: Image(
-                  image: AssetImage('assets/main.jpg'),
-                  fit: BoxFit.cover,
-                ),
-              ),
-              // 본문 글 2
+              // 재료 소개 => 서브재료
               Container(
-                child: RichText(
-                  textAlign: TextAlign.left,
-                  text: TextSpan(
-                    text:
-                        "유찡이가 만든 된장찌게 예~이!\n유찡이가 만든 된장찌게 예~이!\n유찡이가 만든 된장찌게 예~이!\n유찡이가 만든 된장찌게 예~이!\n유찡이가 만든 된장찌게 예~이!\n",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
+                alignment: Alignment.topLeft,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.all(
+                      Radius.circular(10.0) //         <--- border radius here
+                      ),
+                ),
+                child: Column(children: [
+                  // 제목
+                  RichText(
+                    textAlign: TextAlign.left,
+                    text: TextSpan(
+                      text:
+                          "양념소스재료 : ${context.read<Recipe>().Selected_data['serving']}",
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 18,
+                        fontWeight: FontWeight.normal,
+                      ),
                     ),
                   ),
-                ),
+
+                  // 내용
+                  for (var primary_data
+                      in context.read<Recipe>().Selected_data['secondary'])
+                    ListTile(
+                      title: new Text(primary_data['title']),
+                      onTap: () async {},
+                      trailing: new Text(primary_data['content']),
+                    ),
+                ]),
               ),
+
+              // 본문 이미지 && 글
+              for (var primary_data
+                  in context.read<Recipe>().Selected_data['content'])
+                Column(children: [
+                  Container(
+                    padding: EdgeInsets.only(top: 10),
+                    height: 250,
+                    child: Image(
+                      image: NetworkImage(primary_data['image']),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  Container(
+                    child: RichText(
+                      textAlign: TextAlign.left,
+                      text: TextSpan(
+                        text: primary_data['content'],
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ]),
+
               // 상세 하단 경게선
               Container(child: Divider(color: Colors.grey, thickness: 2.0)),
 

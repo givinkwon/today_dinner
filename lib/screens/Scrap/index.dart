@@ -253,7 +253,7 @@ class _FeedState extends State<Feed> {
         context.watch<Home>().Freetalk_image_loading == true &&
         context.watch<Home>().Freetalk_reply_loading == true &&
         context.watch<Home>().Recipe_like_loading == true &&
-        context.watch<Home>().Recipe_image_loading == true &&
+        context.watch<Home>().Recipe_content_loading == true &&
         context.watch<Home>().Recipe_reply_loading == true) {
       // 필터 체크하는 함수
       checkfilter(widget.index);

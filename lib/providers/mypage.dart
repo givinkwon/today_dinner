@@ -129,14 +129,14 @@ class Mypage with ChangeNotifier {
     Recipe_bookmark_loading = false; // reply 데이터 로딩 완료
   }
 
-  void get_data(auth) async {
+  void get_data(email) async {
     //init
     data_init();
 
     // 피드 데이터 가져오기
     await firestore
         .collection("Feed")
-        .where('user', isEqualTo: auth.currentUser?.email)
+        .where('user', isEqualTo: email)
         .get()
         .then((QuerySnapshot querySnapshot) async {
       for (var Feed_doc in querySnapshot.docs) {
@@ -154,7 +154,7 @@ class Mypage with ChangeNotifier {
     // 자유 게시글 데이터 가져오기
     await firestore
         .collection("Freetalk")
-        .where('user', isEqualTo: auth.currentUser?.email)
+        .where('user', isEqualTo: email)
         .get()
         .then((QuerySnapshot querySnapshot) async {
       for (var Freetalk_doc in querySnapshot.docs) {
@@ -220,7 +220,7 @@ class Mypage with ChangeNotifier {
     // 유저 타입 데이터 가져오기
     await firestore
         .collection("User")
-        .where('email', isEqualTo: auth.currentUser?.email)
+        .where('email', isEqualTo: email)
         .get()
         .then((QuerySnapshot querySnapshot) {
       for (var User_doc in querySnapshot.docs) {
@@ -522,7 +522,7 @@ class Mypage with ChangeNotifier {
       });
     }
     // 구독 widget에게 변화 알려서 re-build
-    get_data(auth);
+    get_data(user_email);
     notifyListeners();
   }
 
@@ -549,7 +549,7 @@ class Mypage with ChangeNotifier {
           .delete();
     }
     // 구독 widget에게 변화 알려서 re-build
-    get_data(auth);
+    get_data(user_email);
     notifyListeners();
   }
 
@@ -592,7 +592,7 @@ class Mypage with ChangeNotifier {
       });
     }
     // 구독 widget에게 변화 알려서 re-build
-    get_data(auth);
+    get_data(user_email);
     notifyListeners();
   }
 
@@ -629,7 +629,7 @@ class Mypage with ChangeNotifier {
           .delete();
     }
     // 구독 widget에게 변화 알려서 re-build
-    get_data(auth);
+    get_data(user_email);
     notifyListeners();
   }
 }

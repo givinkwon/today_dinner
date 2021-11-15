@@ -324,8 +324,11 @@ class _FeedState extends State<Feed> {
 
     // 데이터 로딩이 완료된 후에 렌더링
     if (context.watch<Home>().Feed_image_loading == true &&
+        context.watch<Home>().Feed_profileimage_loading == true &&
         context.watch<Home>().Freetalk_image_loading == true &&
-        context.watch<Home>().Recipe_image_loading == true) {
+        context.watch<Home>().Freetalk_profileimage_loading == true &&
+        context.watch<Home>().Recipe_content_loading == true &&
+        context.watch<Home>().Recipe_profileimage_loading == true) {
       // 필터 체크하는 함수
       checkfilter(widget.index);
       // 검색어 체크하는 함수
@@ -395,6 +398,62 @@ class _FeedState extends State<Feed> {
 
           return Column(
             children: <Widget>[
+              Container(
+                height: 20,
+              ),
+              Row(children: [
+                SizedBox(
+                  width: 20,
+                ),
+                // profileimage가 있을 때
+                if (context
+                            .watch<Home>()
+                            .Feed[widget.index]['profileimage']
+                            .length >
+                        0 &&
+                    context.watch<Home>().Feed[widget.index]['profileimage']
+                            [0] !=
+                        "")
+                  CircleAvatar(
+                    radius: 20,
+                    backgroundColor: Colors.white,
+                    backgroundImage: NetworkImage(context
+                        .watch<Home>()
+                        .Feed[widget.index]['profileimage'][0]),
+                  ), // profileimage가 없을 때
+                if (context
+                            .watch<Home>()
+                            .Feed[widget.index]['profileimage']
+                            .length >
+                        0 &&
+                    context.watch<Home>().Feed[widget.index]['profileimage']
+                            [0] ==
+                        "")
+                  CircleAvatar(
+                      radius: 20,
+                      backgroundColor: Colors.white,
+                      foregroundColor: Colors.purple,
+                      child: Icon(Icons.people)),
+                if (context.watch<Home>().top_index != 3)
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Container(
+                      padding: EdgeInsets.only(left: 10),
+                      child: Text(
+                        context.watch<Home>().top_index == 1
+                            ? (context.watch<Home>().Feed[widget.index]
+                                ['nickname'])
+                            : (context.watch<Home>().Freetalk[widget.index]
+                                ['nickname']),
+                        style: TextStyle(fontSize: 14, color: Colors.black),
+                      ),
+                    ),
+                  ),
+              ]),
+              Container(
+                height: 20,
+              ),
+
               // 이미지
               GestureDetector(
                 onTap: () async {
@@ -411,7 +470,6 @@ class _FeedState extends State<Feed> {
                   }
                 },
                 child: Container(
-                  padding: EdgeInsets.only(left: 20),
                   height: 350,
                   child: GridView.builder(
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -429,28 +487,28 @@ class _FeedState extends State<Feed> {
                                 .watch<Home>()
                                 .Freetalk[widget.index]['image']
                                 .length
-                            : context
-                                .watch<Home>()
-                                .Recipe[widget.index]['image']
-                                .length),
+                            : 1),
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (context, int index) {
                       return Container(
-                        child: Image.network(context.watch<Home>().top_index ==
-                                1
-                            ? (context.watch<Home>().Feed[widget.index]['image']
-                                [index]['value'])
-                            : (context.watch<Home>().top_index == 2
-                                ? context.watch<Home>().Freetalk[widget.index]
-                                    ['image'][index]['value']
-                                : context.watch<Home>().Recipe[widget.index]
-                                    ['image'][index]['value'])),
+                        child: Image.network(
+                          context.watch<Home>().top_index == 1
+                              ? (context.watch<Home>().Feed[widget.index]
+                                  ['image'][index]['value'])
+                              : (context.watch<Home>().top_index == 2
+                                  ? context.watch<Home>().Freetalk[widget.index]
+                                      ['image'][index]['value']
+                                  : context.watch<Home>().Recipe[widget.index]
+                                      ['mainimage']),
+                          fit: BoxFit.fitWidth,
+                        ),
                       );
                       return Container();
                     },
                   ),
                 ),
               ),
+
               // 제목
               if (context.watch<Home>().top_index == 3)
                 Text(
@@ -551,23 +609,22 @@ class _FeedState extends State<Feed> {
                   ),
                 ),
               // 본문 내용
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Container(
-                  padding: EdgeInsets.only(left: 10),
-                  child: Text(
-                    context.watch<Home>().top_index == 1
-                        ? (context.watch<Home>().Feed[widget.index]['content'])
-                        : (context.watch<Home>().top_index == 2
-                            ? context.watch<Home>().Freetalk[widget.index]
-                                ['content']
-                            : context.watch<Home>().Recipe[widget.index]
-                                ['content']),
-                    style: TextStyle(fontSize: 14, color: Colors.black),
-                    textAlign: TextAlign.left,
+              if (context.read<Home>().top_index != 3)
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Container(
+                    padding: EdgeInsets.only(left: 10),
+                    child: Text(
+                      context.watch<Home>().top_index == 1
+                          ? (context.watch<Home>().Feed[widget.index]
+                              ['content'])
+                          : context.watch<Home>().Freetalk[widget.index]
+                              ['content'],
+                      style: TextStyle(fontSize: 14, color: Colors.black),
+                      textAlign: TextAlign.left,
+                    ),
                   ),
                 ),
-              ),
               // Feed 댓글 2개 이상일 때
               if (context.watch<Home>().top_index == 1 &&
                   context.watch<Home>().Feed[widget.index]['reply'] != null &&
@@ -1179,7 +1236,7 @@ class _HomePageState extends State<HomePage> {
       print(auth.currentUser!.email);
     }
 
-    context.read<Home>().get_data(auth);
+    context.read<Home>().get_data(auth.currentUser?.email);
     // listener를 추가하여 비동기 변경이 발생했을 때 수정할 수 있도록 changeNotifier를 듣고 있음
     if (mounted) {
       Provider.of<Home>(context, listen: false).addListener(() => setState(() {
@@ -1213,66 +1270,64 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
       appBar: EmptyAppBar(),
-      body: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            Row(
-              children: <Widget>[
-                Expanded(
-                  child: Column(
-                    children: <Widget>[
-                      Container(
-                        margin: EdgeInsets.only(top: 10),
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 4, horizontal: 20),
-                        decoration: BoxDecoration(
-                          color: Colors.black38.withAlpha(10),
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(20),
-                          ),
-                        ),
-                        child: Row(
-                          children: <Widget>[
-                            Expanded(
-                              child: TextField(
-                                decoration: InputDecoration(
-                                  hintText: "레시피를 검색해보세요.",
-                                  hintStyle: TextStyle(
-                                    color: Colors.black.withAlpha(120),
-                                  ),
-                                  border: InputBorder.none,
-                                ),
-                                onChanged: (text) {
-                                  // // watch가 아니라 read를 호출해야함 => read == listen : false => 이벤트 함수는 업데이트 변경 사항을 수신하지 않고 변경 작업을 수행해야함.
-                                  context.read<Home>().setSearchText(text);
-                                },
-                              ),
-                            ),
-                            GestureDetector(
-                                onTap: () async {
-                                  setState(() {});
-                                },
-                                child: Icon(
-                                  Icons.search,
-                                  color: Colors.black.withAlpha(120),
-                                )),
-                          ],
+      body: Column(
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              Expanded(
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      margin: EdgeInsets.only(top: 10),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 4, horizontal: 20),
+                      decoration: BoxDecoration(
+                        color: Colors.black38.withAlpha(10),
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(20),
                         ),
                       ),
-                    ],
-                  ),
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: TextField(
+                              decoration: InputDecoration(
+                                hintText: "레시피를 검색해보세요.",
+                                hintStyle: TextStyle(
+                                  color: Colors.black.withAlpha(120),
+                                ),
+                                border: InputBorder.none,
+                              ),
+                              onChanged: (text) {
+                                // // watch가 아니라 read를 호출해야함 => read == listen : false => 이벤트 함수는 업데이트 변경 사항을 수신하지 않고 변경 작업을 수행해야함.
+                                context.read<Home>().setSearchText(text);
+                              },
+                            ),
+                          ),
+                          GestureDetector(
+                              onTap: () async {
+                                setState(() {});
+                              },
+                              child: Icon(
+                                Icons.search,
+                                color: Colors.black.withAlpha(120),
+                              )),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-            // 메인 상단 메뉴
-            TopBar(),
-            // 필터
-            Filter(),
-            // 필터 선택 tagbox
-            SelectedFilter(),
-            ListView.builder(
-                physics: NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
+              ),
+            ],
+          ),
+          // 메인 상단 메뉴
+          TopBar(),
+          // 필터
+          Filter(),
+          // 필터 선택 tagbox
+          SelectedFilter(),
+          Expanded(
+            child: ListView.builder(
                 scrollDirection: Axis.vertical,
                 itemCount: context.read<Home>().top_index == 1
                     ? (context.read<Home>().Feed.length)
@@ -1282,8 +1337,8 @@ class _HomePageState extends State<HomePage> {
                 itemBuilder: (BuildContext context, int index) {
                   return Feed(index);
                 }),
-          ],
-        ),
+          ),
+        ],
       ),
       bottomNavigationBar: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,

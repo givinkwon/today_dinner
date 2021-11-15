@@ -46,9 +46,9 @@ class _ReplyPageState extends State<ReplyPage> {
   @override
   void initState() {
     // 로그인 상태인지 확인
-    print(auth.currentUser);
+
     if (auth.currentUser != null) {
-      print(auth.currentUser!.email);
+      // print(auth.currentUser!.email);
     }
   }
 
@@ -56,130 +56,294 @@ class _ReplyPageState extends State<ReplyPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(backgroundColor: Colors.transparent, title: Text("댓글")),
-      body: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            // 아이디
-            if (context.watch<Home>().top_index != 3)
-              Container(
-                height: 100,
-                child: Row(children: [
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Container(
-                      padding: EdgeInsets.only(left: 10),
-                      child: Text(
-                        context.watch<Home>().top_index == 1
-                            ? (context
-                                    .watch<Home>()
-                                    .Feed[context.watch<Reply>().selected_index]
-                                ['nickname'])
-                            : (context.watch<Home>().Freetalk[context
-                                .watch<Reply>()
-                                .selected_index]['nickname']),
-                        style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ),
-                  // 본문 내용
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Container(
-                      padding: EdgeInsets.only(left: 10),
-                      child: Text(
-                        context.watch<Home>().top_index == 1
-                            ? (context
-                                    .watch<Home>()
-                                    .Feed[context.watch<Reply>().selected_index]
-                                ['content'])
-                            : (context.watch<Home>().top_index == 2
-                                ? context.watch<Home>().Freetalk[context
-                                    .watch<Reply>()
-                                    .selected_index]['content']
-                                : context.watch<Home>().Recipe[context
-                                    .watch<Reply>()
-                                    .selected_index]['content']),
-                        style: TextStyle(fontSize: 14, color: Colors.black),
-                        textAlign: TextAlign.left,
-                      ),
-                    ),
-                  ),
-                ]),
-              ),
-
-            // Start : Feed 댓글
-            if (context.watch<Home>().top_index == 1 &&
-                context
-                        .watch<Home>()
-                        .Feed[context.watch<Reply>().selected_index]['reply'] !=
-                    null &&
-                context
-                        .watch<Home>()
-                        .Feed[context.watch<Reply>().selected_index]['reply']
-                        .length !=
-                    0)
-              for (var reply in context
-                  .watch<Home>()
-                  .Feed[context.watch<Reply>().selected_index]['reply'])
-                Container(
-                  height: 100,
-                  child: Align(
-                    alignment: Alignment.centerLeft,
+      body: Column(children: [
+        Expanded(
+          child: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                // 아이디
+                if (context.watch<Home>().top_index != 3)
+                  Container(
+                    height: 100,
                     child: Row(children: [
                       Container(
-                        padding: EdgeInsets.only(left: 10),
-                        child: Text('${reply['nickname']} ',
-                            style: TextStyle(fontWeight: FontWeight.bold)),
+                        width: 10,
                       ),
-                      Container(
-                        padding: EdgeInsets.only(left: 10),
-                        child: Text('${reply['content']}'),
+                      // Feed 선택 + profileimage가 있을 때
+                      if (context.watch<Home>().top_index == 1 &&
+                          context
+                                  .watch<Home>()
+                                  .Feed[context.watch<Reply>().selected_index]
+                                      ['profileimage']
+                                  .length >
+                              0 &&
+                          context.watch<Home>().Feed[context
+                                  .watch<Reply>()
+                                  .selected_index]['profileimage'][0] !=
+                              "")
+                        CircleAvatar(
+                          radius: 20,
+                          backgroundColor: Colors.white,
+                          backgroundImage: NetworkImage(context
+                                  .watch<Home>()
+                                  .Feed[context.watch<Reply>().selected_index]
+                              ['profileimage'][0]),
+                        ), // profileimage가 없을 때
+                      if (context.watch<Home>().top_index == 1 &&
+                          context
+                                  .watch<Home>()
+                                  .Feed[context.watch<Reply>().selected_index]
+                                      ['profileimage']
+                                  .length >
+                              0 &&
+                          context.watch<Home>().Feed[context
+                                  .watch<Reply>()
+                                  .selected_index]['profileimage'][0] ==
+                              "")
+                        CircleAvatar(
+                            radius: 20,
+                            backgroundColor: Colors.white,
+                            foregroundColor: Colors.purple,
+                            child: Icon(Icons.people)),
+
+                      // Freetalk 선택 + profileimage가 있을 때
+                      if (context.watch<Home>().top_index == 2 &&
+                          context
+                                  .watch<Home>()
+                                  .Freetalk[context
+                                      .watch<Reply>()
+                                      .selected_index]['profileimage']
+                                  .length >
+                              0 &&
+                          context.watch<Home>().Freetalk[context
+                                  .watch<Reply>()
+                                  .selected_index]['profileimage'][0] !=
+                              "")
+                        CircleAvatar(
+                          radius: 20,
+                          backgroundColor: Colors.white,
+                          backgroundImage: NetworkImage(
+                              context.watch<Home>().Freetalk[context
+                                  .watch<Reply>()
+                                  .selected_index]['profileimage'][0]),
+                        ), // profileimage가 없을 때
+                      if (context.watch<Home>().top_index == 2 &&
+                          context
+                                  .watch<Home>()
+                                  .Freetalk[context
+                                      .watch<Reply>()
+                                      .selected_index]['profileimage']
+                                  .length >
+                              0 &&
+                          context.watch<Home>().Freetalk[context
+                                  .watch<Reply>()
+                                  .selected_index]['profileimage'][0] ==
+                              "")
+                        CircleAvatar(
+                            radius: 20,
+                            backgroundColor: Colors.white,
+                            foregroundColor: Colors.purple,
+                            child: Icon(Icons.people)),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Container(
+                          padding: EdgeInsets.only(left: 10),
+                          child: Text(
+                            context.watch<Home>().top_index == 1
+                                ? (context.watch<Home>().Feed[context
+                                    .watch<Reply>()
+                                    .selected_index]['nickname'])
+                                : (context.watch<Home>().Freetalk[context
+                                    .watch<Reply>()
+                                    .selected_index]['nickname']),
+                            style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ),
+                      // 본문 내용
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Container(
+                          padding: EdgeInsets.only(left: 10),
+                          child: Text(
+                            context.watch<Home>().top_index == 1
+                                ? (context.watch<Home>().Feed[context
+                                    .watch<Reply>()
+                                    .selected_index]['content'])
+                                : (context.watch<Home>().top_index == 2
+                                    ? context.watch<Home>().Freetalk[context
+                                        .watch<Reply>()
+                                        .selected_index]['content']
+                                    : context.watch<Home>().Recipe[context
+                                        .watch<Reply>()
+                                        .selected_index]['content']),
+                            style: TextStyle(fontSize: 14, color: Colors.black),
+                            textAlign: TextAlign.left,
+                          ),
+                        ),
                       ),
                     ]),
                   ),
-                ),
 
-            // End : Feed 댓글
+                // Start : Feed 댓글
+                if (context.watch<Home>().top_index == 1 &&
+                    context
+                                .watch<Home>()
+                                .Feed[context.watch<Reply>().selected_index]
+                            ['reply'] !=
+                        null &&
+                    context
+                            .watch<Home>()
+                            .Feed[context.watch<Reply>().selected_index]
+                                ['reply']
+                            .length !=
+                        0)
+                  for (var reply in context
+                      .watch<Home>()
+                      .Feed[context.watch<Reply>().selected_index]['reply']
+                      .reversed
+                      .toList())
+                    Container(
+                      height: 100,
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Row(children: [
+                          Container(
+                            width: 10,
+                          ),
+                          // 프로필 이미지가 없는 경우
+                          if (reply['profileimage'] == "")
+                            CircleAvatar(
+                                radius: 20,
+                                backgroundColor: Colors.white,
+                                foregroundColor: Colors.purple,
+                                child: Icon(Icons.people)),
+                          // 프로필 이미지가 있는 경우
+                          if (reply['profileimage'] != "")
+                            CircleAvatar(
+                              radius: 20,
+                              backgroundColor: Colors.white,
+                              backgroundImage:
+                                  NetworkImage(reply['profileimage']),
+                            ),
+                          Container(
+                            padding: EdgeInsets.only(left: 10),
+                            child: Text('${reply['nickname']} ',
+                                style: TextStyle(fontWeight: FontWeight.bold)),
+                          ),
+                          Container(
+                            padding: EdgeInsets.only(left: 10),
+                            child: Text('${reply['content']}'),
+                          ),
+                        ]),
+                      ),
+                    ),
 
-            // Start : Freetalk 댓글 2개 미리보기 => 2개 이하인 경우에는 전부 / 2개 이상인 경우에는 2개만
-            if (context.watch<Home>().top_index == 2 &&
-                context
+                // End : Feed 댓글
+
+                // Start : Freetalk 댓글 2개 미리보기 => 2개 이하인 경우에는 전부 / 2개 이상인 경우에는 2개만
+                if (context.watch<Home>().top_index == 2 &&
+                    context
+                                .watch<Home>()
+                                .Freetalk[context.watch<Reply>().selected_index]
+                            ['reply'] !=
+                        null &&
+                    context
                             .watch<Home>()
                             .Freetalk[context.watch<Reply>().selected_index]
-                        ['reply'] !=
-                    null &&
-                context
-                        .watch<Home>()
-                        .Freetalk[context.watch<Reply>().selected_index]
-                            ['reply']
-                        .length !=
-                    0)
-              for (var reply in context
-                  .watch<Home>()
-                  .Freetalk[context.watch<Reply>().selected_index]['reply'])
-                Container(
-                  height: 100,
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Row(children: [
-                      Container(
-                        padding: EdgeInsets.only(left: 10),
-                        child: Text('${reply['nickname']} ',
-                            style: TextStyle(fontWeight: FontWeight.bold)),
+                                ['reply']
+                            .length !=
+                        0)
+                  for (var reply in context
+                      .watch<Home>()
+                      .Freetalk[context.watch<Reply>().selected_index]['reply']
+                      .reversed
+                      .toList())
+                    Container(
+                      height: 100,
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Row(children: [
+                          Container(
+                            width: 10,
+                          ),
+                          // 프로필 이미지가 없는 경우
+                          if (reply['profileimage'] == "")
+                            CircleAvatar(
+                                radius: 20,
+                                backgroundColor: Colors.white,
+                                foregroundColor: Colors.purple,
+                                child: Icon(Icons.people)),
+                          // 프로필 이미지가 있는 경우
+                          if (reply['profileimage'] != "")
+                            CircleAvatar(
+                              radius: 20,
+                              backgroundColor: Colors.white,
+                              backgroundImage:
+                                  NetworkImage(reply['profileimage']),
+                            ),
+                          Container(
+                            padding: EdgeInsets.only(left: 10),
+                            child: Text('${reply['nickname']} ',
+                                style: TextStyle(fontWeight: FontWeight.bold)),
+                          ),
+                          Container(
+                            padding: EdgeInsets.only(left: 10),
+                            child: Text('${reply['content']}'),
+                          ),
+                        ]),
                       ),
-                      Container(
-                        padding: EdgeInsets.only(left: 10),
-                        child: Text('${reply['content']}'),
-                      ),
-                    ]),
-                  ),
-                ),
-          ],
+                    ),
+              ],
+            ),
+          ),
         ),
-      ),
+        Row(children: [
+          Expanded(flex: 1, child: Container()),
+          Expanded(
+              flex: 8,
+              child: TextField(
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: '댓글을 입력해주세요.',
+                ),
+                onChanged: (text) {
+                  // watch가 아니라 read를 호출해야함 => read == listen : false => 이벤트 함수는 업데이트 변경 사항을 수신하지 않고 변경 작업을 수행해야함.
+                  context.read<Reply>().setReply(text);
+                },
+              )),
+          Expanded(flex: 1, child: Container()),
+          Expanded(
+            flex: 3,
+            child: TextButton(
+              onPressed: () {
+                context.read<Reply>().replyComplete(
+                    context
+                        .read<Home>()
+                        .Feed[context.read<Reply>().selected_index]['id'],
+                    context.read<Home>().User[0],
+                    auth,
+                    context);
+              },
+              style: TextButton.styleFrom(
+                  primary: Colors.purple,
+                  backgroundColor: Colors.white,
+                  side: BorderSide(color: Colors.purple, width: 2)),
+              child: Text(
+                "입력하기",
+                style: TextStyle(fontSize: 12, color: Colors.purple),
+              ),
+            ),
+          ),
+          Expanded(flex: 1, child: Container()),
+        ]),
+        Container(
+          height: 20,
+        ),
+      ]),
       bottomNavigationBar: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
           onTap: (index) => {
