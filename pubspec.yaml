@@ -60,6 +60,9 @@ dependencies:
   image_picker: ^0.8.4+4
   get: ^4.3.8
 
+  # image resize를 위해 =>   // 이미지 resize => 데이터를 불러오고나서 height를 가져올 수 있는데, 렌더링할 때는 전체 height를 미리 알아야한다. 때문에 gridview로는 구현이 어려움
+  flutter_staggered_grid_view: ^0.4.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
