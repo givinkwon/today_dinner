@@ -341,28 +341,81 @@ class _ReplyPageState extends State<ReplyPage> {
                 },
               )),
           Expanded(flex: 1, child: Container()),
-          Expanded(
-            flex: 3,
-            child: TextButton(
-              onPressed: () {
-                context.read<Reply>().replyComplete(
-                    context
-                        .read<Home>()
-                        .Feed[context.read<Reply>().selected_index]['id'],
-                    context.read<Home>().User[0],
-                    auth,
-                    context);
-              },
-              style: TextButton.styleFrom(
-                  primary: Colors.purple,
-                  backgroundColor: Colors.white,
-                  side: BorderSide(color: Colors.purple, width: 2)),
-              child: Text(
-                "입력하기",
-                style: TextStyle(fontSize: 12, color: Colors.purple),
+          // Feed인 경우
+          if (context.watch<Home>().top_index == 1)
+            Expanded(
+              flex: 3,
+              child: TextButton(
+                onPressed: () {
+                  context.read<Reply>().replyComplete(
+                      context
+                          .read<Home>()
+                          .Feed[context.read<Reply>().selected_index]['id'],
+                      context.read<Home>().User[0],
+                      auth,
+                      context,
+                      context.read<Home>().top_index);
+                },
+                style: TextButton.styleFrom(
+                    primary: Colors.purple,
+                    backgroundColor: Colors.white,
+                    side: BorderSide(color: Colors.purple, width: 2)),
+                child: Text(
+                  "입력하기",
+                  style: TextStyle(fontSize: 12, color: Colors.purple),
+                ),
               ),
             ),
-          ),
+          // Freetalk인 경우
+          if (context.watch<Home>().top_index == 2)
+            Expanded(
+              flex: 3,
+              child: TextButton(
+                onPressed: () {
+                  context.read<Reply>().replyComplete(
+                      context
+                          .read<Home>()
+                          .Freetalk[context.read<Reply>().selected_index]['id'],
+                      context.read<Home>().User[0],
+                      auth,
+                      context,
+                      context.read<Home>().top_index);
+                },
+                style: TextButton.styleFrom(
+                    primary: Colors.purple,
+                    backgroundColor: Colors.white,
+                    side: BorderSide(color: Colors.purple, width: 2)),
+                child: Text(
+                  "입력하기",
+                  style: TextStyle(fontSize: 12, color: Colors.purple),
+                ),
+              ),
+            ),
+          // Recipe인 경우
+          if (context.watch<Home>().top_index == 3)
+            Expanded(
+              flex: 3,
+              child: TextButton(
+                onPressed: () {
+                  context.read<Reply>().replyComplete(
+                      context
+                          .read<Home>()
+                          .Recipe[context.read<Reply>().selected_index]['id'],
+                      context.read<Home>().User[0],
+                      auth,
+                      context,
+                      context.read<Home>().top_index);
+                },
+                style: TextButton.styleFrom(
+                    primary: Colors.purple,
+                    backgroundColor: Colors.white,
+                    side: BorderSide(color: Colors.purple, width: 2)),
+                child: Text(
+                  "입력하기",
+                  style: TextStyle(fontSize: 12, color: Colors.purple),
+                ),
+              ),
+            ),
           Expanded(flex: 1, child: Container()),
         ]),
         Container(

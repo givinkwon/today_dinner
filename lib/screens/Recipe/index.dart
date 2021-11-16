@@ -6,6 +6,7 @@ import 'package:today_dinner/screens/Product/index.dart';
 import 'package:today_dinner/providers/home.dart';
 import 'package:today_dinner/providers/write.dart';
 import 'package:today_dinner/providers/recipe.dart';
+import 'package:today_dinner/providers/reply.dart';
 
 // firestorage.List feed_image = firestorage.ref('20210917_164240.jpg');
 // var url = firestorage.ref('20210917_164240.jpg').getDownloadURL();
@@ -52,19 +53,12 @@ class _RecipePageState extends State<RecipePage> {
       // print(auth.currentUser!.uid);
     }
 
-    // listener를 추가하여 비동기 변경이 발생했을 때 수정할 수 있도록 changeNotifier를 듣고 있음
-    Provider.of<Home>(context, listen: false).addListener(() => setState(() {
-          print("리렌더링");
-        }));
-
-    // listener를 추가하여 비동기 변경이 발생했을 때 수정할 수 있도록 changeNotifier를 듣고 있음
-    Provider.of<Write>(context, listen: false).addListener(() => setState(() {
-          print("리렌더링");
-        }));
-    // listener를 추가하여 비동기 변경이 발생했을 때 수정할 수 있도록 changeNotifier를 듣고 있음
-    Provider.of<Recipe>(context, listen: false).addListener(() => setState(() {
-          print("리렌더링");
-        }));
+    if (mounted) {
+      // listener를 추가하여 비동기 변경이 발생했을 때 수정할 수 있도록 changeNotifier를 듣고 있음
+      Provider.of<Home>(context, listen: false).addListener(() => setState(() {
+            print("리렌더링");
+          }));
+    }
   }
 
   @override
@@ -255,83 +249,209 @@ class _RecipePageState extends State<RecipePage> {
                   ),
                 ]),
 
-              // 상세 하단 경게선
+              // // 상세 하단 경게선
               Container(child: Divider(color: Colors.grey, thickness: 2.0)),
 
-              // 상세 하단 메뉴 1
-              Container(
-                margin: EdgeInsets.all(5.0),
-                child: Text("남은 식재료 활용 밑반찬"),
-              ),
-              Container(
-                height: 120.0,
-                child: GridView.builder(
-                  padding: EdgeInsets.all(5.0),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 1,
-                    crossAxisSpacing: 5.0,
-                    mainAxisSpacing: 12.0,
-                  ),
-                  itemCount: 16,
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, int index) {
-                    return GestureDetector(
-                      onTap: () {
-                        // 제품 상세 페이지로 이동하기
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => RecipePage()),
-                        );
-                      },
-                      child: Container(
-                        color: Colors.grey[300],
-                        padding: EdgeInsets.all(10.0),
-                        child: Center(
-                          child: Text("GridView $index"),
-                        ),
-                      ),
-                    );
+              // 댓글 2개 이상일 때
+              if (context.read<Recipe>().Selected_data['reply'] != null &&
+                  context.read<Recipe>().Selected_data['reply'].length > 2)
+                GestureDetector(
+                  onTap: () async {
+                    // index 설정
+                    // context.read<Reply>().select_index(widget.index);
+                    // 페이지 이동
+                    // Navigator.push(
+                    // context,
+                    // MaterialPageRoute(builder: (context) => ReplyPage()),
+                    // );
                   },
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Container(
+                      padding: EdgeInsets.only(left: 10),
+                      child: Text(
+                          '댓글 ${context.read<Recipe>().Selected_data['reply'].length}개 모두 보기'),
+                    ),
+                  ),
                 ),
+
+              // Start : 댓글 2개 미리보기 => 2개 이하인 경우에는 전부 / 2개 이상인 경우에는 2개만
+              if (context.read<Recipe>().Selected_data['reply'] != null &&
+                  context.read<Recipe>().Selected_data['reply'].length != 0 &&
+                  context.read<Recipe>().Selected_data['reply'].length < 3)
+                for (var reply in context.read<Recipe>().Selected_data['reply'])
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Row(children: [
+                      Container(
+                        padding: EdgeInsets.only(left: 10),
+                        child: Text('${reply['nickname']} ',
+                            style: TextStyle(fontWeight: FontWeight.bold)),
+                      ),
+                      Container(
+                        padding: EdgeInsets.only(left: 10),
+                        child: Text('${reply['content']}'),
+                      ),
+                    ]),
+                  ),
+              if (context.read<Recipe>().Selected_data['reply'] != null &&
+                  context.read<Recipe>().Selected_data['reply'].length != 0 &&
+                  context.read<Recipe>().Selected_data['reply'].length > 2)
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Column(children: [
+                    Row(children: [
+                      Container(
+                        padding: EdgeInsets.only(left: 10),
+                        child: Text(
+                            '${context.read<Recipe>().Selected_data['reply'][0]['nickname']} ',
+                            style: TextStyle(fontWeight: FontWeight.bold)),
+                      ),
+                      Container(
+                        padding: EdgeInsets.only(left: 10),
+                        child: Text(
+                            '${context.read<Recipe>().Selected_data['reply'][0]['content']}'),
+                      ),
+                    ]),
+                    Row(children: [
+                      Container(
+                        padding: EdgeInsets.only(left: 10),
+                        child: Text(
+                            '${context.read<Recipe>().Selected_data['reply'][1]['nickname']} ',
+                            style: TextStyle(fontWeight: FontWeight.bold)),
+                      ),
+                      Container(
+                        padding: EdgeInsets.only(left: 10),
+                        child: Text(
+                            '${context.read<Recipe>().Selected_data['reply'][1]['content']}'),
+                      ),
+                    ]),
+                  ]),
+                ),
+
+              SizedBox(
+                height: 30,
               ),
 
-              // 상세 하단 메뉴 2
-              Container(
-                margin: EdgeInsets.all(5.0),
-                child: Text("후기 좋은 밀키트 모음 ♥"),
-              ),
-              Container(
-                height: 120.0,
-                child: GridView.builder(
-                  padding: EdgeInsets.all(5.0),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 1,
-                    crossAxisSpacing: 5.0,
-                    mainAxisSpacing: 12.0,
-                  ),
-                  itemCount: 16,
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, int index) {
-                    return GestureDetector(
-                      onTap: () {
-                        // 제품 상세 페이지로 이동하기
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ProductPage()),
-                        );
-                      },
-                      child: Container(
-                        color: Colors.grey[300],
-                        padding: EdgeInsets.all(10.0),
-                        child: Center(
-                          child: Text("GridView $index"),
-                        ),
+              // 댓글 입력
+              Row(children: [
+                Expanded(flex: 1, child: Container()),
+                Expanded(
+                    flex: 8,
+                    child: TextField(
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: '댓글을 입력해주세요.',
                       ),
-                    );
-                  },
+                      onChanged: (text) {
+                        // watch가 아니라 read를 호출해야함 => read == listen : false => 이벤트 함수는 업데이트 변경 사항을 수신하지 않고 변경 작업을 수행해야함.
+                        context.read<Reply>().setReply(text);
+                      },
+                    )),
+                Expanded(flex: 1, child: Container()),
+                Expanded(
+                  flex: 3,
+                  child: TextButton(
+                    onPressed: () {
+                      context.read<Reply>().replyComplete(
+                          context.read<Recipe>().Selected_data['id'],
+                          context.read<Home>().User[0],
+                          auth,
+                          context,
+                          context.read<Home>().top_index);
+                    },
+                    style: TextButton.styleFrom(
+                        primary: Colors.purple,
+                        backgroundColor: Colors.white,
+                        side: BorderSide(color: Colors.purple, width: 2)),
+                    child: Text(
+                      "입력하기",
+                      style: TextStyle(fontSize: 12, color: Colors.purple),
+                    ),
+                  ),
                 ),
+                Expanded(flex: 1, child: Container()),
+              ]),
+              Container(
+                height: 20,
               ),
+
+              // End : Freetalk 댓글 2개 미리보기 => 2개 이하인 경우에는 전부 / 2개 이상인 경우에는 2개만
+
+              // // 상세 하단 메뉴 1
+              // Container(
+              //   margin: EdgeInsets.all(5.0),
+              //   child: Text("남은 식재료 활용 밑반찬"),
+              // ),
+              // Container(
+              //   height: 120.0,
+              //   child: GridView.builder(
+              //     padding: EdgeInsets.all(5.0),
+              //     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              //       crossAxisCount: 1,
+              //       crossAxisSpacing: 5.0,
+              //       mainAxisSpacing: 12.0,
+              //     ),
+              //     itemCount: 16,
+              //     scrollDirection: Axis.horizontal,
+              //     itemBuilder: (context, int index) {
+              //       return GestureDetector(
+              //         onTap: () {
+              //           // 제품 상세 페이지로 이동하기
+              //           Navigator.push(
+              //             context,
+              //             MaterialPageRoute(builder: (context) => RecipePage()),
+              //           );
+              //         },
+              //         child: Container(
+              //           color: Colors.grey[300],
+              //           padding: EdgeInsets.all(10.0),
+              //           child: Center(
+              //             child: Text("GridView $index"),
+              //           ),
+              //         ),
+              //       );
+              //     },
+              //   ),
+              // ),
+
+              // // 상세 하단 메뉴 2
+              // Container(
+              //   margin: EdgeInsets.all(5.0),
+              //   child: Text("후기 좋은 밀키트 모음 ♥"),
+              // ),
+              // Container(
+              //   height: 120.0,
+              //   child: GridView.builder(
+              //     padding: EdgeInsets.all(5.0),
+              //     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              //       crossAxisCount: 1,
+              //       crossAxisSpacing: 5.0,
+              //       mainAxisSpacing: 12.0,
+              //     ),
+              //     itemCount: 16,
+              //     scrollDirection: Axis.horizontal,
+              //     itemBuilder: (context, int index) {
+              //       return GestureDetector(
+              //         onTap: () {
+              //           // 제품 상세 페이지로 이동하기
+              //           Navigator.push(
+              //             context,
+              //             MaterialPageRoute(
+              //                 builder: (context) => ProductPage()),
+              //           );
+              //         },
+              //         child: Container(
+              //           color: Colors.grey[300],
+              //           padding: EdgeInsets.all(10.0),
+              //           child: Center(
+              //             child: Text("GridView $index"),
+              //           ),
+              //         ),
+              //       );
+              //     },
+              //   ),
+              // ),
             ],
           ),
         ),

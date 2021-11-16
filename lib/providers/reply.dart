@@ -39,7 +39,7 @@ class Reply with ChangeNotifier {
   String AlertContent = ""; // Alert 내용
 
   // 글쓰기 완료
-  void replyComplete(doc_id, user, auth, context) {
+  void replyComplete(doc_id, user, auth, context, top_index) {
     // init
     Error = 0;
     AlertTitle = "";
@@ -58,39 +58,115 @@ class Reply with ChangeNotifier {
     print(1);
     print(user);
     //데이터베이스 저장
-    firestore
-        .collection("Feed")
-        .doc("${doc_id}")
-        .collection("reply")
-        .doc("${rand}")
-        .set({
-      'content': reply,
-      'createdAt': FieldValue.serverTimestamp(),
-      'nickname': user['nickname'],
-      'profileimage': user['profileimage'],
-      'user': user['email'],
-    }).then((_) => {
-              showDialog(
-                  context: context,
-                  barrierDismissible: false,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: new Text("댓글쓰기 완료"),
-                      content: new Text("댓글 쓰기가 완료되었습니다."),
-                      actions: <Widget>[
-                        new FlatButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => HomePage()),
-                            );
-                          },
-                          child: new Text("닫기"),
-                        ),
-                      ],
-                    );
-                  }),
-            });
+    // Feed
+    if (top_index == 1)
+      firestore
+          .collection("Feed")
+          .doc("${doc_id}")
+          .collection("reply")
+          .doc("${rand}")
+          .set({
+        'content': reply,
+        'createdAt': FieldValue.serverTimestamp(),
+        'nickname': user['nickname'],
+        'profileimage': user['profileimage'],
+        'user': user['email'],
+      }).then((_) => {
+                showDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: new Text("댓글쓰기 완료"),
+                        content: new Text("댓글 쓰기가 완료되었습니다."),
+                        actions: <Widget>[
+                          new FlatButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => HomePage()),
+                              );
+                            },
+                            child: new Text("닫기"),
+                          ),
+                        ],
+                      );
+                    }),
+              });
+
+    // Freetalk
+    if (top_index == 2)
+      firestore
+          .collection("Freetalk")
+          .doc("${doc_id}")
+          .collection("reply")
+          .doc("${rand}")
+          .set({
+        'content': reply,
+        'createdAt': FieldValue.serverTimestamp(),
+        'nickname': user['nickname'],
+        'profileimage': user['profileimage'],
+        'user': user['email'],
+      }).then((_) => {
+                showDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: new Text("댓글쓰기 완료"),
+                        content: new Text("댓글 쓰기가 완료되었습니다."),
+                        actions: <Widget>[
+                          new FlatButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => HomePage()),
+                              );
+                            },
+                            child: new Text("닫기"),
+                          ),
+                        ],
+                      );
+                    }),
+              });
+
+    // Recipe
+    if (top_index == 3)
+      firestore
+          .collection("Recipe")
+          .doc("${doc_id}")
+          .collection("reply")
+          .doc("${rand}")
+          .set({
+        'content': reply,
+        'createdAt': FieldValue.serverTimestamp(),
+        'nickname': user['nickname'],
+        'profileimage': user['profileimage'],
+        'user': user['email'],
+      }).then((_) => {
+                showDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: new Text("댓글쓰기 완료"),
+                        content: new Text("댓글 쓰기가 완료되었습니다."),
+                        actions: <Widget>[
+                          new FlatButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => HomePage()),
+                              );
+                            },
+                            child: new Text("닫기"),
+                          ),
+                        ],
+                      );
+                    }),
+              });
   }
 }

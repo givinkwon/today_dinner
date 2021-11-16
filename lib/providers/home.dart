@@ -538,13 +538,13 @@ class Home with ChangeNotifier {
 
   void getRecipereply(Recipe_doc, Recipe_index) async {
     // Feed > data > image 데이터 호출
+    // init => init 안하면 null error
+    Recipe[Recipe_index]['reply'] = [];
     await firestore
         .collection('Recipe/' + Recipe_doc.id + '/reply')
         .get()
         .then((QuerySnapshot querySnapshot) {
       for (var Recipereply_doc in querySnapshot.docs) {
-        // init => init 안하면 null error
-        Recipe[Recipe_index]['reply'] = [];
         Recipe[Recipe_index]['reply'].add(Recipereply_doc.data());
       }
     });
