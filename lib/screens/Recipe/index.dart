@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:today_dinner/screens/Product/index.dart';
-
+import 'package:today_dinner/screens/Reply/index.dart';
 // provider => watch는 값이 변화할 때 리렌더링, read는 값이 변화해도 렌더링 x
 // => watch는 값을 보여주는 UI에 read는 변경이 필요없는 함수에 주로 사용
 import 'package:today_dinner/providers/home.dart';
@@ -257,13 +257,11 @@ class _RecipePageState extends State<RecipePage> {
                   context.read<Recipe>().Selected_data['reply'].length > 2)
                 GestureDetector(
                   onTap: () async {
-                    // index 설정
-                    // context.read<Reply>().select_index(widget.index);
-                    // 페이지 이동
-                    // Navigator.push(
-                    // context,
-                    // MaterialPageRoute(builder: (context) => ReplyPage()),
-                    // );
+                    //페이지 이동
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ReplyPage()),
+                    );
                   },
                   child: Align(
                     alignment: Alignment.centerLeft,

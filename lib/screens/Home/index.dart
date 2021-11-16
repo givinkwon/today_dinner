@@ -506,6 +506,10 @@ class _FeedState extends State<Feed> {
                             // 데이터 전달하기
                             context.read<Recipe>().select_data(
                                 context.read<Home>().Recipe[widget.index]);
+
+                            //index 설정
+                            context.read<Reply>().select_index(widget.index);
+
                             // 페이지 이동
                             Navigator.push(
                               context,

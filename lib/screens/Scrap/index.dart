@@ -1122,9 +1122,11 @@ class _ScrapPageState extends State<ScrapPage> {
     }
 
     // listener를 추가하여 비동기 변경이 발생했을 때 수정할 수 있도록 changeNotifier를 듣고 있음
-    Provider.of<Home>(context, listen: false).addListener(() => setState(() {
-          print("리렌더링");
-        }));
+    if (mounted) {
+      Provider.of<Home>(context, listen: false).addListener(() => setState(() {
+            print("리렌더링");
+          }));
+    }
   }
 
   // bookmark icon 클릭했을 때

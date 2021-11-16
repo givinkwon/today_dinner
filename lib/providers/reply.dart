@@ -23,6 +23,7 @@ firebase_storage.FirebaseStorage storage =
 class Reply with ChangeNotifier {
   int selected_index = 0;
 
+  // feed랑 freetalk에 사용
   void select_index(index) {
     selected_index = index;
   }

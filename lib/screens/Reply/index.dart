@@ -310,11 +310,89 @@ class _ReplyPageState extends State<ReplyPage> {
                               backgroundImage:
                                   NetworkImage(reply['profileimage']),
                             ),
+                          Column(children: [
+                            SizedBox(height: 40),
+                            Container(
+                              padding: EdgeInsets.only(left: 10),
+                              child: Text('${reply['nickname']} ',
+                                  style:
+                                      TextStyle(fontWeight: FontWeight.bold)),
+                            ),
+                            Container(
+                              padding: EdgeInsets.only(left: 10),
+                              child: Text(
+                                "${DateTime.parse(context.watch<Home>().Freetalk[context.watch<Reply>().selected_index]['createdAt'].toDate().toString()).month}월 ${DateTime.parse(context.watch<Home>().Freetalk[context.watch<Reply>().selected_index]['createdAt'].toDate().toString()).day}일",
+                                style: TextStyle(fontSize: 10),
+                                textAlign: TextAlign.left,
+                              ),
+                            ),
+                          ]),
                           Container(
                             padding: EdgeInsets.only(left: 10),
-                            child: Text('${reply['nickname']} ',
-                                style: TextStyle(fontWeight: FontWeight.bold)),
+                            child: Text('${reply['content']}'),
                           ),
+                        ]),
+                      ),
+                    ),
+
+                // Start : Recipe 댓글 2개 미리보기 => 2개 이하인 경우에는 전부 / 2개 이상인 경우에는 2개만
+                if (context.watch<Home>().top_index == 3 &&
+                    context
+                                .watch<Home>()
+                                .Recipe[context.watch<Reply>().selected_index]
+                            ['reply'] !=
+                        null &&
+                    context
+                            .watch<Home>()
+                            .Recipe[context.watch<Reply>().selected_index]
+                                ['reply']
+                            .length !=
+                        0)
+                  for (var reply in context
+                      .watch<Home>()
+                      .Recipe[context.watch<Reply>().selected_index]['reply']
+                      .reversed
+                      .toList())
+                    Container(
+                      height: 100,
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Row(children: [
+                          Container(
+                            width: 10,
+                          ),
+                          // 프로필 이미지가 없는 경우
+                          if (reply['profileimage'] == "")
+                            CircleAvatar(
+                                radius: 20,
+                                backgroundColor: Colors.white,
+                                foregroundColor: Colors.purple,
+                                child: Icon(Icons.people)),
+                          // 프로필 이미지가 있는 경우
+                          if (reply['profileimage'] != "")
+                            CircleAvatar(
+                              radius: 20,
+                              backgroundColor: Colors.white,
+                              backgroundImage:
+                                  NetworkImage(reply['profileimage']),
+                            ),
+                          Column(children: [
+                            SizedBox(height: 40),
+                            Container(
+                              padding: EdgeInsets.only(left: 10),
+                              child: Text('${reply['nickname']} ',
+                                  style:
+                                      TextStyle(fontWeight: FontWeight.bold)),
+                            ),
+                            Container(
+                              padding: EdgeInsets.only(left: 10),
+                              child: Text(
+                                "${DateTime.parse(context.watch<Home>().Recipe[context.watch<Reply>().selected_index]['createdAt'].toDate().toString()).month}월 ${DateTime.parse(context.watch<Home>().Recipe[context.watch<Reply>().selected_index]['createdAt'].toDate().toString()).day}일",
+                                style: TextStyle(fontSize: 10),
+                                textAlign: TextAlign.left,
+                              ),
+                            ),
+                          ]),
                           Container(
                             padding: EdgeInsets.only(left: 10),
                             child: Text('${reply['content']}'),
