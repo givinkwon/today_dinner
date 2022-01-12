@@ -18,6 +18,8 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:today_dinner/screens/Reply/index.dart';
 import 'package:today_dinner/screens/Mypage/index.dart';
 import 'package:today_dinner/screens/Mypage/Mywrite.dart';
+import 'package:today_dinner/screens/Home/Login.dart';
+import 'package:today_dinner/screens/Login/index.dart';
 
 // provider => watch는 값이 변화할 때 리렌더링, read는 값이 변화해도 렌더링 x
 // => watch는 값을 보여주는 UI에 read는 변경이 필요없는 함수에 주로 사용
@@ -65,7 +67,19 @@ class _AccountPageState extends State<AccountPage> {
     print(context.read<Home>().User);
 
     return Scaffold(
-      appBar: AppBar(backgroundColor: Colors.transparent, title: Text("계정 설정")),
+      appBar: AppBar(
+        iconTheme: IconThemeData(
+          color: Color.fromRGBO(40, 40, 40, 1), //색변경
+        ),
+        backgroundColor: Colors.white,
+        title: Text(
+          "계정 설정",
+          style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Color.fromRGBO(40, 40, 40, 1)),
+        ),
+        centerTitle: true,
+      ),
       body: SingleChildScrollView(
         child: Container(
           height: 800,
@@ -245,12 +259,13 @@ class _AccountPageState extends State<AccountPage> {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
+          selectedItemColor: Color.fromRGBO(201, 92, 57, 1),
           type: BottomNavigationBarType.fixed,
           onTap: (index) => {
                 // 홈
                 if (index == 0)
                   {
-                    Navigator.push(
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(builder: (context) => HomePage()),
                     ),
@@ -266,8 +281,34 @@ class _AccountPageState extends State<AccountPage> {
                     ),
                   },
 
+                // 미가입 시
+                if (auth.currentUser == null && index == 1)
+                  {
+                    showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: new Text("로그인"),
+                            content: new Text("로그인이 필요합니다."),
+                            actions: <Widget>[
+                              new FlatButton(
+                                onPressed: () {
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => LoginIndexPage()),
+                                  );
+                                },
+                                child: new Text("로그인 페이지로 이동"),
+                              ),
+                            ],
+                          );
+                        }),
+                  },
+
                 // 스크랩
-                if (index == 2)
+                if (auth.currentUser != null && index == 2)
                   {
                     Navigator.push(
                       context,
@@ -275,8 +316,33 @@ class _AccountPageState extends State<AccountPage> {
                     ),
                   },
 
+                //미가입 시
+                if (auth.currentUser == null && index == 2)
+                  {
+                    showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: new Text("로그인"),
+                            content: new Text("로그인이 필요합니다."),
+                            actions: <Widget>[
+                              new FlatButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => LoginIndexPage()),
+                                  );
+                                },
+                                child: new Text("로그인 페이지로 이동"),
+                              ),
+                            ],
+                          );
+                        }),
+                  },
                 // 마이페이지
-                if (auth.currentUser != null && index == 3)
+                if (index == 3)
                   {
                     Navigator.push(
                       context,
@@ -290,11 +356,10 @@ class _AccountPageState extends State<AccountPage> {
               icon: Icon(Icons.home),
               title: Text('홈'),
             ),
-            if (auth.currentUser != null)
-              new BottomNavigationBarItem(
-                icon: Icon(Icons.add),
-                title: Text('글쓰기'),
-              ),
+            new BottomNavigationBarItem(
+              icon: Icon(Icons.add),
+              title: Text('글쓰기'),
+            ),
             new BottomNavigationBarItem(
               icon: Icon(Icons.bookmark),
               title: Text('스크랩'),

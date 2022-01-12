@@ -1,8 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.today_dinner">
+    package="com.todaydinner.www">
    <application
-        android:label="today_dinner"
+        android:label="맛간요리"
         android:icon="@mipmap/ic_launcher">
+        <!-- facebook sdk-->
+        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
+    
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
@@ -18,6 +21,12 @@
               android:name="io.flutter.embedding.android.NormalTheme"
               android:resource="@style/NormalTheme"
               />
+            <!-- flutter firebase-message 플러그인이 안드로이드 환경에서 data에 해당하는 페이로드를 "FLUTTER_NOTIFICATION_CLICK"로 받음-->
+            <intent-filter>
+                <action android:name="FLUTTER_NOTIFICATION_CLICK" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>

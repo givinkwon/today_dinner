@@ -57,6 +57,13 @@ class Signup with ChangeNotifier {
     Phone = value;
   }
 
+  bool Marketing = true;
+
+  void setMarketing(value) {
+    Marketing = value;
+    notifyListeners();
+  }
+
   int Error = 0; // Error state => 1일 때 Error 발생
   String AlertTitle = ""; // Alert 제목
   String AlertContent = ""; // Alert 내용
@@ -111,6 +118,7 @@ class Signup with ChangeNotifier {
                     'phone': Phone,
                     'name': Name,
                     'profileimage': '',
+                    'marketing': Marketing,
                   }).then((_) => {
                         showDialog(
                             context: context,
@@ -220,5 +228,26 @@ class Signup with ChangeNotifier {
     }
 
     await EmailCheck(context, 1);
+  }
+
+  // 휴대폰 인증
+  bool phone_authentication_request = false; // 휴대폰 인증 요청
+
+  // 인증번호 발송하기
+  Future<dynamic> PhoneRequest(context) async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    // 안드로이드는 자동 인증
+    await auth.verifyPhoneNumber(
+      phoneNumber: '+82' + Phone,
+      verificationCompleted: (PhoneAuthCredential credential) async {
+        print(1);
+        await auth.signInWithCredential(credential);
+      },
+      codeAutoRetrievalTimeout: (String verificationId) {},
+      codeSent: (String verificationId, int? forceResendingToken) {},
+      verificationFailed: (FirebaseAuthException error) {},
+    );
+
+    notifyListeners();
   }
 }

@@ -4,6 +4,7 @@ import 'package:today_dinner/screens/Recipe/index.dart';
 import 'package:today_dinner/screens/Scrap/index.dart';
 import 'package:today_dinner/screens/Write/index.dart';
 import 'package:today_dinner/screens/Mypage/index.dart';
+import 'package:today_dinner/screens/Home/login.dart';
 // provider => watch는 값이 변화할 때 리렌더링, read는 값이 변화해도 렌더링 x
 // => watch는 값을 보여주는 UI에 read는 변경이 필요없는 함수에 주로 사용
 import 'package:today_dinner/providers/home.dart';
@@ -42,8 +43,19 @@ class ShoppingPage extends StatelessWidget {
     ];
 
     return Scaffold(
-      appBar:
-          AppBar(backgroundColor: Colors.transparent, title: Text("아이엠 유찡이에엥")),
+      appBar: AppBar(
+        iconTheme: IconThemeData(
+          color: Color.fromRGBO(40, 40, 40, 1), //색변경
+        ),
+        backgroundColor: Colors.white,
+        title: Text(
+          "스크랩",
+          style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Color.fromRGBO(40, 40, 40, 1)),
+        ),
+        centerTitle: true,
+      ),
       body: SingleChildScrollView(
         child: Container(
           margin: const EdgeInsets.only(top: 10.0),
@@ -126,12 +138,13 @@ class ShoppingPage extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
+          selectedItemColor: Color.fromRGBO(201, 92, 57, 1),
           type: BottomNavigationBarType.fixed,
           onTap: (index) => {
                 // 홈
                 if (index == 0)
                   {
-                    Navigator.push(
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(builder: (context) => HomePage()),
                     ),
@@ -141,25 +154,76 @@ class ShoppingPage extends StatelessWidget {
                 if (auth.currentUser != null && index == 1)
                   {
                     context.read<Write>().init(), // 글 쓸 때 이미지 초기화
-                    Navigator.push(
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(builder: (context) => WritePage()),
                     ),
                   },
 
-                // 스크랩
-                if (index == 2)
+                // 미가입 시
+                if (auth.currentUser == null && index == 1)
                   {
-                    Navigator.push(
+                    showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: new Text("로그인"),
+                            content: new Text("로그인이 필요합니다."),
+                            actions: <Widget>[
+                              new FlatButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => LoginPage()),
+                                  );
+                                },
+                                child: new Text("로그인 페이지로 이동"),
+                              ),
+                            ],
+                          );
+                        }),
+                  },
+
+                // 스크랩
+                if (auth.currentUser != null && index == 2)
+                  {
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(builder: (context) => ScrapPage()),
                     ),
                   },
 
-                // 마이페이지
-                if (auth.currentUser != null && index == 3)
+                // 미가입 시
+                if (auth.currentUser == null && index == 2)
                   {
-                    Navigator.push(
+                    showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: new Text("로그인"),
+                            content: new Text("로그인이 필요합니다."),
+                            actions: <Widget>[
+                              new FlatButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => LoginPage()),
+                                  );
+                                },
+                                child: new Text("로그인 페이지로 이동"),
+                              ),
+                            ],
+                          );
+                        }),
+                  },
+                // 마이페이지
+                if (index == 3)
+                  {
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(builder: (context) => MyPage()),
                     ),
@@ -171,11 +235,10 @@ class ShoppingPage extends StatelessWidget {
               icon: Icon(Icons.home),
               title: Text('홈'),
             ),
-            if (auth.currentUser != null)
-              new BottomNavigationBarItem(
-                icon: Icon(Icons.add),
-                title: Text('글쓰기'),
-              ),
+            new BottomNavigationBarItem(
+              icon: Icon(Icons.add),
+              title: Text('글쓰기'),
+            ),
             new BottomNavigationBarItem(
               icon: Icon(Icons.bookmark),
               title: Text('스크랩'),

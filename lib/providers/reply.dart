@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 // screens
 import 'package:today_dinner/screens/Home/index.dart';
+import 'package:today_dinner/screens/Recipe/index.dart';
 // provider
 import 'package:today_dinner/providers/home.dart';
 
@@ -83,7 +84,7 @@ class Reply with ChangeNotifier {
                         actions: <Widget>[
                           new FlatButton(
                             onPressed: () {
-                              Navigator.push(
+                              Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => HomePage()),
@@ -120,7 +121,7 @@ class Reply with ChangeNotifier {
                         actions: <Widget>[
                           new FlatButton(
                             onPressed: () {
-                              Navigator.push(
+                              Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => HomePage()),
@@ -157,10 +158,10 @@ class Reply with ChangeNotifier {
                         actions: <Widget>[
                           new FlatButton(
                             onPressed: () {
-                              Navigator.push(
+                              Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => HomePage()),
+                                    builder: (context) => RecipePage()),
                               );
                             },
                             child: new Text("닫기"),

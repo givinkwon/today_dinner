@@ -9,6 +9,7 @@ import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/foundation.dart';
 
 import 'package:today_dinner/screens/Home/index.dart';
+import 'package:today_dinner/screens/Mypage/Mywrite.dart';
 
 // firebase auth
 import 'package:firebase_auth/firebase_auth.dart';
@@ -27,6 +28,7 @@ import 'package:today_dinner/providers/home.dart';
 FirebaseFirestore firestore = FirebaseFirestore.instance;
 firebase_storage.FirebaseStorage storage =
     firebase_storage.FirebaseStorage.instance;
+FirebaseAuth auth = FirebaseAuth.instance;
 
 class Write with ChangeNotifier {
   List<String> ImageUrl = []; // 업로드된 이미지의 url
@@ -98,7 +100,7 @@ class Write with ChangeNotifier {
     if (top_index == 1) {
       //데이터베이스 저장
       firestore.collection("Feed").doc("$rand").set({
-        'id': rand,
+        'id': "${rand}",
         'createdAt': FieldValue.serverTimestamp(),
         'content': Content,
         'user': auth.currentUser?.email,
@@ -134,7 +136,7 @@ class Write with ChangeNotifier {
     if (top_index == 2) {
       //데이터베이스 저장
       firestore.collection("Freetalk").doc("$rand").set({
-        'id': rand,
+        'id': "${rand}",
         'createdAt': FieldValue.serverTimestamp(),
         'content': Content,
         'user': auth.currentUser?.email,
@@ -178,7 +180,7 @@ class Write with ChangeNotifier {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => HomePage()),
+                    MaterialPageRoute(builder: (context) => MywritePage()),
                   );
                 },
                 child: new Text("메인페이지로 이동"),
@@ -189,7 +191,7 @@ class Write with ChangeNotifier {
   }
 
   // 갤러리에서 이미지 가져오기
-  Future<dynamic> getGalleryImage(index) async {
+  Future<dynamic> getGalleryImage() async {
     // init
     String downloadURL = "";
 

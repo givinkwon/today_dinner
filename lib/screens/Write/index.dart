@@ -13,6 +13,8 @@ import 'package:today_dinner/screens/Write/index.dart';
 import 'package:today_dinner/screens/Home/index.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:today_dinner/screens/Mypage/index.dart';
+import 'package:today_dinner/screens/Home/login.dart';
+import 'package:today_dinner/screens/Login/index.dart';
 // provider => watch는 값이 변화할 때 리렌더링, read는 값이 변화해도 렌더링 x
 // => watch는 값을 보여주는 UI에 read는 변경이 필요없는 함수에 주로 사용
 import 'package:today_dinner/providers/home.dart';
@@ -68,43 +70,36 @@ class SelectedFilter extends StatefulWidget {
 class _SelectedFilterState extends State<SelectedFilter> {
   @override
   Widget build(BuildContext context) {
-    if (context.watch<Write>().Selected_list.length > 0) {
-      return Container(
-        height: 70.0,
-        child: GridView.builder(
-          padding: EdgeInsets.all(5.0),
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 1,
-            crossAxisSpacing: 3.0,
-            mainAxisSpacing: 20.0,
-            childAspectRatio: 0.38,
-          ),
-          itemCount: context.watch<Write>().Selected_list.length,
-          scrollDirection: Axis.horizontal,
-          itemBuilder: (context, int index) {
-            return Row(children: <Widget>[
-              Text(
-                context.watch<Write>().Selected_list[index],
-                style: TextStyle(fontSize: 14, color: Colors.purple),
-              ),
-              IconButton(
-                icon: Icon(Icons.close),
-                onPressed: () {
-                  context
-                      .read<Write>()
-                      .remove_list(context.read<Write>().Selected_list[index]);
-                },
-              ),
-            ]);
-          },
-        ),
-      );
-    } else {
-      return Container(
-        width: 0,
-        height: 0,
-      );
-    }
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Container(
+        height: 30,
+        margin: EdgeInsets.only(bottom: 20),
+        child: Row(children: [
+          for (var text in context.watch<Write>().Selected_list)
+            Container(
+              decoration: BoxDecoration(
+                  color: Colors.grey.shade200,
+                  borderRadius: BorderRadius.circular(40.0)),
+              padding: EdgeInsets.only(left: 15),
+              margin: EdgeInsets.only(right: 15),
+              child: Row(children: [
+                Text(
+                  text,
+                  style: TextStyle(
+                      fontSize: 14, color: Color.fromRGBO(201, 92, 57, 1)),
+                ),
+                IconButton(
+                  icon: Icon(Icons.close, size: 12),
+                  onPressed: () {
+                    context.read<Write>().remove_list(text);
+                  },
+                ),
+              ]),
+            ),
+        ]),
+      ),
+    );
   }
 }
 
@@ -124,11 +119,24 @@ class _FilterState extends State<Filter> {
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               ListTile(
-                title: new Text('식사'),
+                title: new Text('조리법'),
                 onTap: () async {
-                  _showbottomMeal(context);
+                  _showbottomCook(context);
                 },
               ),
+              ListTile(
+                title: new Text('영유아식'),
+                onTap: () async {
+                  _showbottomBaby(context);
+                },
+              ),
+              if (context.watch<Home>().top_index != 3)
+                ListTile(
+                  title: new Text('식사'),
+                  onTap: () async {
+                    _showbottomMeal(context);
+                  },
+                ),
               ListTile(
                 title: new Text('종류'),
                 onTap: () {
@@ -146,9 +154,58 @@ class _FilterState extends State<Filter> {
         });
   }
 
+  // bottomSheet 함수 => 2차 메뉴 : 조리법
+  void _showbottomCook(BuildContext context) {
+    showModalBottomSheet(
+        isScrollControlled: true,
+        context: context,
+        builder: (context) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              for (var data in context.watch<Home>().Cook)
+                ListTile(
+                  title: new Text(data['value']),
+                  onTap: () {
+                    context.read<Write>().add_list(data['value']);
+                    // 2단계 종료
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                  },
+                ),
+            ],
+          );
+        });
+  }
+
+  // bottomSheet 함수 => 2차 메뉴 : 영유아식
+  void _showbottomBaby(BuildContext context) {
+    showModalBottomSheet(
+        isScrollControlled: true,
+        context: context,
+        builder: (context) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              for (var data in context.watch<Home>().Baby)
+                ListTile(
+                  title: new Text(data['value']),
+                  onTap: () {
+                    context.read<Write>().add_list(data['value']);
+                    // 2단계 종료
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                  },
+                ),
+            ],
+          );
+        });
+  }
+
   // bottomSheet 함수 => 2차 메뉴 : 식사
   void _showbottomMeal(BuildContext context) {
     showModalBottomSheet(
+        isScrollControlled: true,
         context: context,
         builder: (context) {
           return Column(
@@ -172,9 +229,11 @@ class _FilterState extends State<Filter> {
   // bottomSheet 함수 => 2차 메뉴 : 종류
   void _showbottomCategory(BuildContext context) {
     showModalBottomSheet(
+        isScrollControlled: true,
         context: context,
         builder: (context) {
-          return ListView(
+          return Column(
+            mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               Column(
                 mainAxisSize: MainAxisSize.min,
@@ -199,6 +258,7 @@ class _FilterState extends State<Filter> {
   // bottomSheet 함수 => 2차 메뉴 : 식재료
   void _showbottomFood(BuildContext context) {
     showModalBottomSheet(
+        isScrollControlled: true,
         context: context,
         builder: (context) {
           return Column(
@@ -221,26 +281,25 @@ class _FilterState extends State<Filter> {
   // bottomSheet 함수 => 3차 메뉴 : 식재료
   void _showbottomFoodSecondary(int index) {
     showModalBottomSheet(
+        isScrollControlled: true,
         context: context,
         builder: (context) {
-          return ListView(children: <Widget>[
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                for (var key in context.watch<Home>().Ingredients[index].keys)
-                  ListTile(
-                    title: new Text(key),
-                    onTap: () {
-                      context.read<Write>().add_list(key);
-                      // 3단계 종료
-                      Navigator.pop(context);
-                      Navigator.pop(context);
-                      Navigator.pop(context);
-                    },
-                  ),
-              ],
-            ),
-          ]);
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              for (var key in context.watch<Home>().Ingredients[index].keys)
+                ListTile(
+                  title: new Text(key),
+                  onTap: () {
+                    context.read<Write>().add_list(key);
+                    // 3단계 종료
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                  },
+                ),
+            ],
+          );
         });
   }
 
@@ -258,7 +317,8 @@ class _FilterState extends State<Filter> {
               },
               child: Icon(
                 Icons.filter_alt,
-                color: Colors.purple,
+                size: 32,
+                color: Color.fromRGBO(201, 92, 57, 1),
               ),
             ),
           ),
@@ -295,8 +355,8 @@ class _TopBarState extends State<TopBar> {
                     style: TextStyle(
                         fontSize: 18,
                         color: context.watch<Write>().top_index == 1
-                            ? Colors.purple
-                            : Colors.grey),
+                            ? Color.fromRGBO(201, 92, 57, 1)
+                            : Color.fromRGBO(40, 40, 40, 1)),
                   ),
                   Container(
                     decoration: BoxDecoration(
@@ -305,10 +365,10 @@ class _TopBarState extends State<TopBar> {
                           bottom: BorderSide(
                               width: context.watch<Write>().top_index == 1
                                   ? 3.0
-                                  : 2.0,
+                                  : 0.0,
                               color: context.watch<Write>().top_index == 1
-                                  ? Colors.purple
-                                  : Colors.grey)),
+                                  ? Color.fromRGBO(201, 92, 57, 1)
+                                  : Colors.white)),
                     ),
                   ),
                 ],
@@ -330,8 +390,8 @@ class _TopBarState extends State<TopBar> {
                         fontSize: 18,
                         color: context.watch<Write>().top_index ==
                                 2 // 수정 시 재빌드하기 위해서는 watch를 사용
-                            ? Colors.purple
-                            : Colors.grey),
+                            ? Color.fromRGBO(201, 92, 57, 1)
+                            : Color.fromRGBO(40, 40, 40, 1)),
                   ),
                   Container(
                     decoration: BoxDecoration(
@@ -340,10 +400,10 @@ class _TopBarState extends State<TopBar> {
                           bottom: BorderSide(
                               width: context.watch<Write>().top_index == 2
                                   ? 3.0
-                                  : 2.0,
+                                  : 0.0,
                               color: context.watch<Write>().top_index == 2
-                                  ? Colors.purple
-                                  : Colors.grey)),
+                                  ? Color.fromRGBO(201, 92, 57, 1)
+                                  : Colors.white)),
                     ),
                   ),
                 ],
@@ -374,15 +434,9 @@ class WritePage extends StatefulWidget {
 }
 
 class _WritePageState extends State<WritePage> {
-  // @override
-  // void dispose() {
-  //   Provider.of<Write>(context, listen: false).dispose();
-  //   Provider.of<Home>(context, listen: false).dispose();
-  //   super.dispose();
-  // }
-
   @override
   void initState() {
+    super.initState();
     // 로그인 상태인지 확인
     print(auth.currentUser);
     if (auth.currentUser != null) {
@@ -390,16 +444,6 @@ class _WritePageState extends State<WritePage> {
     }
 
     // listener를 추가하여 비동기 변경이 발생했을 때 수정할 수 있도록 changeNotifier를 듣고 있음
-    if (mounted) {
-      Provider.of<Home>(context, listen: false).addListener(() => setState(() {
-            print("리렌더링");
-          }));
-
-      // listener를 추가하여 비동기 변경이 발생했을 때 수정할 수 있도록 changeNotifier를 듣고 있음
-      Provider.of<Write>(context, listen: false).addListener(() => setState(() {
-            print("리렌더링");
-          }));
-    }
   }
 
   // bookmark icon 클릭했을 때
@@ -451,181 +495,164 @@ class _WritePageState extends State<WritePage> {
     ];
 
     return Scaffold(
-      appBar: EmptyAppBar(),
+      appBar: AppBar(
+        iconTheme: IconThemeData(
+          color: Color.fromRGBO(40, 40, 40, 1), //색변경
+        ),
+        backgroundColor: Colors.white,
+        title: Text(
+          "글쓰기",
+          style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Color.fromRGBO(40, 40, 40, 1)),
+        ),
+        centerTitle: true,
+      ),
       body: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            Row(
-              children: <Widget>[
-                Expanded(
-                  child: Column(
-                    children: <Widget>[
-                      Container(
-                        margin: EdgeInsets.only(top: 10),
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 4, horizontal: 20),
-                        decoration: BoxDecoration(
-                          color: Colors.black38.withAlpha(10),
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(20),
-                          ),
-                        ),
-                        child: Row(
-                          children: <Widget>[
-                            Expanded(
-                              child: TextField(
-                                decoration: InputDecoration(
-                                  hintText: "레시피를 검색해보세요.",
-                                  hintStyle: TextStyle(
-                                    color: Colors.black.withAlpha(120),
-                                  ),
-                                  border: InputBorder.none,
-                                ),
-                                onChanged: (String keyword) {},
-                              ),
-                            ),
-                            Icon(
-                              Icons.search,
-                              color: Colors.black.withAlpha(120),
-                            )
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            // 메인 상단 메뉴
-            TopBar(),
-            // 본문 내용
-            if (context.watch<Write>().ImageUrl.length > 0)
-              Container(
-                height: 350,
-                child: GridView.builder(
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 1,
-                    crossAxisSpacing: 0,
-                    mainAxisSpacing: 0,
-                  ),
-                  itemCount: context.watch<Write>().ImageUrl.length,
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, int index) {
-                    for (var url in context.watch<Write>().ImageUrl)
-                      return Container(
-                        padding: EdgeInsets.all(5.0),
-                        child: Image.network(
-                          url,
-                          width: 350,
-                          height: 350,
-                        ),
-                      );
-                    return Container();
-                  },
-                ),
-              ),
-            if (context.watch<Write>().ImageUrl.length > 0 ||
-                context.read<Write>().top_index == 2)
-              Container(
-                child: Text("이미지 추가하기"),
-              ),
-            Container(
-              height: context.watch<Write>().ImageUrl.length > 0 ||
-                      context.read<Write>().top_index == 2
-                  ? 100
-                  : 350,
-              child: GridView.builder(
-                padding: EdgeInsets.all(5.0),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 1,
-                  crossAxisSpacing: 5.0,
-                  mainAxisSpacing: 12.0,
-                ),
-                itemCount: context.watch<Write>().ImageUrl.length > 0 ? 16 : 4,
+        child: Padding(
+          padding: EdgeInsets.only(left: 15, right: 15),
+          child: Column(
+            children: <Widget>[
+              // 메인 상단 메뉴
+              TopBar(),
+              // 본문 내용
+              SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
-                itemBuilder: (context, int index) {
-                  return GestureDetector(
+                child: Row(children: [
+                  for (var image in context.watch<Write>().ImageUrl)
+                    Container(
+                      width: MediaQuery.of(context).size.width * 0.9,
+                      padding: EdgeInsets.only(
+                        right: 20,
+                      ),
+                      height: 300,
+                      child: FadeInImage(
+                        image: NetworkImage(
+                          image,
+                        ),
+                        placeholder: AssetImage('assets/loading.gif'),
+                        imageErrorBuilder: (context, exception, stackTrace) {
+                          print(exception);
+                          return Image.asset('assets/loading.gif');
+                        },
+                        fit: BoxFit.fitWidth,
+                      ),
+                    ),
+                  GestureDetector(
                     onTap: () {
-                      context.read<Write>().getGalleryImage(index).then((_) {
+                      context.read<Write>().getGalleryImage().then((_) {
                         setState(() {});
                       });
                     },
                     child: Container(
+                      width: MediaQuery.of(context).size.width * 0.9,
+                      height: 300,
                       color: Colors.grey[300],
                       padding: EdgeInsets.all(10.0),
                       child: Center(
-                        child: Icon(Icons.add),
+                        child: Icon(Icons.add, size: 50, color: Colors.grey),
                       ),
                     ),
-                  );
-                },
+                  ),
+                ]),
               ),
-            ),
-            // 필터 선택 tagbox
-            Container(
-              child: TextField(
-                maxLines: 4,
-                decoration: InputDecoration(
-                  labelText: context.read<Write>().top_index == 1
-                      ? '사진에 대해 설명해주세요.'
-                      : '내용을 작성해주세요.',
+
+              // 필터 선택 tagbox
+              Container(
+                margin: EdgeInsets.only(bottom: 20),
+                child: TextField(
+                  maxLines: 3,
+                  decoration: InputDecoration(
+                    hintText: context.read<Write>().top_index == 1
+                        ? '사진에 대해 설명해주세요.'
+                        : '내용을 작성해주세요.',
+                  ),
+                  onChanged: (text) {
+                    // watch가 아니라 read를 호출해야함 => read == listen : false => 이벤트 함수는 업데이트 변경 사항을 수신하지 않고 변경 작업을 수행해야함.
+                    context.read<Write>().setContent(text);
+                  },
                 ),
-                onChanged: (text) {
-                  // watch가 아니라 read를 호출해야함 => read == listen : false => 이벤트 함수는 업데이트 변경 사항을 수신하지 않고 변경 작업을 수행해야함.
-                  context.read<Write>().setContent(text);
-                },
               ),
-            ),
-            Filter(),
 
-            Container(
-              child: Text(
-                '필터를 선택해주세요.',
-              ),
-            ),
-
-            // 필터 선택 tagbox
-            SelectedFilter(),
-            Container(
-              width: 300,
-              child: TextButton(
-                onPressed: _writeButtonPressed,
-                style: TextButton.styleFrom(
-                    primary: Colors.purple,
-                    backgroundColor: Colors.purple,
-                    side: BorderSide(color: Colors.purple, width: 2)),
+              Filter(),
+              Container(
                 child: Text(
-                  "글쓰기",
-                  style: TextStyle(fontSize: 17, color: Colors.white),
+                  '필터를 선택해주세요.',
                 ),
               ),
-            ),
-          ],
+              SizedBox(height: 20),
+              // 필터 선택 tagbox
+              SelectedFilter(),
+              Container(
+                width: 300,
+                child: TextButton(
+                  onPressed: _writeButtonPressed,
+                  style: TextButton.styleFrom(
+                      primary: Color.fromRGBO(201, 92, 57, 1),
+                      backgroundColor: Color.fromRGBO(201, 92, 57, 1),
+                      side: BorderSide(
+                          color: Color.fromRGBO(201, 92, 57, 1), width: 2)),
+                  child: Text(
+                    "글쓰기",
+                    style: TextStyle(fontSize: 17, color: Colors.white),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
+          selectedItemColor: Color.fromRGBO(201, 92, 57, 1),
           type: BottomNavigationBarType.fixed,
           onTap: (index) => {
                 // 홈
                 if (index == 0)
                   {
-                    Navigator.push(
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(builder: (context) => HomePage()),
                     ),
                   },
 
-                // 스크랩
-                if (index == 1)
+                // 글쓰기
+                if (auth.currentUser != null && index == 1)
                   {
+                    context.read<Write>().init(), // 글 쓸 때 이미지 초기화
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => WritePage()),
                     ),
                   },
 
+                // 미가입 시
+                if (auth.currentUser == null && index == 1)
+                  {
+                    showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: new Text("로그인"),
+                            content: new Text("로그인이 필요합니다."),
+                            actions: <Widget>[
+                              new FlatButton(
+                                onPressed: () {
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => LoginIndexPage()),
+                                  );
+                                },
+                                child: new Text("로그인 페이지로 이동"),
+                              ),
+                            ],
+                          );
+                        }),
+                  },
+
                 // 스크랩
-                if (index == 2)
+                if (auth.currentUser != null && index == 2)
                   {
                     Navigator.push(
                       context,
@@ -633,8 +660,33 @@ class _WritePageState extends State<WritePage> {
                     ),
                   },
 
+                //미가입 시
+                if (auth.currentUser == null && index == 2)
+                  {
+                    showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: new Text("로그인"),
+                            content: new Text("로그인이 필요합니다."),
+                            actions: <Widget>[
+                              new FlatButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => LoginIndexPage()),
+                                  );
+                                },
+                                child: new Text("로그인 페이지로 이동"),
+                              ),
+                            ],
+                          );
+                        }),
+                  },
                 // 마이페이지
-                if (auth.currentUser != null && index == 3)
+                if (index == 3)
                   {
                     Navigator.push(
                       context,
@@ -648,11 +700,10 @@ class _WritePageState extends State<WritePage> {
               icon: Icon(Icons.home),
               title: Text('홈'),
             ),
-            if (auth.currentUser != null)
-              new BottomNavigationBarItem(
-                icon: Icon(Icons.add),
-                title: Text('글쓰기'),
-              ),
+            new BottomNavigationBarItem(
+              icon: Icon(Icons.add),
+              title: Text('글쓰기'),
+            ),
             new BottomNavigationBarItem(
               icon: Icon(Icons.bookmark),
               title: Text('스크랩'),

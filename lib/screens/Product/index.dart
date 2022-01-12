@@ -21,8 +21,19 @@ class ProductPage extends StatelessWidget {
     ];
 
     return Scaffold(
-      appBar:
-          AppBar(backgroundColor: Colors.transparent, title: Text("아이엠 유찡이에엥")),
+      appBar: AppBar(
+        iconTheme: IconThemeData(
+          color: Color.fromRGBO(40, 40, 40, 1), //색변경
+        ),
+        backgroundColor: Colors.white,
+        title: Text(
+          "스크랩",
+          style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Color.fromRGBO(40, 40, 40, 1)),
+        ),
+        centerTitle: true,
+      ),
       body: SingleChildScrollView(
         child: Container(
           child: Column(
@@ -69,7 +80,7 @@ class ProductPage extends StatelessWidget {
                     text:
                         "유찡이가 만든 된장찌게 예~이!\n유찡이가 만든 된장찌게 예~이!\n유찡이가 만든 된장찌게 예~이!\n유찡이가 만든 된장찌게 예~이!\n유찡이가 만든 된장찌게 예~이!\n",
                     style: TextStyle(
-                      color: Colors.black,
+                      color: Color.fromRGBO(40, 40, 40, 1),
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
                     ),
@@ -93,7 +104,7 @@ class ProductPage extends StatelessWidget {
                     text:
                         "유찡이가 만든 된장찌게 예~이!\n유찡이가 만든 된장찌게 예~이!\n유찡이가 만든 된장찌게 예~이!\n유찡이가 만든 된장찌게 예~이!\n유찡이가 만든 된장찌게 예~이!\n",
                     style: TextStyle(
-                      color: Colors.black,
+                      color: Color.fromRGBO(40, 40, 40, 1),
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
                     ),
@@ -111,7 +122,7 @@ class ProductPage extends StatelessWidget {
                   text: TextSpan(
                     text: "리뷰 564",
                     style: TextStyle(
-                      color: Colors.black,
+                      color: Color.fromRGBO(40, 40, 40, 1),
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),
@@ -135,7 +146,7 @@ class ProductPage extends StatelessWidget {
                             text: TextSpan(
                               text: "평균 평점",
                               style: TextStyle(
-                                color: Colors.black,
+                                color: Color.fromRGBO(40, 40, 40, 1),
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -148,7 +159,7 @@ class ProductPage extends StatelessWidget {
                     VerticalDivider(
                       thickness: 5,
                       width: 20,
-                      color: Colors.black,
+                      color: Color.fromRGBO(40, 40, 40, 1),
                     ),
 
                     // 점수별 리뷰 분포
@@ -159,7 +170,7 @@ class ProductPage extends StatelessWidget {
                         text: TextSpan(
                           text: "평균 평점",
                           style: TextStyle(
-                            color: Colors.black,
+                            color: Color.fromRGBO(40, 40, 40, 1),
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                           ),

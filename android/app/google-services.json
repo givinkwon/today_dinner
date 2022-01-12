@@ -8,9 +8,38 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:922495838488:android:b7c062a0c2500bb3d0166d",
+        "mobilesdk_app_id": "1:922495838488:android:de7b7d35dc05c54cd0166d",
         "android_client_info": {
           "package_name": "com.example.today_dinner"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "922495838488-m28kia8418ubecvvlbip5fc0eb7a87fs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC8X5OF5twBEY7iiLINWKZfpsnsHpQI3dA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "922495838488-m28kia8418ubecvvlbip5fc0eb7a87fs.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:922495838488:android:0a6895fd271fd26cd0166d",
+        "android_client_info": {
+          "package_name": "com.todaydinner.www"
         }
       },
       "oauth_client": [

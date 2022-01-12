@@ -17,6 +17,8 @@ import 'package:today_dinner/screens/Write/index.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:today_dinner/screens/Reply/index.dart';
 import 'package:today_dinner/screens/Mypage/index.dart';
+import 'package:today_dinner/screens/Home/login.dart';
+import 'package:today_dinner/screens/Login/index.dart';
 
 // provider => watch는 값이 변화할 때 리렌더링, read는 값이 변화해도 렌더링 x
 // => watch는 값을 보여주는 UI에 read는 변경이 필요없는 함수에 주로 사용
@@ -239,6 +241,7 @@ class _FeedState extends State<Feed> {
   //init
   bool like_check = false;
   bool bookmark_check = false;
+
   @override
   Widget build(BuildContext context) {
     // 데이터 로딩이 완료된 후에 렌더링
@@ -303,345 +306,373 @@ class _FeedState extends State<Feed> {
         }
       }
 
-      return Column(
-        children: <Widget>[
-          // 이미지
-          GestureDetector(
-            onTap: () async {
-              if (context.read<Mypage>().top_index == 3) {
-                // 데이터 전달하기
-                context
-                    .read<Recipe>()
-                    .select_data(context.read<Mypage>().Recipe[widget.index]);
-                // 페이지 이동
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => RecipePage()),
-                );
-              }
-            },
-            child: Container(
-              padding: EdgeInsets.only(left: 20),
-              height: 350,
-              child: GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 1,
-                  crossAxisSpacing: 0,
-                  mainAxisSpacing: 0,
-                ),
-                itemCount: context.watch<Mypage>().top_index == 1
-                    ? context.watch<Mypage>().Feed[widget.index]['image'].length
-                    : (context.watch<Mypage>().top_index == 2
-                        ? context
-                            .watch<Mypage>()
-                            .Freetalk[widget.index]['image']
-                            .length
-                        : context
-                            .watch<Mypage>()
-                            .Recipe[widget.index]['image']
-                            .length),
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (context, int index) {
-                  return Container(
-                    child: Image.network(context.watch<Mypage>().top_index == 1
-                        ? (context.watch<Mypage>().Feed[widget.index]['image']
-                            [index]['value'])
-                        : (context.watch<Mypage>().top_index == 2
-                            ? context.watch<Mypage>().Freetalk[widget.index]
-                                ['image'][index]['value']
-                            : context.watch<Mypage>().Recipe[widget.index]
-                                ['image'][index]['value'])),
-                  );
-                  return Container();
-                },
-              ),
-            ),
-          ),
-          // 제목
-          if (context.watch<Mypage>().top_index == 3)
-            Text(
-              context.watch<Mypage>().Recipe[widget.index]['title'],
-              style: TextStyle(fontSize: 18, color: Colors.black),
-            ),
-          // 레시피 작성자
-          if (context.watch<Mypage>().top_index == 3)
-            Text(
-              context.watch<Mypage>().Recipe[widget.index]['user'],
-              style: TextStyle(fontSize: 18, color: Colors.black),
+      final _valueList = ['첫 번째', '두 번째', '세 번째'];
+      var _selectedValue = '첫 번째';
+
+      return Container(
+        width: MediaQuery.of(context).size.width,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Container(
+              height: 20,
             ),
 
-          // 피드 아이콘 => 좋아요 / 댓글 / 북마크
-          if (context.watch<Mypage>().top_index != 3)
-            Row(
-              children: <Widget>[
-                IconButton(
-                  icon: like_check == true
-                      ? Icon(Icons.favorite)
-                      : Icon(Icons.favorite_border),
-                  onPressed: () {
-                    Like_Click(like_check, widget.index);
-                  },
+            GestureDetector(
+              onTap: () async {},
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: Container(
+                  padding: EdgeInsets.only(right: 15),
+                  child: Icon(Icons.more_vert),
                 ),
-                IconButton(
-                  icon: Icon(Icons.question_answer_outlined),
-                  onPressed: () {
-                    // index 설정
-                    context.read<Reply>().select_index(widget.index);
-                    // 페이지 이동
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => ReplyPage()),
-                    );
-                  },
-                ),
-                IconButton(
-                  icon: bookmark_check == true
-                      ? Icon(Icons.bookmark_add)
-                      : Icon(Icons.bookmark_add_outlined),
-                  onPressed: () {
-                    Bookmark_Click(bookmark_check, widget.index);
-                  },
-                ),
-              ],
+              ),
             ),
-          // 좋아요 개수
-          if (context.watch<Mypage>().top_index != 3 &&
-              context.watch<Mypage>().Feed[widget.index]['like'] != null)
+            Container(
+              height: 10,
+            ),
+
+            // feed image
+            if (context.watch<Mypage>().top_index == 1)
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    for (var image in context.watch<Mypage>().Feed[widget.index]
+                        ['image'])
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        child: FadeInImage(
+                          image: NetworkImage(
+                            image['value'] ??
+                                "https://post-phinf.pstatic.net/MjAxODExMjJfMTAz/MDAxNTQyODUyMDM1MjI5.8RJHvvLrFX79Q9DJ9cqNpv47MOr8tSi3p76LRgYPRPcg.UwHYqsyiLKp_HCUQSrtpwbT4bJkwaIBqhE5DL5BJwQ0g.JPEG/China-Food-Reco-Travel-Hotels.com-2.jpg?type=w1200",
+                          ),
+                          placeholder: AssetImage('assets/loading.gif'),
+                          imageErrorBuilder: (context, exception, stackTrace) {
+                            print(exception);
+                            return Image.asset('assets/loading.gif');
+                          },
+                          fit: BoxFit.fitWidth,
+                        ),
+                      )
+                  ],
+                ),
+              ),
+
+            // freetalk image
+            if (context.watch<Mypage>().top_index == 2)
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    for (var image in context
+                        .watch<Mypage>()
+                        .Freetalk[widget.index]['image'])
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        child: FadeInImage(
+                          image: NetworkImage(
+                            image['value'],
+                          ),
+                          placeholder: AssetImage('assets/loading.gif'),
+                          imageErrorBuilder: (_, __, ___) {
+                            return Image.asset('assets/loading.gif');
+                          },
+                          fit: BoxFit.fitWidth,
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+
+            // 피드 아이콘 => 좋아요 / 댓글 / 북마크
+            if (context.watch<Mypage>().top_index != 3)
+              Row(
+                children: <Widget>[
+                  IconButton(
+                    icon: like_check == true
+                        ? Icon(Icons.favorite)
+                        : Icon(Icons.favorite_border),
+                    onPressed: () {
+                      Like_Click(like_check, widget.index);
+                    },
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.question_answer_outlined),
+                    onPressed: () {
+                      // index 설정
+                      context.read<Reply>().select_index(widget.index);
+                      // 페이지 이동
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => ReplyPage()),
+                      );
+                    },
+                  ),
+                  IconButton(
+                    icon: bookmark_check == true
+                        ? Icon(Icons.bookmark_add)
+                        : Icon(Icons.bookmark_add_outlined),
+                    onPressed: () {
+                      Bookmark_Click(bookmark_check, widget.index);
+                    },
+                  ),
+                ],
+              ),
+            // 좋아요 개수
+            if (context.watch<Mypage>().top_index != 3 &&
+                context.watch<Mypage>().Feed[widget.index]['like'] != null)
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Container(
+                  padding: EdgeInsets.only(left: 10),
+                  child: Text(
+                    context.watch<Mypage>().top_index == 1
+                        ? ("좋아요" +
+                            context
+                                .watch<Mypage>()
+                                .Feed[widget.index]['like']
+                                .length
+                                .toString() +
+                            "개")
+                        : (context.watch<Mypage>().top_index == 2
+                            ? ("좋아요" +
+                                context
+                                    .watch<Mypage>()
+                                    .Freetalk[widget.index]['like']
+                                    .length
+                                    .toString() +
+                                "개")
+                            : ("좋아요" +
+                                context
+                                    .watch<Mypage>()
+                                    .Recipe[widget.index]['like']
+                                    .length
+                                    .toString() +
+                                "개")),
+                    style: TextStyle(
+                        fontSize: 14, color: Color.fromRGBO(40, 40, 40, 1)),
+                    textAlign: TextAlign.left,
+                  ),
+                ),
+              ),
+            // 아이디
+            if (context.watch<Mypage>().top_index != 3)
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Container(
+                  padding: EdgeInsets.only(left: 10),
+                  child: Text(
+                    context.watch<Mypage>().top_index == 1
+                        ? (context.watch<Mypage>().Feed[widget.index]
+                            ['nickname'])
+                        : (context.watch<Mypage>().Freetalk[widget.index]
+                            ['nickname']),
+                    style: TextStyle(
+                        fontSize: 14, color: Color.fromRGBO(40, 40, 40, 1)),
+                  ),
+                ),
+              ),
+            // 본문 내용
             Align(
               alignment: Alignment.centerLeft,
               child: Container(
                 padding: EdgeInsets.only(left: 10),
                 child: Text(
                   context.watch<Mypage>().top_index == 1
-                      ? ("좋아요" +
-                          context
-                              .watch<Mypage>()
-                              .Feed[widget.index]['like']
-                              .length
-                              .toString() +
-                          "개")
+                      ? (context.watch<Mypage>().Feed[widget.index]['content'])
                       : (context.watch<Mypage>().top_index == 2
-                          ? ("좋아요" +
-                              context
-                                  .watch<Mypage>()
-                                  .Freetalk[widget.index]['like']
-                                  .length
-                                  .toString() +
-                              "개")
-                          : ("좋아요" +
-                              context
-                                  .watch<Mypage>()
-                                  .Recipe[widget.index]['like']
-                                  .length
-                                  .toString() +
-                              "개")),
-                  style: TextStyle(fontSize: 14, color: Colors.black),
+                          ? context.watch<Mypage>().Freetalk[widget.index]
+                              ['content']
+                          : context.watch<Mypage>().Recipe[widget.index]
+                              ['content']),
+                  style: TextStyle(
+                      fontSize: 14, color: Color.fromRGBO(40, 40, 40, 1)),
                   textAlign: TextAlign.left,
                 ),
               ),
             ),
-          // 아이디
-          if (context.watch<Mypage>().top_index != 3)
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Container(
-                padding: EdgeInsets.only(left: 10),
-                child: Text(
-                  context.watch<Mypage>().top_index == 1
-                      ? (context.watch<Mypage>().Feed[widget.index]['nickname'])
-                      : (context.watch<Mypage>().Freetalk[widget.index]
-                          ['nickname']),
-                  style: TextStyle(fontSize: 14, color: Colors.black),
+            // Feed 댓글 2개 이상일 때
+            if (context.watch<Mypage>().top_index == 1 &&
+                context.watch<Mypage>().Feed[widget.index]['reply'] != null &&
+                context.watch<Mypage>().Feed[widget.index]['reply'].length > 2)
+              GestureDetector(
+                onTap: () async {
+                  // index 설정
+                  context.read<Reply>().select_index(widget.index);
+                  // 페이지 이동
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ReplyPage()),
+                  );
+                },
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Container(
+                    padding: EdgeInsets.only(left: 10),
+                    child: Text(
+                        '댓글 ${context.watch<Mypage>().Feed[widget.index]['reply'].length}개 모두 보기'),
+                  ),
                 ),
               ),
-            ),
-          // 본문 내용
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Container(
-              padding: EdgeInsets.only(left: 10),
-              child: Text(
-                context.watch<Mypage>().top_index == 1
-                    ? (context.watch<Mypage>().Feed[widget.index]['content'])
-                    : (context.watch<Mypage>().top_index == 2
-                        ? context.watch<Mypage>().Freetalk[widget.index]
-                            ['content']
-                        : context.watch<Mypage>().Recipe[widget.index]
-                            ['content']),
-                style: TextStyle(fontSize: 14, color: Colors.black),
-                textAlign: TextAlign.left,
-              ),
-            ),
-          ),
-          // Feed 댓글 2개 이상일 때
-          if (context.watch<Mypage>().top_index == 1 &&
-              context.watch<Mypage>().Feed[widget.index]['reply'] != null &&
-              context.watch<Mypage>().Feed[widget.index]['reply'].length > 2)
-            GestureDetector(
-              onTap: () async {
-                // index 설정
-                context.read<Reply>().select_index(widget.index);
-                // 페이지 이동
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ReplyPage()),
-                );
-              },
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Container(
-                  padding: EdgeInsets.only(left: 10),
-                  child: Text(
-                      '댓글 ${context.watch<Mypage>().Feed[widget.index]['reply'].length}개 모두 보기'),
-                ),
-              ),
-            ),
 
-          // Start : Feed 댓글 2개 미리보기 => 2개 이하인 경우에는 전부 / 2개 이상인 경우에는 2개만
-          if (context.watch<Mypage>().top_index == 1 &&
-              context.watch<Mypage>().Feed[widget.index]['reply'] != null &&
-              context.watch<Mypage>().Feed[widget.index]['reply'].length != 0 &&
-              context.watch<Mypage>().Feed[widget.index]['reply'].length < 3)
-            for (var reply in context.watch<Mypage>().Feed[widget.index]
-                ['reply'])
+            // Start : Feed 댓글 2개 미리보기 => 2개 이하인 경우에는 전부 / 2개 이상인 경우에는 2개만
+            if (context.watch<Mypage>().top_index == 1 &&
+                context.watch<Mypage>().Feed[widget.index]['reply'] != null &&
+                context.watch<Mypage>().Feed[widget.index]['reply'].length !=
+                    0 &&
+                context.watch<Mypage>().Feed[widget.index]['reply'].length < 3)
+              for (var reply in context.watch<Mypage>().Feed[widget.index]
+                  ['reply'])
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Row(children: [
+                    Container(
+                      padding: EdgeInsets.only(left: 10),
+                      child: Text('${reply['nickname']} ',
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                    ),
+                    Container(
+                      padding: EdgeInsets.only(left: 10),
+                      child: Text('${reply['content']}'),
+                    ),
+                  ]),
+                ),
+            if (context.watch<Mypage>().top_index == 1 &&
+                context.watch<Mypage>().Feed[widget.index]['reply'] != null &&
+                context.watch<Mypage>().Feed[widget.index]['reply'].length !=
+                    0 &&
+                context.watch<Mypage>().Feed[widget.index]['reply'].length > 2)
               Align(
                 alignment: Alignment.centerLeft,
-                child: Row(children: [
-                  Container(
-                    padding: EdgeInsets.only(left: 10),
-                    child: Text('${reply['nickname']} ',
-                        style: TextStyle(fontWeight: FontWeight.bold)),
-                  ),
-                  Container(
-                    padding: EdgeInsets.only(left: 10),
-                    child: Text('${reply['content']}'),
-                  ),
+                child: Column(children: [
+                  Row(children: [
+                    Container(
+                      padding: EdgeInsets.only(left: 10),
+                      child: Text(
+                          '${context.watch<Mypage>().Feed[widget.index]['reply'][0]['nickname']} ',
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                    ),
+                    Container(
+                      padding: EdgeInsets.only(left: 10),
+                      child: Text(
+                          '${context.watch<Mypage>().Feed[widget.index]['reply'][0]['content']}'),
+                    ),
+                  ]),
+                  Row(children: [
+                    Container(
+                      padding: EdgeInsets.only(left: 10),
+                      child: Text(
+                          '${context.watch<Mypage>().Feed[widget.index]['reply'][1]['nickname']} ',
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                    ),
+                    Container(
+                      padding: EdgeInsets.only(left: 10),
+                      child: Text(
+                          '${context.watch<Mypage>().Feed[widget.index]['reply'][1]['content']}'),
+                    ),
+                  ]),
                 ]),
               ),
-          if (context.watch<Mypage>().top_index == 1 &&
-              context.watch<Mypage>().Feed[widget.index]['reply'] != null &&
-              context.watch<Mypage>().Feed[widget.index]['reply'].length != 0 &&
-              context.watch<Mypage>().Feed[widget.index]['reply'].length > 2)
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Column(children: [
-                Row(children: [
-                  Container(
-                    padding: EdgeInsets.only(left: 10),
-                    child: Text(
-                        '${context.watch<Mypage>().Feed[widget.index]['reply'][0]['nickname']} ',
-                        style: TextStyle(fontWeight: FontWeight.bold)),
-                  ),
-                  Container(
-                    padding: EdgeInsets.only(left: 10),
-                    child: Text(
-                        '${context.watch<Mypage>().Feed[widget.index]['reply'][0]['content']}'),
-                  ),
-                ]),
-                Row(children: [
-                  Container(
-                    padding: EdgeInsets.only(left: 10),
-                    child: Text(
-                        '${context.watch<Mypage>().Feed[widget.index]['reply'][1]['nickname']} ',
-                        style: TextStyle(fontWeight: FontWeight.bold)),
-                  ),
-                  Container(
-                    padding: EdgeInsets.only(left: 10),
-                    child: Text(
-                        '${context.watch<Mypage>().Feed[widget.index]['reply'][1]['content']}'),
-                  ),
-                ]),
-              ]),
-            ),
 
-          // End : Feed 댓글 2개 미리보기 => 2개 이하인 경우에는 전부 / 2개 이상인 경우에는 2개만
+            // End : Feed 댓글 2개 미리보기 => 2개 이하인 경우에는 전부 / 2개 이상인 경우에는 2개만
 
-          // Freetalk 댓글
-          if (context.watch<Mypage>().top_index == 2 &&
-              context.watch<Mypage>().Freetalk[widget.index]['reply'] != null &&
-              context.watch<Mypage>().Freetalk[widget.index]['reply'].length >
-                  2)
-            GestureDetector(
-              onTap: () async {
-                // 페이지 이동
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ReplyPage()),
-                );
-              },
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Container(
-                  padding: EdgeInsets.only(left: 10),
-                  child: Text(
-                      '댓글 ${context.watch<Mypage>().Freetalk[widget.index]['reply'].length}개 모두 보기'),
+            // Freetalk 댓글
+            if (context.watch<Mypage>().top_index == 2 &&
+                context.watch<Mypage>().Freetalk[widget.index]['reply'] !=
+                    null &&
+                context.watch<Mypage>().Freetalk[widget.index]['reply'].length >
+                    2)
+              GestureDetector(
+                onTap: () async {
+                  // 페이지 이동
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ReplyPage()),
+                  );
+                },
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Container(
+                    padding: EdgeInsets.only(left: 10),
+                    child: Text(
+                        '댓글 ${context.watch<Mypage>().Freetalk[widget.index]['reply'].length}개 모두 보기'),
+                  ),
                 ),
               ),
-            ),
 
-          // Start : Freetalk 댓글 2개 미리보기 => 2개 이하인 경우에는 전부 / 2개 이상인 경우에는 2개만
-          if (context.watch<Mypage>().top_index == 2 &&
-              context.watch<Mypage>().Freetalk[widget.index]['reply'] != null &&
-              context.watch<Mypage>().Freetalk[widget.index]['reply'].length !=
-                  0 &&
-              context.watch<Mypage>().Freetalk[widget.index]['reply'].length <
-                  3)
-            for (var reply in context.watch<Mypage>().Freetalk[widget.index]
-                ['reply'])
+            // Start : Freetalk 댓글 2개 미리보기 => 2개 이하인 경우에는 전부 / 2개 이상인 경우에는 2개만
+            if (context.watch<Mypage>().top_index == 2 &&
+                context.watch<Mypage>().Freetalk[widget.index]['reply'] !=
+                    null &&
+                context
+                        .watch<Mypage>()
+                        .Freetalk[widget.index]['reply']
+                        .length !=
+                    0 &&
+                context.watch<Mypage>().Freetalk[widget.index]['reply'].length <
+                    3)
+              for (var reply in context.watch<Mypage>().Freetalk[widget.index]
+                  ['reply'])
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Row(children: [
+                    Container(
+                      padding: EdgeInsets.only(left: 10),
+                      child: Text('${reply['nickname']} ',
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                    ),
+                    Container(
+                      padding: EdgeInsets.only(left: 10),
+                      child: Text('${reply['content']}'),
+                    ),
+                  ]),
+                ),
+            if (context.watch<Mypage>().top_index == 2 &&
+                context.watch<Mypage>().Freetalk[widget.index]['reply'] !=
+                    null &&
+                context
+                        .watch<Mypage>()
+                        .Freetalk[widget.index]['reply']
+                        .length !=
+                    0 &&
+                context.watch<Mypage>().Freetalk[widget.index]['reply'].length >
+                    2)
               Align(
                 alignment: Alignment.centerLeft,
-                child: Row(children: [
-                  Container(
-                    padding: EdgeInsets.only(left: 10),
-                    child: Text('${reply['nickname']} ',
-                        style: TextStyle(fontWeight: FontWeight.bold)),
-                  ),
-                  Container(
-                    padding: EdgeInsets.only(left: 10),
-                    child: Text('${reply['content']}'),
-                  ),
+                child: Column(children: [
+                  Row(children: [
+                    Container(
+                      padding: EdgeInsets.only(left: 10),
+                      child: Text(
+                          '${context.watch<Mypage>().Freetalk[widget.index]['reply'][0]['nickname']} ',
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                    ),
+                    Container(
+                      padding: EdgeInsets.only(left: 10),
+                      child: Text(
+                          '${context.watch<Mypage>().Freetalk[widget.index]['reply'][0]['content']}'),
+                    ),
+                  ]),
+                  Row(children: [
+                    Container(
+                      padding: EdgeInsets.only(left: 10),
+                      child: Text(
+                          '${context.watch<Mypage>().Freetalk[widget.index]['reply'][1]['nickname']} ',
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                    ),
+                    Container(
+                      padding: EdgeInsets.only(left: 10),
+                      child: Text(
+                          '${context.watch<Mypage>().Freetalk[widget.index]['reply'][1]['content']}'),
+                    ),
+                  ]),
                 ]),
               ),
-          if (context.watch<Mypage>().top_index == 2 &&
-              context.watch<Mypage>().Freetalk[widget.index]['reply'] != null &&
-              context.watch<Mypage>().Freetalk[widget.index]['reply'].length !=
-                  0 &&
-              context.watch<Mypage>().Freetalk[widget.index]['reply'].length >
-                  2)
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Column(children: [
-                Row(children: [
-                  Container(
-                    padding: EdgeInsets.only(left: 10),
-                    child: Text(
-                        '${context.watch<Mypage>().Freetalk[widget.index]['reply'][0]['nickname']} ',
-                        style: TextStyle(fontWeight: FontWeight.bold)),
-                  ),
-                  Container(
-                    padding: EdgeInsets.only(left: 10),
-                    child: Text(
-                        '${context.watch<Mypage>().Freetalk[widget.index]['reply'][0]['content']}'),
-                  ),
-                ]),
-                Row(children: [
-                  Container(
-                    padding: EdgeInsets.only(left: 10),
-                    child: Text(
-                        '${context.watch<Mypage>().Freetalk[widget.index]['reply'][1]['nickname']} ',
-                        style: TextStyle(fontWeight: FontWeight.bold)),
-                  ),
-                  Container(
-                    padding: EdgeInsets.only(left: 10),
-                    child: Text(
-                        '${context.watch<Mypage>().Freetalk[widget.index]['reply'][1]['content']}'),
-                  ),
-                ]),
-              ]),
-            ),
 
-          // End : Freetalk 댓글 2개 미리보기 => 2개 이하인 경우에는 전부 / 2개 이상인 경우에는 2개만
-        ],
+            // End : Freetalk 댓글 2개 미리보기 => 2개 이하인 경우에는 전부 / 2개 이상인 경우에는 2개만
+          ],
+        ),
       );
     } else {
       return Container(
@@ -679,8 +710,8 @@ class _TopBarState extends State<TopBar> {
                     style: TextStyle(
                         fontSize: 18,
                         color: context.watch<Mypage>().top_index == 1
-                            ? Colors.purple
-                            : Colors.grey),
+                            ? Color.fromRGBO(201, 92, 57, 1)
+                            : Color.fromRGBO(40, 40, 40, 1)),
                   ),
                   Container(
                     decoration: BoxDecoration(
@@ -689,10 +720,10 @@ class _TopBarState extends State<TopBar> {
                           bottom: BorderSide(
                               width: context.watch<Mypage>().top_index == 1
                                   ? 3.0
-                                  : 2.0,
+                                  : 0.0,
                               color: context.watch<Mypage>().top_index == 1
-                                  ? Colors.purple
-                                  : Colors.grey)),
+                                  ? Color.fromRGBO(201, 92, 57, 1)
+                                  : Colors.white)),
                     ),
                   ),
                 ],
@@ -714,8 +745,8 @@ class _TopBarState extends State<TopBar> {
                         fontSize: 18,
                         color: context.watch<Mypage>().top_index ==
                                 2 // 수정 시 재빌드하기 위해서는 watch를 사용
-                            ? Colors.purple
-                            : Colors.grey),
+                            ? Color.fromRGBO(201, 92, 57, 1)
+                            : Color.fromRGBO(40, 40, 40, 1)),
                   ),
                   Container(
                     decoration: BoxDecoration(
@@ -724,10 +755,10 @@ class _TopBarState extends State<TopBar> {
                           bottom: BorderSide(
                               width: context.watch<Mypage>().top_index == 2
                                   ? 3.0
-                                  : 2.0,
+                                  : 0.0,
                               color: context.watch<Mypage>().top_index == 2
-                                  ? Colors.purple
-                                  : Colors.grey)),
+                                  ? Color.fromRGBO(201, 92, 57, 1)
+                                  : Colors.white)),
                     ),
                   ),
                 ],
@@ -748,12 +779,8 @@ class MywritePage extends StatefulWidget {
 
 class _MywritePageState extends State<MywritePage> {
   @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
   void initState() {
+    super.initState();
     // 로그인 상태인지 확인
     // print(auth.currentUser);
     if (auth.currentUser != null) {
@@ -761,17 +788,24 @@ class _MywritePageState extends State<MywritePage> {
     }
 
     context.read<Mypage>().get_data(auth.currentUser?.email);
-    // listener를 추가하여 비동기 변경이 발생했을 때 수정할 수 있도록 changeNotifier를 듣고 있음
-    Provider.of<Mypage>(context, listen: false).addListener(() => setState(() {
-          print("리렌더링2");
-        }));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:
-          AppBar(backgroundColor: Colors.transparent, title: Text("내가 쓴 글")),
+      appBar: AppBar(
+        iconTheme: IconThemeData(
+          color: Color.fromRGBO(40, 40, 40, 1), //색변경
+        ),
+        backgroundColor: Colors.white,
+        title: Text(
+          "내가 쓴 글",
+          style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Color.fromRGBO(40, 40, 40, 1)),
+        ),
+        centerTitle: true,
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
@@ -793,12 +827,13 @@ class _MywritePageState extends State<MywritePage> {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
+          selectedItemColor: Color.fromRGBO(201, 92, 57, 1),
           type: BottomNavigationBarType.fixed,
           onTap: (index) => {
                 // 홈
                 if (index == 0)
                   {
-                    Navigator.push(
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(builder: (context) => HomePage()),
                     ),
@@ -814,8 +849,34 @@ class _MywritePageState extends State<MywritePage> {
                     ),
                   },
 
+                // 미가입 시
+                if (auth.currentUser == null && index == 1)
+                  {
+                    showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: new Text("로그인"),
+                            content: new Text("로그인이 필요합니다."),
+                            actions: <Widget>[
+                              new FlatButton(
+                                onPressed: () {
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => LoginIndexPage()),
+                                  );
+                                },
+                                child: new Text("로그인 페이지로 이동"),
+                              ),
+                            ],
+                          );
+                        }),
+                  },
+
                 // 스크랩
-                if (index == 2)
+                if (auth.currentUser != null && index == 2)
                   {
                     Navigator.push(
                       context,
@@ -823,6 +884,31 @@ class _MywritePageState extends State<MywritePage> {
                     ),
                   },
 
+                //미가입 시
+                if (auth.currentUser == null && index == 2)
+                  {
+                    showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: new Text("로그인"),
+                            content: new Text("로그인이 필요합니다."),
+                            actions: <Widget>[
+                              new FlatButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => LoginIndexPage()),
+                                  );
+                                },
+                                child: new Text("로그인 페이지로 이동"),
+                              ),
+                            ],
+                          );
+                        }),
+                  },
                 // 마이페이지
                 if (index == 3)
                   {
@@ -838,11 +924,10 @@ class _MywritePageState extends State<MywritePage> {
               icon: Icon(Icons.home),
               title: Text('홈'),
             ),
-            if (auth.currentUser != null)
-              new BottomNavigationBarItem(
-                icon: Icon(Icons.add),
-                title: Text('글쓰기'),
-              ),
+            new BottomNavigationBarItem(
+              icon: Icon(Icons.add),
+              title: Text('글쓰기'),
+            ),
             new BottomNavigationBarItem(
               icon: Icon(Icons.bookmark),
               title: Text('스크랩'),

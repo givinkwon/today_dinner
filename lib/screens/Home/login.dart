@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:kakao_flutter_sdk/auth.dart';
 import 'package:provider/provider.dart';
 import 'package:today_dinner/providers/home.dart';
 import '../Login/index.dart';
@@ -11,6 +10,20 @@ import 'package:today_dinner/screens/Login/index.dart';
 class LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();
+}
+
+// appbar 지우기
+class EmptyAppBar extends StatelessWidget implements PreferredSizeWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Color.fromRGBO(246, 246, 246, 1),
+      height: 0,
+    );
+  }
+
+  @override
+  Size get preferredSize => Size(0.0, 0.0);
 }
 
 // 전체 class
@@ -40,95 +53,97 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        bottomOpacity: 0.0,
+        elevation: 0.0,
+        backgroundColor: Color.fromRGBO(251, 246, 240, 1),
+        toolbarHeight: 0,
+      ),
+      backgroundColor: Color.fromRGBO(251, 246, 240, 1),
       body: ChangeNotifierProvider(
         create: (BuildContext context) => Home(),
-        child: Stack(
-          children: [
-            Padding(
-              padding: EdgeInsets.only(top: 300),
-              child: Image(
-                image: AssetImage('assets/main.jpg'),
-                fit: BoxFit.cover,
-              ),
+        child: Container(
+          width: double.infinity,
+          height: double.infinity,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              fit: BoxFit.fitWidth,
+              image: AssetImage('assets/main2.jpg'),
             ),
-            Center(
-              child: RichText(
-                text: TextSpan(
-                  text: "오늘의 저녁\n\n\n\n\n\n",
-                  style: TextStyle(
-                    color: Colors.orange[700],
-                    fontSize: 40,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+          ),
+          child: Column(
+            children: [
+              Container(
+                height: MediaQuery.of(context).size.height * 0.5,
               ),
-            ),
-            Center(
-              child: RichText(
-                text: TextSpan(
-                  text: "우리가족 식사고민끝! 요리 필수 앱\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
-                  style: TextStyle(
-                    color: Colors.orange[700],
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 50),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    ElevatedButton(
-                      onPressed: _loginButtonPressed,
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(
-                          Colors.orange[700],
-                        ),
-                        padding: MaterialStateProperty.all(
-                          EdgeInsets.all(15),
-                        ),
-                        shape: MaterialStateProperty.all(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30.0),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 50),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      ElevatedButton(
+                        onPressed: _loginButtonPressed,
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(
+                            Color.fromRGBO(201, 92, 57, 1),
+                          ),
+                          padding: MaterialStateProperty.all(
+                            EdgeInsets.all(15),
+                          ),
+                          shape: MaterialStateProperty.all(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30.0),
+                            ),
                           ),
                         ),
+                        child: Text(
+                          "로그인하고 살펴보기",
+                          style: TextStyle(fontSize: 17),
+                        ),
                       ),
-                      child: Text(
-                        "로그인하고 살펴보기",
-                        style: TextStyle(fontSize: 17),
+                      TextButton(
+                        onPressed: _nologinButtonPressed,
+                        style: TextButton.styleFrom(
+                          primary: Colors.white,
+                        ),
+                        child: Text(
+                          "로그인 없이 살펴보기",
+                          style: TextStyle(
+                              fontSize: 17,
+                              color: Color.fromRGBO(89, 89, 89, 1)),
+                        ),
                       ),
-                    ),
-                    TextButton(
-                      onPressed: _nologinButtonPressed,
-                      style: TextButton.styleFrom(
-                        primary: Colors.white,
+                      TextButton(
+                        onPressed: _signupButtonPressed,
+                        style: TextButton.styleFrom(
+                          primary: Colors.white,
+                        ),
+                        child: Text(
+                          "가입하기",
+                          style: TextStyle(
+                              fontSize: 15,
+                              color: Color.fromRGBO(89, 89, 89, 1)),
+                        ),
                       ),
-                      child: Text(
-                        "로그인 없이 살펴보기",
-                        style: TextStyle(fontSize: 17, color: Colors.black),
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: _signupButtonPressed,
-                      style: TextButton.styleFrom(
-                        primary: Colors.white,
-                      ),
-                      child: Text(
-                        "가입하기",
-                        style: TextStyle(fontSize: 12, color: Colors.black),
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

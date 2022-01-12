@@ -15,7 +15,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.0+1
+version: 1.1.0+11
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
@@ -30,19 +30,18 @@ dependencies:
   flutter:
     sdk: flutter
 
-
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   english_words: ^3.1.0
-  # 카카오톡 관련 시작
-  dio: ^4.0.0
-  json_annotation: ^4.0.1
-  package_info_plus: ^1.0.4
-  platform: ^3.0.0
-  shared_preferences: ^2.0.5
-  kakao_flutter_sdk: ^0.8.1
-  # 카카오톡 관련 끝
+  # # 카카오톡 관련 시작
+  # dio: ^4.0.0
+  # json_annotation: ^4.0.1
+  # package_info_plus: ^1.0.4
+  # platform: ^3.0.0
+  # shared_preferences: ^2.0.5
+  # kakao_flutter_sdk: ^0.8.1
+  # # 카카오톡 관련 끝
   
   # 별점
   flutter_rating_bar: ^4.0.0
@@ -59,9 +58,18 @@ dependencies:
   firebase_auth: ^3.1.4
   image_picker: ^0.8.4+4
   get: ^4.3.8
+  cached_network_image: ^3.1.0+1
+  # web link
+  url_launcher: ^6.0.16
+  # youtube 재생
+  youtube_player_flutter: ^8.0.0
+  firebase_messaging: ^11.2.4
+  # google 로그인
+  # google_sign_in: ^4.0.14
 
-  # image resize를 위해 =>   // 이미지 resize => 데이터를 불러오고나서 height를 가져올 수 있는데, 렌더링할 때는 전체 height를 미리 알아야한다. 때문에 gridview로는 구현이 어려움
-  flutter_staggered_grid_view: ^0.4.1
+  # firebase_anayltics(contains gtag)
+  firebase_analytics: ^9.0.5
+
 
 dev_dependencies:
   flutter_test:
@@ -90,6 +98,24 @@ flutter:
     - assets/
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
+
+  fonts:
+  - family: Noto_Serif_KR
+    fonts:
+      - asset: assets/fonts/Noto_Serif_KR/NotoSansKR-Thin.otf
+        weight: 200
+      - asset: assets/fonts/Noto_Serif_KR/NotoSansKR-Light.otf
+        weight: 300
+      - asset: assets/fonts/Noto_Serif_KR/NotoSansKR-Regular.otf
+        weight: 400
+      - asset: assets/fonts/Noto_Serif_KR/NotoSansKR-Medium.otf
+        weight: 500
+      - asset: assets/fonts/Noto_Serif_KR/NotoSansKR-Medium.otf
+        weight: 600
+      - asset: assets/fonts/Noto_Serif_KR/NotoSansKR-Bold.otf
+        weight: 700
+      - asset: assets/fonts/Noto_Serif_KR/NotoSansKR-Black.otf
+        weight: 900
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

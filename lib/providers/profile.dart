@@ -64,6 +64,41 @@ class Profile with ChangeNotifier {
         });
   }
 
+  var Marketing = true;
+  // 마케팅 수신 동의 업데이트
+  // 글쓰기 완료
+  void changeMarketing(context, email, value) {
+    if (value == true) {
+      Marketing = false;
+    } else {
+      Marketing = true;
+    }
+    //데이터베이스 저장
+    firestore.collection("User").doc(email).update({
+      'marketing': Marketing,
+    }).then((_) => {
+          showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: new Text("혜택/정보 수신 동의 변경 완료"),
+                  content: new Text("변경되었습니다."),
+                  actions: <Widget>[
+                    new FlatButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: new Text("닫기"),
+                    ),
+                  ],
+                );
+              }),
+        });
+    // 구독 widget에게 변화 알려서 re-build
+    notifyListeners();
+  }
+
   int Error = 0; // Error state => 1일 때 Error 발생
   String AlertTitle = ""; // Alert 제목
   String AlertContent = ""; // Alert 내용
@@ -119,7 +154,7 @@ class Profile with ChangeNotifier {
                       child: TextField(
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
-                      labelText: '휴대폰을 입력해주세요.',
+                      hintText: '휴대폰을 입력해주세요.',
                     ),
                     onChanged: (text) {
                       // // watch가 아니라 read를 호출해야함 => read == listen : false => 이벤트 함수는 업데이트 변경 사항을 수신하지 않고 변경 작업을 수행해야함.
@@ -259,7 +294,7 @@ class Profile with ChangeNotifier {
                       child: TextField(
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
-                      labelText: '닉네임을 입력해주세요.',
+                      hintText: '닉네임을 입력해주세요.',
                     ),
                     onChanged: (text) {
                       // // watch가 아니라 read를 호출해야함 => read == listen : false => 이벤트 함수는 업데이트 변경 사항을 수신하지 않고 변경 작업을 수행해야함.
@@ -416,7 +451,7 @@ class Profile with ChangeNotifier {
                       child: TextField(
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
-                      labelText: '탈퇴하겠습니다',
+                      hintText: '탈퇴하겠습니다',
                     ),
                     onChanged: (text) {
                       // // watch가 아니라 read를 호출해야함 => read == listen : false => 이벤트 함수는 업데이트 변경 사항을 수신하지 않고 변경 작업을 수행해야함.
@@ -536,5 +571,42 @@ class Profile with ChangeNotifier {
         }
       }
     }
+  }
+
+  // 블랙리스트 추가
+  void AddBlacklist(context, email, userdata) async {
+    //데이터베이스 저장
+    firestore
+        .collection("User")
+        .doc(email)
+        .collection('blacklist')
+        .doc(userdata)
+        .set({
+      'value': userdata,
+    }).then((_) => {
+              showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: new Text("사용자 차단"),
+                      content: new Text("해당 사용자의 글이 차단되었습니다."),
+                      actions: <Widget>[
+                        new FlatButton(
+                          onPressed: () {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => HomePage()),
+                            );
+                          },
+                          child: new Text("닫기"),
+                        ),
+                      ],
+                    );
+                  }),
+            });
+    // 구독 widget에게 변화 알려서 re-build
+    notifyListeners();
   }
 }
