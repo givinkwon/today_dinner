@@ -608,72 +608,72 @@ class _FeedState extends State<Feed> {
     }
   }
 
-  // 선택된 필터가 있으면 필터에 부합하는 데이터만 노출 => and 조건
-  void checkfilter(int index) async {
-    // true 값으로 init
-    context.watch<Home>().check = true;
-    if (context.watch<Home>().Selected_list.length > 0) {
-      // 필터가 있으면 false로 바꾸기 & count 0으로 초기화
-      context.watch<Home>().check = false;
-      context.watch<Home>().filter_count = 0;
+  // // 선택된 필터가 있으면 필터에 부합하는 데이터만 노출 => and 조건
+  // void checkfilter(int index) async {
+  //   // true 값으로 init
+  //   context.watch<Home>().check = true;
+  //   if (context.watch<Home>().Selected_list.length > 0) {
+  //     // 필터가 있으면 false로 바꾸기 & count 0으로 초기화
+  //     context.watch<Home>().check = false;
+  //     context.watch<Home>().filter_count = 0;
 
-      // Feed의 경우
-      if (context.watch<Home>().top_index == 1) {
-        for (var data in context.watch<Home>().Feed[index]['filter']) {
-          for (var selected in context.watch<Home>().Selected_list) {
-            // print(data);
-            // print(selected);
-            if (data.indexOf(selected) == 0) {
-              // 피드에 포함된 필터가 선택되어 있는 경우에는 다시 true로 return
-              context.watch<Home>().filter_count += 1;
-            }
-          }
-        }
+  //     // Feed의 경우
+  //     if (context.watch<Home>().top_index == 1) {
+  //       for (var data in context.watch<Home>().Feed[index]['filter']) {
+  //         for (var selected in context.watch<Home>().Selected_list) {
+  //           // print(data);
+  //           // print(selected);
+  //           if (data.indexOf(selected) == 0) {
+  //             // 피드에 포함된 필터가 선택되어 있는 경우에는 다시 true로 return
+  //             context.watch<Home>().filter_count += 1;
+  //           }
+  //         }
+  //       }
 
-        if (context.watch<Home>().filter_count ==
-            context.watch<Home>().Selected_list.length) {
-          context.watch<Home>().check =
-              true; // filter_count와 선택된 필터 리스트 길이가 같음 => and 조건 부합
-        }
-      }
-      // Freetalk의 경우
-      if (context.watch<Home>().top_index == 2) {
-        for (var data in context.watch<Home>().Freetalk[index]['filter']) {
-          for (var selected in context.watch<Home>().Selected_list) {
-            // print(data);
-            // print(selected);
-            if (data.indexOf(selected) == 0) {
-              // 피드에 포함된 필터가 선택되어 있는 경우에는 다시 true로 return
-              context.watch<Home>().filter_count += 1;
-            }
-          }
-        }
-        if (context.watch<Home>().filter_count ==
-            context.watch<Home>().Selected_list.length) {
-          context.watch<Home>().check =
-              true; // filter_count와 선택된 필터 리스트 길이가 같음 => and 조건 부합
-        }
-      }
-      // Recipe의 경우
-      if (context.watch<Home>().top_index == 3) {
-        for (var data in context.watch<Home>().Recipe[index]['filter']) {
-          for (var selected in context.watch<Home>().Selected_list) {
-            // print(data);
-            // print(selected);
-            if (data.indexOf(selected) == 0) {
-              // 피드에 포함된 필터가 선택되어 있는 경우에는 다시 true로 return
-              context.watch<Home>().filter_count += 1;
-            }
-          }
-        }
-        if (context.watch<Home>().filter_count ==
-            context.watch<Home>().Selected_list.length) {
-          context.watch<Home>().check =
-              true; // filter_count와 선택된 필터 리스트 길이가 같음 => and 조건 부합
-        }
-      }
-    }
-  }
+  //       if (context.watch<Home>().filter_count ==
+  //           context.watch<Home>().Selected_list.length) {
+  //         context.watch<Home>().check =
+  //             true; // filter_count와 선택된 필터 리스트 길이가 같음 => and 조건 부합
+  //       }
+  //     }
+  //     // Freetalk의 경우
+  //     if (context.watch<Home>().top_index == 2) {
+  //       for (var data in context.watch<Home>().Freetalk[index]['filter']) {
+  //         for (var selected in context.watch<Home>().Selected_list) {
+  //           // print(data);
+  //           // print(selected);
+  //           if (data.indexOf(selected) == 0) {
+  //             // 피드에 포함된 필터가 선택되어 있는 경우에는 다시 true로 return
+  //             context.watch<Home>().filter_count += 1;
+  //           }
+  //         }
+  //       }
+  //       if (context.watch<Home>().filter_count ==
+  //           context.watch<Home>().Selected_list.length) {
+  //         context.watch<Home>().check =
+  //             true; // filter_count와 선택된 필터 리스트 길이가 같음 => and 조건 부합
+  //       }
+  //     }
+  //     // Recipe의 경우
+  //     if (context.watch<Home>().top_index == 3) {
+  //       for (var data in context.watch<Home>().Recipe[index]['filter']) {
+  //         for (var selected in context.watch<Home>().Selected_list) {
+  //           // print(data);
+  //           // print(selected);
+  //           if (data.indexOf(selected) == 0) {
+  //             // 피드에 포함된 필터가 선택되어 있는 경우에는 다시 true로 return
+  //             context.watch<Home>().filter_count += 1;
+  //           }
+  //         }
+  //       }
+  //       if (context.watch<Home>().filter_count ==
+  //           context.watch<Home>().Selected_list.length) {
+  //         context.watch<Home>().check =
+  //             true; // filter_count와 선택된 필터 리스트 길이가 같음 => and 조건 부합
+  //       }
+  //     }
+  //   }
+  // }
 
   // 검색어가 있으면 검색어에 부합하는 데이터만 노출
   void checksearch(int index) async {
@@ -761,522 +761,613 @@ class _FeedState extends State<Feed> {
   Widget build(BuildContext context) {
     // 블랙리스트 체크하는 함수
     checkblacklist(widget.index);
-    // 필터 체크하는 함수
-    checkfilter(widget.index);
+    // // 필터 체크하는 함수
+    // checkfilter(widget.index);
     // 검색어 체크하는 함수
     checksearch(widget.index);
     if (context.watch<Home>().checkblacklist) {
-      if (context.watch<Home>().check) {
-        if (context.watch<Home>().checksearch) {
-          if (context.watch<Home>().top_index == 1) {
-            if (context.watch<Home>().Feed[widget.index]['like'] != null) {
-              for (var like_id in context.watch<Home>().Feed[widget.index]
-                  ['like']) {
-                if (like_id['value'] == auth.currentUser?.email) {
-                  like_check = true;
-                }
-              }
-            }
-            if (context.watch<Home>().Feed[widget.index]['bookmark'] != null) {
-              print(context.watch<Home>().Feed[widget.index]['bookmark']);
-              for (var bookmark_id in context.watch<Home>().Feed[widget.index]
-                  ['bookmark']) {
-                if (bookmark_id['value'] == auth.currentUser?.email) {
-                  bookmark_check = true;
-                }
+      // if (context.watch<Home>().check) {
+      if (context.watch<Home>().checksearch) {
+        if (context.watch<Home>().top_index == 1) {
+          if (context.watch<Home>().Feed[widget.index]['like'] != null) {
+            for (var like_id in context.watch<Home>().Feed[widget.index]
+                ['like']) {
+              if (like_id['value'] == auth.currentUser?.email) {
+                like_check = true;
               }
             }
           }
+          if (context.watch<Home>().Feed[widget.index]['bookmark'] != null) {
+            print(context.watch<Home>().Feed[widget.index]['bookmark']);
+            for (var bookmark_id in context.watch<Home>().Feed[widget.index]
+                ['bookmark']) {
+              if (bookmark_id['value'] == auth.currentUser?.email) {
+                bookmark_check = true;
+              }
+            }
+          }
+        }
 
-          if (context.watch<Home>().top_index == 2) {
-            if (context.watch<Home>().Freetalk[widget.index]['like'] != null) {
-              for (var like_id in context.watch<Home>().Freetalk[widget.index]
-                  ['like']) {
-                if (like_id['value'] == auth.currentUser?.email) {
-                  like_check = true;
-                }
-              }
-            }
-            if (context.watch<Home>().Freetalk[widget.index]['bookmark'] !=
-                null) {
-              print(context.watch<Home>().Freetalk[widget.index]['bookmark']);
-              for (var bookmark_id
-                  in context.watch<Home>().Freetalk[widget.index]['bookmark']) {
-                if (bookmark_id['value'] == auth.currentUser?.email) {
-                  bookmark_check = true;
-                }
+        if (context.watch<Home>().top_index == 2) {
+          if (context.watch<Home>().Freetalk[widget.index]['like'] != null) {
+            for (var like_id in context.watch<Home>().Freetalk[widget.index]
+                ['like']) {
+              if (like_id['value'] == auth.currentUser?.email) {
+                like_check = true;
               }
             }
           }
-          if (context.watch<Home>().top_index == 3) {
-            if (context.watch<Home>().Recipe[widget.index]['like'] != null) {
-              for (var like_id in context.watch<Home>().Recipe[widget.index]
-                  ['like']) {
-                if (like_id['value'] == auth.currentUser?.email) {
-                  like_check = true;
-                }
-              }
-            }
-            if (context.watch<Home>().Recipe[widget.index]['bookmark'] !=
-                null) {
-              print(context.watch<Home>().Recipe[widget.index]['bookmark']);
-              for (var bookmark_id in context.watch<Home>().Recipe[widget.index]
-                  ['bookmark']) {
-                if (bookmark_id['value'] == auth.currentUser?.email) {
-                  bookmark_check = true;
-                }
+          if (context.watch<Home>().Freetalk[widget.index]['bookmark'] !=
+              null) {
+            print(context.watch<Home>().Freetalk[widget.index]['bookmark']);
+            for (var bookmark_id in context.watch<Home>().Freetalk[widget.index]
+                ['bookmark']) {
+              if (bookmark_id['value'] == auth.currentUser?.email) {
+                bookmark_check = true;
               }
             }
           }
+        }
+        if (context.watch<Home>().top_index == 3) {
+          if (context.watch<Home>().Recipe[widget.index]['like'] != null) {
+            for (var like_id in context.watch<Home>().Recipe[widget.index]
+                ['like']) {
+              if (like_id['value'] == auth.currentUser?.email) {
+                like_check = true;
+              }
+            }
+          }
+          if (context.watch<Home>().Recipe[widget.index]['bookmark'] != null) {
+            print(context.watch<Home>().Recipe[widget.index]['bookmark']);
+            for (var bookmark_id in context.watch<Home>().Recipe[widget.index]
+                ['bookmark']) {
+              if (bookmark_id['value'] == auth.currentUser?.email) {
+                bookmark_check = true;
+              }
+            }
+          }
+        }
 
-          return Container(
-            width: MediaQuery.of(context).size.width,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Container(
-                  height: 20,
+        return Container(
+          width: MediaQuery.of(context).size.width,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Container(
+                height: 20,
+              ),
+              Row(children: [
+                SizedBox(
+                  width: 10,
                 ),
-                Row(children: [
-                  SizedBox(
-                    width: 10,
-                  ),
-                  // profileimage가 있을 때 : Feed
-                  if (context.watch<Home>().top_index == 1 &&
-                      context
-                              .watch<Home>()
-                              .Feed[widget.index]['profileimage']
-                              .length >
-                          0 &&
-                      context.watch<Home>().Feed[widget.index]['profileimage']
-                              [0] !=
-                          "")
-                    CircleAvatar(
-                      radius: 15,
-                      backgroundColor: Colors.white,
-                      backgroundImage: NetworkImage(context
-                          .watch<Home>()
-                          .Feed[widget.index]['profileimage'][0]),
-                    ), // profileimage가 없을 때
-                  if (context.watch<Home>().top_index == 1 &&
-                      context
-                              .watch<Home>()
-                              .Feed[widget.index]['profileimage']
-                              .length >
-                          0 &&
-                      context.watch<Home>().Feed[widget.index]['profileimage']
-                              [0] ==
-                          "")
-                    CircleAvatar(
-                        radius: 15,
-                        backgroundColor: Colors.white,
-                        foregroundColor: Color.fromRGBO(201, 92, 57, 1),
-                        child: Icon(Icons.people)),
-                  // profileimage가 있을 때 : Freetalk
-                  if (context.watch<Home>().top_index == 2 &&
-                      context
-                              .watch<Home>()
-                              .Freetalk[widget.index]['profileimage']
-                              .length >
-                          0 &&
-                      context.watch<Home>().Freetalk[widget.index]
-                              ['profileimage'][0] !=
-                          "")
-                    CircleAvatar(
-                      radius: 15,
-                      backgroundColor: Colors.white,
-                      backgroundImage: NetworkImage(context
-                          .watch<Home>()
-                          .Freetalk[widget.index]['profileimage'][0]),
-                    ), // profileimage가 없을 때
-                  if (context.watch<Home>().top_index == 2 &&
-                      context
-                              .watch<Home>()
-                              .Freetalk[widget.index]['profileimage']
-                              .length >
-                          0 &&
-                      context.watch<Home>().Freetalk[widget.index]
-                              ['profileimage'][0] ==
-                          "")
-                    CircleAvatar(
-                        radius: 15,
-                        backgroundColor: Colors.white,
-                        foregroundColor: Color.fromRGBO(201, 92, 57, 1),
-                        child: Icon(Icons.people)),
-
-                  if (context.watch<Home>().top_index != 3)
-                    Container(
-                      padding: EdgeInsets.only(left: 10),
-                      child: Text(
-                        context.watch<Home>().top_index == 1
-                            ? (context.watch<Home>().Feed[widget.index]
-                                ['nickname'])
-                            : (context.watch<Home>().Freetalk[widget.index]
-                                ['nickname']),
-                        style: TextStyle(
-                            fontSize: 14, color: Color.fromRGBO(40, 40, 40, 1)),
-                      ),
-                    ),
-                ]),
-                Container(
-                  height: 20,
-                ),
-
-                // feed image
+                // profileimage가 있을 때 : Feed
                 if (context.watch<Home>().top_index == 1 &&
-                    context.watch<Home>().Feed[widget.index]['image'] != null)
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: [
-                        for (var image in context
+                    context
                             .watch<Home>()
-                            .Feed[widget.index]['image'])
-                          Container(
-                            width: MediaQuery.of(context).size.width,
+                            .Feed[widget.index]['profileimage']
+                            .length >
+                        0 &&
+                    context.watch<Home>().Feed[widget.index]['profileimage']
+                            [0] !=
+                        "")
+                  CircleAvatar(
+                    radius: 15,
+                    backgroundColor: Colors.white,
+                    backgroundImage: NetworkImage(context
+                        .watch<Home>()
+                        .Feed[widget.index]['profileimage'][0]),
+                  ), // profileimage가 없을 때
+                if (context.watch<Home>().top_index == 1 &&
+                    context
+                            .watch<Home>()
+                            .Feed[widget.index]['profileimage']
+                            .length >
+                        0 &&
+                    context.watch<Home>().Feed[widget.index]['profileimage']
+                            [0] ==
+                        "")
+                  CircleAvatar(
+                      radius: 15,
+                      backgroundColor: Colors.white,
+                      foregroundColor: Color.fromRGBO(201, 92, 57, 1),
+                      child: Icon(Icons.people)),
+                // profileimage가 있을 때 : Freetalk
+                if (context.watch<Home>().top_index == 2 &&
+                    context
+                            .watch<Home>()
+                            .Freetalk[widget.index]['profileimage']
+                            .length >
+                        0 &&
+                    context.watch<Home>().Freetalk[widget.index]['profileimage']
+                            [0] !=
+                        "")
+                  CircleAvatar(
+                    radius: 15,
+                    backgroundColor: Colors.white,
+                    backgroundImage: NetworkImage(context
+                        .watch<Home>()
+                        .Freetalk[widget.index]['profileimage'][0]),
+                  ), // profileimage가 없을 때
+                if (context.watch<Home>().top_index == 2 &&
+                    context
+                            .watch<Home>()
+                            .Freetalk[widget.index]['profileimage']
+                            .length >
+                        0 &&
+                    context.watch<Home>().Freetalk[widget.index]['profileimage']
+                            [0] ==
+                        "")
+                  CircleAvatar(
+                      radius: 15,
+                      backgroundColor: Colors.white,
+                      foregroundColor: Color.fromRGBO(201, 92, 57, 1),
+                      child: Icon(Icons.people)),
+
+                if (context.watch<Home>().top_index != 3)
+                  Container(
+                    padding: EdgeInsets.only(left: 10),
+                    child: Text(
+                      context.watch<Home>().top_index == 1
+                          ? (context.watch<Home>().Feed[widget.index]
+                              ['nickname'])
+                          : (context.watch<Home>().Freetalk[widget.index]
+                              ['nickname']),
+                      style: TextStyle(
+                          fontSize: 14, color: Color.fromRGBO(40, 40, 40, 1)),
+                    ),
+                  ),
+              ]),
+              Container(
+                height: 20,
+              ),
+
+              // feed image
+              if (context.watch<Home>().top_index == 1 &&
+                  context.watch<Home>().Feed[widget.index]['image'] != null)
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      for (var image in context.watch<Home>().Feed[widget.index]
+                          ['image'])
+                        Container(
+                          width: MediaQuery.of(context).size.width,
+                          child: FadeInImage(
+                            image: NetworkImage(
+                              image['value'],
+                            ),
+                            placeholder: AssetImage('assets/loading.gif'),
+                            imageErrorBuilder:
+                                (context, exception, stackTrace) {
+                              print(exception);
+                              return Image.asset('assets/loading.gif');
+                            },
+                            fit: BoxFit.fitWidth,
+                          ),
+                        )
+                    ],
+                  ),
+                ),
+
+              // freetalk image
+              if (context.watch<Home>().top_index == 2 &&
+                  context.watch<Home>().Freetalk[widget.index]['image'] != null)
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      for (var image in context
+                          .watch<Home>()
+                          .Freetalk[widget.index]['image'])
+                        Container(
+                          width: MediaQuery.of(context).size.width,
+                          child: FadeInImage(
+                            image: NetworkImage(
+                              image['value'],
+                            ),
+                            placeholder: AssetImage('assets/loading.gif'),
+                            imageErrorBuilder: (_, __, ___) {
+                              return Image.asset('assets/loading.gif');
+                            },
+                            fit: BoxFit.fitWidth,
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+
+              // recipe image
+              if (context.watch<Home>().top_index == 3)
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Stack(
+                    children: [
+                      GestureDetector(
+                        onTap: () async {
+                          // gtag
+                          await analytics.logEvent(
+                              name: 'click_recipe_detail',
+                              parameters: {
+                                'recipe_name': context
+                                    .read<Home>()
+                                    .Recipe[widget.index]['id']
+                              });
+
+                          // 데이터 전달하기
+                          context.read<Recipe>().select_data(
+                              context.read<Home>().Recipe[widget.index]);
+
+                          //index 설정
+                          context.read<Reply>().select_index(widget.index);
+
+                          // 페이지 이동
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => RecipePage()),
+                          );
+                        },
+                        child: Container(
+                          height: 180,
+                          margin: EdgeInsets.only(left: 15, right: 15),
+                          width: MediaQuery.of(context).size.width - 30,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
                             child: FadeInImage(
-                              image: NetworkImage(
-                                image['value'],
-                              ),
-                              placeholder: AssetImage('assets/loading.gif'),
                               imageErrorBuilder:
                                   (context, exception, stackTrace) {
-                                print(exception);
-                                return Image.asset('assets/loading.gif');
+                                return Container(
+                                  width: 100.0,
+                                  height: 100.0,
+                                  child: Image.asset('assets/loading.gif'),
+                                );
                               },
-                              fit: BoxFit.fitWidth,
-                            ),
-                          )
-                      ],
-                    ),
-                  ),
-
-                // freetalk image
-                if (context.watch<Home>().top_index == 2 &&
-                    context.watch<Home>().Freetalk[widget.index]['image'] !=
-                        null)
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: [
-                        for (var image in context
-                            .watch<Home>()
-                            .Freetalk[widget.index]['image'])
-                          Container(
-                            width: MediaQuery.of(context).size.width,
-                            child: FadeInImage(
                               image: NetworkImage(
-                                image['value'],
+                                context
+                                            .watch<Home>()
+                                            .Recipe[widget.index]['videourl']
+                                            .split("=")
+                                            .length ==
+                                        2
+                                    ? "https://img.youtube.com/vi/${context.watch<Home>().Recipe[widget.index]['videourl'].split("=")[1]}/0.jpg"
+                                    : "https://img.youtube.com/vi/tg7w12Eyzbk/0.jpg",
                               ),
-                              placeholder: AssetImage('assets/loading.gif'),
-                              imageErrorBuilder: (_, __, ___) {
-                                return Image.asset('assets/loading.gif');
-                              },
+                              placeholder: AssetImage("assets/loading.gif"),
                               fit: BoxFit.fitWidth,
-                            ),
-                          ),
-                      ],
-                    ),
-                  ),
-
-                // recipe image
-                if (context.watch<Home>().top_index == 3)
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Stack(
-                      children: [
-                        GestureDetector(
-                          onTap: () async {
-                            // gtag
-                            await analytics.logEvent(
-                                name: 'click_recipe_detail',
-                                parameters: {
-                                  'recipe_name': context
-                                      .read<Home>()
-                                      .Recipe[widget.index]['id']
-                                });
-
-                            // 데이터 전달하기
-                            context.read<Recipe>().select_data(
-                                context.read<Home>().Recipe[widget.index]);
-
-                            //index 설정
-                            context.read<Reply>().select_index(widget.index);
-
-                            // 페이지 이동
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => RecipePage()),
-                            );
-                          },
-                          child: Container(
-                            height: 180,
-                            margin: EdgeInsets.only(left: 15, right: 15),
-                            width: MediaQuery.of(context).size.width - 30,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(10),
-                              child: FadeInImage(
-                                imageErrorBuilder:
-                                    (context, exception, stackTrace) {
-                                  return Container(
-                                    width: 100.0,
-                                    height: 100.0,
-                                    child: Image.asset('assets/loading.gif'),
-                                  );
-                                },
-                                image: NetworkImage(
-                                  context
-                                              .watch<Home>()
-                                              .Recipe[widget.index]['videourl']
-                                              .split("=")
-                                              .length ==
-                                          2
-                                      ? "https://img.youtube.com/vi/${context.watch<Home>().Recipe[widget.index]['videourl'].split("=")[1]}/0.jpg"
-                                      : "https://img.youtube.com/vi/tg7w12Eyzbk/0.jpg",
-                                ),
-                                placeholder: AssetImage("assets/loading.gif"),
-                                fit: BoxFit.fitWidth,
-                              ),
                             ),
                           ),
                         ),
-                        if (auth.currentUser != null)
-                          Positioned(
-                            top: MediaQuery.of(context).size.height * 0.18,
-                            left: MediaQuery.of(context).size.width - 80,
-                            right: 0,
-                            child: IconButton(
-                              icon: bookmark_check == true
-                                  ? Icon(Icons.bookmark,
-                                      color: Colors.white, size: 32)
-                                  : Icon(Icons.bookmark_outline,
-                                      color: Colors.white, size: 32),
-                              onPressed: () {
-                                Bookmark_Click(bookmark_check, widget.index);
-                              },
-                            ),
+                      ),
+                      if (auth.currentUser != null)
+                        Positioned(
+                          top: MediaQuery.of(context).size.height * 0.18,
+                          left: MediaQuery.of(context).size.width - 80,
+                          right: 0,
+                          child: IconButton(
+                            icon: bookmark_check == true
+                                ? Icon(Icons.bookmark,
+                                    color: Colors.white, size: 32)
+                                : Icon(Icons.bookmark_outline,
+                                    color: Colors.white, size: 32),
+                            onPressed: () {
+                              Bookmark_Click(bookmark_check, widget.index);
+                            },
                           ),
-                      ],
-                    ),
+                        ),
+                    ],
                   ),
+                ),
 
-                // 제목
-                if (context.watch<Home>().top_index == 3)
-                  Container(
-                    padding: EdgeInsets.only(top: 20, left: 20, right: 20),
+              // 제목
+              if (context.watch<Home>().top_index == 3)
+                Container(
+                  padding: EdgeInsets.only(top: 20, left: 20, right: 20),
+                  child: Text(
+                    context.watch<Home>().Recipe[widget.index]['title'],
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        fontSize: 14,
+                        color: Color.fromRGBO(40, 40, 40, 1),
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
+
+              // 피드 아이콘 => 좋아요 / 댓글 / 북마크
+              if (context.watch<Home>().top_index != 3)
+                Row(
+                  children: <Widget>[
+                    IconButton(
+                      icon: like_check == true
+                          ? Icon(Icons.favorite)
+                          : Icon(Icons.favorite_border),
+                      onPressed: () {
+                        // 미가입 시
+                        if (auth.currentUser == null) {
+                          showDialog(
+                              context: context,
+                              barrierDismissible: false,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: new Text("로그인"),
+                                  content: new Text("로그인이 필요합니다."),
+                                  actions: <Widget>[
+                                    new FlatButton(
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  LoginPage()),
+                                        );
+                                      },
+                                      child: new Text("로그인 페이지로 이동"),
+                                    ),
+                                  ],
+                                );
+                              });
+                        } else {
+                          Like_Click(like_check, widget.index);
+                        }
+                      },
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.question_answer_outlined),
+                      onPressed: () {
+                        // 미가입 시
+                        if (auth.currentUser == null) {
+                          showDialog(
+                              context: context,
+                              barrierDismissible: false,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: new Text("로그인"),
+                                  content: new Text("로그인이 필요합니다."),
+                                  actions: <Widget>[
+                                    new FlatButton(
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  LoginPage()),
+                                        );
+                                      },
+                                      child: new Text("로그인 페이지로 이동"),
+                                    ),
+                                  ],
+                                );
+                              });
+                        } else {
+                          // index 설정
+                          context.read<Reply>().select_index(widget.index);
+                          // 페이지 이동
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ReplyPage()),
+                          );
+                        }
+                      },
+                    ),
+                    IconButton(
+                      icon: bookmark_check == true
+                          ? Icon(Icons.bookmark_add)
+                          : Icon(Icons.bookmark_add_outlined),
+                      onPressed: () {
+                        // 미가입 시
+                        if (auth.currentUser == null) {
+                          showDialog(
+                              context: context,
+                              barrierDismissible: false,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: new Text("로그인"),
+                                  content: new Text("로그인이 필요합니다."),
+                                  actions: <Widget>[
+                                    new FlatButton(
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  LoginPage()),
+                                        );
+                                      },
+                                      child: new Text("로그인 페이지로 이동"),
+                                    ),
+                                  ],
+                                );
+                              });
+                        } else {
+                          Bookmark_Click(bookmark_check, widget.index);
+                        }
+                      },
+                    ),
+                  ],
+                ),
+
+              // 좋아요 개수 => 없는 경우(Feed)
+              if (context.watch<Home>().top_index == 1 &&
+                  context.watch<Home>().Feed[widget.index]['like'] == null)
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Container(
+                    padding: EdgeInsets.only(left: 10),
                     child: Text(
-                      context.watch<Home>().Recipe[widget.index]['title'],
-                      textAlign: TextAlign.center,
+                      "좋아요 0개",
                       style: TextStyle(
                           fontSize: 14,
                           color: Color.fromRGBO(40, 40, 40, 1),
                           fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.left,
                     ),
                   ),
+                ),
+              // 좋아요 개수 => 없는 경우(Feed)
+              if (context.watch<Home>().top_index == 2 &&
+                  context.watch<Home>().Freetalk[widget.index]['like'] == null)
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Container(
+                    padding: EdgeInsets.only(left: 10),
+                    child: Text(
+                      "좋아요 0개",
+                      style: TextStyle(
+                          fontSize: 14,
+                          color: Color.fromRGBO(40, 40, 40, 1),
+                          fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.left,
+                    ),
+                  ),
+                ),
+              // 좋아요 개수
+              if (context.watch<Home>().top_index != 3 &&
+                  context.watch<Home>().Feed[widget.index]['like'] != null)
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Container(
+                    padding: EdgeInsets.only(left: 10),
+                    child: Text(
+                      context.watch<Home>().top_index == 1
+                          ? ("좋아요" +
+                              context
+                                  .watch<Home>()
+                                  .Feed[widget.index]['like']
+                                  .length
+                                  .toString() +
+                              "개")
+                          : (context.watch<Home>().top_index == 2
+                              ? ("좋아요" +
+                                  context
+                                      .watch<Home>()
+                                      .Freetalk[widget.index]['like']
+                                      .length
+                                      .toString() +
+                                  "개")
+                              : ("좋아요" +
+                                  context
+                                      .watch<Home>()
+                                      .Recipe[widget.index]['like']
+                                      .length
+                                      .toString() +
+                                  "개")),
+                      style: TextStyle(
+                          fontSize: 14,
+                          color: Color.fromRGBO(40, 40, 40, 1),
+                          fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.left,
+                    ),
+                  ),
+                ),
+              // 아이디
+              if (context.watch<Home>().top_index != 3)
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      margin: EdgeInsets.only(left: 10),
+                      child: Text(
+                          context.watch<Home>().top_index == 1
+                              ? (context.watch<Home>().Feed[widget.index]
+                                  ['nickname'])
+                              : (context.watch<Home>().Freetalk[widget.index]
+                                  ['nickname']),
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                          )),
+                    ),
+                    Expanded(
+                      child: ListTile(
+                        dense: true,
+                        leading: Container(
+                          padding: EdgeInsets.only(right: 10),
+                          child: Text(
+                              context.watch<Home>().top_index == 1
+                                  ? (context.watch<Home>().Feed[widget.index]
+                                      ['content'])
+                                  : context.watch<Home>().Freetalk[widget.index]
+                                      ['content'],
+                              style: TextStyle(
+                                  fontSize: 13.0,
+                                  fontWeight: FontWeight.normal),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis),
+                        ),
+                        onTap: () async {},
+                        trailing: Container(
+                          alignment: Alignment.centerRight,
+                          width: 20,
+                          child: IconButton(
+                            icon: Icon(
+                              Icons.more_vert,
+                              color: Colors.grey,
+                              size: 20,
+                            ),
+                            onPressed: () {
+                              // Feed인 경우
+                              if (context.read<Home>().top_index == 1) {
+                                _showbottomContent(
+                                    context,
+                                    context.read<Home>().Feed[widget.index]
+                                        ['user']);
+                              }
+                              // Freetalk인 경우
+                              if (context.read<Home>().top_index == 2) {
+                                _showbottomContent(
+                                    context,
+                                    context.read<Home>().Freetalk[widget.index]
+                                        ['user']);
+                              }
+                            },
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
 
-                // 피드 아이콘 => 좋아요 / 댓글 / 북마크
-                if (context.watch<Home>().top_index != 3)
-                  Row(
-                    children: <Widget>[
-                      IconButton(
-                        icon: like_check == true
-                            ? Icon(Icons.favorite)
-                            : Icon(Icons.favorite_border),
-                        onPressed: () {
-                          // 미가입 시
-                          if (auth.currentUser == null) {
-                            showDialog(
-                                context: context,
-                                barrierDismissible: false,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    title: new Text("로그인"),
-                                    content: new Text("로그인이 필요합니다."),
-                                    actions: <Widget>[
-                                      new FlatButton(
-                                        onPressed: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    LoginPage()),
-                                          );
-                                        },
-                                        child: new Text("로그인 페이지로 이동"),
-                                      ),
-                                    ],
-                                  );
-                                });
-                          } else {
-                            Like_Click(like_check, widget.index);
-                          }
-                        },
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.question_answer_outlined),
-                        onPressed: () {
-                          // 미가입 시
-                          if (auth.currentUser == null) {
-                            showDialog(
-                                context: context,
-                                barrierDismissible: false,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    title: new Text("로그인"),
-                                    content: new Text("로그인이 필요합니다."),
-                                    actions: <Widget>[
-                                      new FlatButton(
-                                        onPressed: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    LoginPage()),
-                                          );
-                                        },
-                                        child: new Text("로그인 페이지로 이동"),
-                                      ),
-                                    ],
-                                  );
-                                });
-                          } else {
-                            // index 설정
-                            context.read<Reply>().select_index(widget.index);
-                            // 페이지 이동
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ReplyPage()),
-                            );
-                          }
-                        },
-                      ),
-                      IconButton(
-                        icon: bookmark_check == true
-                            ? Icon(Icons.bookmark_add)
-                            : Icon(Icons.bookmark_add_outlined),
-                        onPressed: () {
-                          // 미가입 시
-                          if (auth.currentUser == null) {
-                            showDialog(
-                                context: context,
-                                barrierDismissible: false,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    title: new Text("로그인"),
-                                    content: new Text("로그인이 필요합니다."),
-                                    actions: <Widget>[
-                                      new FlatButton(
-                                        onPressed: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    LoginPage()),
-                                          );
-                                        },
-                                        child: new Text("로그인 페이지로 이동"),
-                                      ),
-                                    ],
-                                  );
-                                });
-                          } else {
-                            Bookmark_Click(bookmark_check, widget.index);
-                          }
-                        },
-                      ),
-                    ],
+              // Feed 댓글 2개 이상일 때
+              if (context.watch<Home>().top_index == 1 &&
+                  context.watch<Home>().Feed[widget.index]['reply'] != null &&
+                  context.watch<Home>().Feed[widget.index]['reply'].length > 2)
+                GestureDetector(
+                  onTap: () async {
+                    // index 설정
+                    context.read<Reply>().select_index(widget.index);
+                    // 페이지 이동
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ReplyPage()),
+                    );
+                  },
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Container(
+                      padding: EdgeInsets.only(left: 10),
+                      child: Text(
+                          '댓글 ${context.watch<Home>().Feed[widget.index]['reply'].length}개 모두 보기',
+                          style: TextStyle(color: Colors.grey[500])),
+                    ),
                   ),
+                ),
 
-                // 좋아요 개수 => 없는 경우(Feed)
-                if (context.watch<Home>().top_index == 1 &&
-                    context.watch<Home>().Feed[widget.index]['like'] == null)
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Container(
-                      padding: EdgeInsets.only(left: 10),
-                      child: Text(
-                        "좋아요 0개",
-                        style: TextStyle(
-                            fontSize: 14,
-                            color: Color.fromRGBO(40, 40, 40, 1),
-                            fontWeight: FontWeight.bold),
-                        textAlign: TextAlign.left,
-                      ),
-                    ),
-                  ),
-                // 좋아요 개수 => 없는 경우(Feed)
-                if (context.watch<Home>().top_index == 2 &&
-                    context.watch<Home>().Freetalk[widget.index]['like'] ==
-                        null)
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Container(
-                      padding: EdgeInsets.only(left: 10),
-                      child: Text(
-                        "좋아요 0개",
-                        style: TextStyle(
-                            fontSize: 14,
-                            color: Color.fromRGBO(40, 40, 40, 1),
-                            fontWeight: FontWeight.bold),
-                        textAlign: TextAlign.left,
-                      ),
-                    ),
-                  ),
-                // 좋아요 개수
-                if (context.watch<Home>().top_index != 3 &&
-                    context.watch<Home>().Feed[widget.index]['like'] != null)
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Container(
-                      padding: EdgeInsets.only(left: 10),
-                      child: Text(
-                        context.watch<Home>().top_index == 1
-                            ? ("좋아요" +
-                                context
-                                    .watch<Home>()
-                                    .Feed[widget.index]['like']
-                                    .length
-                                    .toString() +
-                                "개")
-                            : (context.watch<Home>().top_index == 2
-                                ? ("좋아요" +
-                                    context
-                                        .watch<Home>()
-                                        .Freetalk[widget.index]['like']
-                                        .length
-                                        .toString() +
-                                    "개")
-                                : ("좋아요" +
-                                    context
-                                        .watch<Home>()
-                                        .Recipe[widget.index]['like']
-                                        .length
-                                        .toString() +
-                                    "개")),
-                        style: TextStyle(
-                            fontSize: 14,
-                            color: Color.fromRGBO(40, 40, 40, 1),
-                            fontWeight: FontWeight.bold),
-                        textAlign: TextAlign.left,
-                      ),
-                    ),
-                  ),
-                // 아이디
-                if (context.watch<Home>().top_index != 3)
+              // Start : Feed 댓글 2개 미리보기 => 2개 이하인 경우에는 전부 / 2개 이상인 경우에는 댓글 미리보기
+              if (context.watch<Home>().top_index == 1 &&
+                  context.watch<Home>().Feed[widget.index]['reply'] != null &&
+                  context.watch<Home>().Feed[widget.index]['reply'].length !=
+                      0 &&
+                  context.watch<Home>().Feed[widget.index]['reply'].length < 3)
+                for (var reply in context.watch<Home>().Feed[widget.index]
+                    ['reply'])
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Container(
                         alignment: Alignment.centerLeft,
                         margin: EdgeInsets.only(left: 10),
-                        child: Text(
-                            context.watch<Home>().top_index == 1
-                                ? (context.watch<Home>().Feed[widget.index]
-                                    ['nickname'])
-                                : (context.watch<Home>().Freetalk[widget.index]
-                                    ['nickname']),
+                        child: Text(reply['nickname'],
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
@@ -1285,19 +1376,13 @@ class _FeedState extends State<Feed> {
                       Expanded(
                         child: ListTile(
                           dense: true,
+                          visualDensity: VisualDensity(vertical: -4),
                           leading: Container(
-                            padding: EdgeInsets.only(right: 10),
-                            child: Text(
-                                context.watch<Home>().top_index == 1
-                                    ? (context.watch<Home>().Feed[widget.index]
-                                        ['content'])
-                                    : context
-                                        .watch<Home>()
-                                        .Freetalk[widget.index]['content'],
+                            padding: EdgeInsets.only(right: 30),
+                            child: Text(reply['content'],
                                 style: TextStyle(
                                     fontSize: 13.0,
                                     fontWeight: FontWeight.normal),
-                                maxLines: 2,
                                 overflow: TextOverflow.ellipsis),
                           ),
                           onTap: () async {},
@@ -1311,21 +1396,7 @@ class _FeedState extends State<Feed> {
                                 size: 20,
                               ),
                               onPressed: () {
-                                // Feed인 경우
-                                if (context.read<Home>().top_index == 1) {
-                                  _showbottomContent(
-                                      context,
-                                      context.read<Home>().Feed[widget.index]
-                                          ['user']);
-                                }
-                                // Freetalk인 경우
-                                if (context.read<Home>().top_index == 2) {
-                                  _showbottomContent(
-                                      context,
-                                      context
-                                          .read<Home>()
-                                          .Freetalk[widget.index]['user']);
-                                }
+                                _showbottomContent(context, '');
                               },
                             ),
                           ),
@@ -1334,184 +1405,93 @@ class _FeedState extends State<Feed> {
                     ],
                   ),
 
-                // Feed 댓글 2개 이상일 때
-                if (context.watch<Home>().top_index == 1 &&
-                    context.watch<Home>().Feed[widget.index]['reply'] != null &&
-                    context.watch<Home>().Feed[widget.index]['reply'].length >
-                        2)
-                  GestureDetector(
-                    onTap: () async {
-                      // index 설정
-                      context.read<Reply>().select_index(widget.index);
-                      // 페이지 이동
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => ReplyPage()),
-                      );
-                    },
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Container(
-                        padding: EdgeInsets.only(left: 10),
-                        child: Text(
-                            '댓글 ${context.watch<Home>().Feed[widget.index]['reply'].length}개 모두 보기',
-                            style: TextStyle(color: Colors.grey[500])),
-                      ),
+              // End : Feed 댓글 2개 미리보기 => 2개 이하인 경우에는 전부 / 2개 이상인 경우에는 2개만
+
+              // Freetalk 댓글
+              if (context.watch<Home>().top_index == 2 &&
+                  context.watch<Home>().Freetalk[widget.index]['reply'] !=
+                      null &&
+                  context.watch<Home>().Freetalk[widget.index]['reply'].length >
+                      2)
+                GestureDetector(
+                  onTap: () async {
+                    // 페이지 이동
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ReplyPage()),
+                    );
+                  },
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Container(
+                      padding: EdgeInsets.only(left: 10),
+                      child: Text(
+                          '댓글 ${context.watch<Home>().Freetalk[widget.index]['reply'].length}개 모두 보기'),
                     ),
                   ),
+                ),
 
-                // Start : Feed 댓글 2개 미리보기 => 2개 이하인 경우에는 전부 / 2개 이상인 경우에는 댓글 미리보기
-                if (context.watch<Home>().top_index == 1 &&
-                    context.watch<Home>().Feed[widget.index]['reply'] != null &&
-                    context.watch<Home>().Feed[widget.index]['reply'].length !=
-                        0 &&
-                    context.watch<Home>().Feed[widget.index]['reply'].length <
-                        3)
-                  for (var reply in context.watch<Home>().Feed[widget.index]
-                      ['reply'])
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
-                          alignment: Alignment.centerLeft,
-                          margin: EdgeInsets.only(left: 10),
-                          child: Text(reply['nickname'],
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                              )),
-                        ),
-                        Expanded(
-                          child: ListTile(
-                            dense: true,
-                            visualDensity: VisualDensity(vertical: -4),
-                            leading: Container(
-                              padding: EdgeInsets.only(right: 30),
-                              child: Text(reply['content'],
-                                  style: TextStyle(
-                                      fontSize: 13.0,
-                                      fontWeight: FontWeight.normal),
-                                  overflow: TextOverflow.ellipsis),
-                            ),
-                            onTap: () async {},
-                            trailing: Container(
-                              alignment: Alignment.centerRight,
-                              width: 20,
-                              child: IconButton(
-                                icon: Icon(
-                                  Icons.more_vert,
-                                  color: Colors.grey,
-                                  size: 20,
-                                ),
-                                onPressed: () {
-                                  _showbottomContent(context, '');
-                                },
+              // Start : Freetalk 댓글 2개 미리보기 => 2개 이하인 경우에는 전부 / 2개 이상인 경우에는 미리보기
+              if (context.watch<Home>().top_index == 2 &&
+                  context.watch<Home>().Freetalk[widget.index]['reply'] !=
+                      null &&
+                  context
+                          .watch<Home>()
+                          .Freetalk[widget.index]['reply']
+                          .length !=
+                      0 &&
+                  context.watch<Home>().Freetalk[widget.index]['reply'].length <
+                      3)
+                for (var reply in context.watch<Home>().Freetalk[widget.index]
+                    ['reply'])
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        margin: EdgeInsets.only(left: 10),
+                        child: Text(reply['nickname'],
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                            )),
+                      ),
+                      Expanded(
+                        child: ListTile(
+                          dense: true,
+                          visualDensity: VisualDensity(vertical: -4),
+                          leading: Container(
+                            padding: EdgeInsets.only(right: 30),
+                            child: Text(reply['content'],
+                                style: TextStyle(
+                                    fontSize: 13.0,
+                                    fontWeight: FontWeight.normal),
+                                overflow: TextOverflow.ellipsis),
+                          ),
+                          onTap: () async {},
+                          trailing: Container(
+                            alignment: Alignment.centerRight,
+                            width: 20,
+                            child: IconButton(
+                              icon: Icon(
+                                Icons.more_vert,
+                                color: Colors.grey,
+                                size: 20,
                               ),
+                              onPressed: () {
+                                _showbottomContent(context, '');
+                              },
                             ),
                           ),
                         ),
-                      ],
-                    ),
-
-                // End : Feed 댓글 2개 미리보기 => 2개 이하인 경우에는 전부 / 2개 이상인 경우에는 2개만
-
-                // Freetalk 댓글
-                if (context.watch<Home>().top_index == 2 &&
-                    context.watch<Home>().Freetalk[widget.index]['reply'] !=
-                        null &&
-                    context
-                            .watch<Home>()
-                            .Freetalk[widget.index]['reply']
-                            .length >
-                        2)
-                  GestureDetector(
-                    onTap: () async {
-                      // 페이지 이동
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => ReplyPage()),
-                      );
-                    },
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Container(
-                        padding: EdgeInsets.only(left: 10),
-                        child: Text(
-                            '댓글 ${context.watch<Home>().Freetalk[widget.index]['reply'].length}개 모두 보기'),
                       ),
-                    ),
+                    ],
                   ),
 
-                // Start : Freetalk 댓글 2개 미리보기 => 2개 이하인 경우에는 전부 / 2개 이상인 경우에는 미리보기
-                if (context.watch<Home>().top_index == 2 &&
-                    context.watch<Home>().Freetalk[widget.index]['reply'] !=
-                        null &&
-                    context
-                            .watch<Home>()
-                            .Freetalk[widget.index]['reply']
-                            .length !=
-                        0 &&
-                    context
-                            .watch<Home>()
-                            .Freetalk[widget.index]['reply']
-                            .length <
-                        3)
-                  for (var reply in context.watch<Home>().Freetalk[widget.index]
-                      ['reply'])
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
-                          alignment: Alignment.centerLeft,
-                          margin: EdgeInsets.only(left: 10),
-                          child: Text(reply['nickname'],
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                              )),
-                        ),
-                        Expanded(
-                          child: ListTile(
-                            dense: true,
-                            visualDensity: VisualDensity(vertical: -4),
-                            leading: Container(
-                              padding: EdgeInsets.only(right: 30),
-                              child: Text(reply['content'],
-                                  style: TextStyle(
-                                      fontSize: 13.0,
-                                      fontWeight: FontWeight.normal),
-                                  overflow: TextOverflow.ellipsis),
-                            ),
-                            onTap: () async {},
-                            trailing: Container(
-                              alignment: Alignment.centerRight,
-                              width: 20,
-                              child: IconButton(
-                                icon: Icon(
-                                  Icons.more_vert,
-                                  color: Colors.grey,
-                                  size: 20,
-                                ),
-                                onPressed: () {
-                                  _showbottomContent(context, '');
-                                },
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-
-                // End : Freetalk 댓글 2개 미리보기 => 2개 이하인 경우에는 전부 / 2개 이상인 경우에는 2개만
-              ],
-            ),
-          );
-        } else {
-          return Container(
-            width: 0,
-            height: 0,
-          );
-        }
+              // End : Freetalk 댓글 2개 미리보기 => 2개 이하인 경우에는 전부 / 2개 이상인 경우에는 2개만
+            ],
+          ),
+        );
       } else {
         return Container(
           width: 0,
@@ -1525,6 +1505,13 @@ class _FeedState extends State<Feed> {
       );
     }
   }
+  // else {
+  //   return Container(
+  //     width: 0,
+  //     height: 0,
+  //   );
+  // }
+  // }
 }
 
 // SelectedFilter 기본 class => 선택된 필터 종류 보여주는 박스

@@ -91,8 +91,8 @@ class Home with ChangeNotifier {
   // 필터 태그 선택 시
   void add_list(value) {
     Selected_list.add(value);
-    // 데이터 추가 호출
-    get_data_append();
+    // 데이터 호출
+    get_data_filter();
     // 구독 widget에게 변화 알려서 re-build
     notifyListeners();
   }
@@ -1083,5 +1083,143 @@ class Home with ChangeNotifier {
     Feed_count = Fetch_count;
     Freetalk_count = Fetch_count;
     Recipe_count = Fetch_count;
+  }
+
+  // 필터가 있는 경우 데이터 로딩
+  void get_data_filter() async {
+    // init
+    Fetch_count = 10;
+
+    // Feed 화면 로딩
+    if (top_index == 1) {
+      // init
+      Feed = [];
+
+      // 피드 데이터 가져오기
+      await firestore
+          .collection("Feed")
+          .where('filter', arrayContainsAny: Selected_list)
+          .orderBy("createdAt", descending: true)
+          .limit(Fetch_count)
+          .get()
+          .then((QuerySnapshot querySnapshot) async {
+        // 데이터 있는 지 체크
+        if (querySnapshot.docs.length > 0) {
+          // 마지막 doc 체크
+          Feed_last_doc = querySnapshot.docs.last;
+          for (var FeedDoc in querySnapshot.docs) {
+            Feed.add(FeedDoc.data());
+            Feed_index_list.add(FeedDoc);
+          }
+
+          Feed_index_list.asMap().forEach((FeedIndex, FeedDoc) => {
+                // 기존에 호출되지 않은 사항 subcollection 호출 및 추가
+                if (Feed_count <= FeedIndex)
+                  {
+                    print("${FeedIndex} ${FeedDoc.data()}"),
+                    // subcollection data 호출
+                    getFeedimage(FeedDoc, FeedIndex),
+                    getFeedlike(FeedDoc, FeedIndex),
+                    getFeedreply(FeedDoc, FeedIndex),
+                    getFeedfilter(FeedDoc, FeedIndex),
+                    getFeedbookmark(FeedDoc, FeedIndex),
+                    // User의 프로필 이미지는 변경될 수 있으니 연동해서 가져오기
+                    getFeedprofileimage(FeedDoc, FeedIndex),
+                  }
+              });
+        }
+      });
+      // 데이터 개수 추가
+      Feed_count += Fetch_count;
+    }
+
+    // Freetalk 화면 로딩
+    if (top_index == 2) {
+      // init
+      Freetalk = [];
+
+      // 자유 게시판 데이터 가져오기
+      await firestore
+          .collection("Freetalk")
+          .orderBy("createdAt", descending: true)
+          .where('filter', arrayContainsAny: Selected_list)
+          .limit(Fetch_count)
+          .get()
+          .then((QuerySnapshot querySnapshot) async {
+        // 데이터 있는 지 체크
+        if (querySnapshot.docs.length > 0) {
+          // 마지막 doc 체크
+          Freetalk_last_doc = querySnapshot.docs.last;
+          for (var FreetalkDoc in querySnapshot.docs) {
+            Freetalk.add(FreetalkDoc.data());
+            Freetalk_index_list.add(FreetalkDoc);
+          }
+
+          Freetalk_index_list.asMap().forEach((FreetalkIndex, FreetalkDoc) => {
+                // 기존에 호출되지 않은 사항 subcollection 호출 및 추가
+                if (Freetalk_count <= FreetalkIndex)
+                  {
+                    print("${FreetalkIndex} ${FreetalkDoc.data()}"),
+                    // subcollection data 호출
+                    getFreetalklike(FreetalkDoc, FreetalkIndex),
+                    getFreetalkimage(FreetalkDoc, FreetalkIndex),
+                    getFreetalkreply(FreetalkDoc, FreetalkIndex),
+                    getFreetalkfilter(FreetalkDoc, FreetalkIndex),
+                    getFreetalkbookmark(FreetalkDoc, FreetalkIndex),
+                    // User의 프로필 이미지는 변경될 수 있으니 연동해서 가져오기
+                    getFreetalkprofileimage(FreetalkDoc, FreetalkIndex),
+                  }
+              });
+        }
+      });
+      // 데이터 개수 추가
+      Freetalk_count += Fetch_count;
+    }
+
+    // Recipe 화면 로딩
+    if (top_index == 3) {
+      // init
+      Recipe = [];
+
+      await firestore
+          .collection("Recipe")
+          .orderBy("createdAt", descending: true)
+          .where('filter', arrayContainsAny: Selected_list)
+          .limit(Fetch_count)
+          .get()
+          .then((QuerySnapshot querySnapshot) async {
+        // 데이터 있는 지 체크
+        if (querySnapshot.docs.length > 0) {
+          // 마지막 doc 체크
+          Recipe_last_doc = querySnapshot.docs.last;
+          for (var RecipeDoc in querySnapshot.docs) {
+            Recipe.add(RecipeDoc.data());
+            Recipe_index_list.add(RecipeDoc);
+          }
+
+          Recipe_index_list.asMap().forEach((RecipeIndex, RecipeDoc) => {
+                // 기존에 호출되지 않은 사항 subcollection 호출 및 추가
+                if (Recipe_count <= RecipeIndex)
+                  {
+                    print("${RecipeIndex} ${RecipeDoc.data()}"),
+                    // subcollection data 호출
+                    getRecipelike(RecipeDoc, RecipeIndex),
+                    getRecipeprimary(RecipeDoc, RecipeIndex),
+                    getRecipesecondary(RecipeDoc, RecipeIndex),
+                    getRecipetag(RecipeDoc, RecipeIndex),
+                    getRecipereply(RecipeDoc, RecipeIndex),
+                    getRecipefilter(RecipeDoc, RecipeIndex),
+                    getRecipebookmark(RecipeDoc, RecipeIndex),
+                    // User의 프로필 이미지는 변경될 수 있으니 연동해서 가져오기
+                    getRecipeprofileimage(RecipeDoc, RecipeIndex),
+                  }
+              });
+        }
+      });
+      // 데이터 개수 추가
+      Recipe_count += Fetch_count;
+    }
+
+    notifyListeners();
   }
 }
