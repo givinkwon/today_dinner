@@ -2,11 +2,11 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
-// screens
-import 'package:today_dinner/screens/Home/index.dart';
-import 'package:today_dinner/screens/Recipe/index.dart';
 // provider
 import 'package:today_dinner/providers/home.dart';
+import 'package:today_dinner/providers/data/Feed.dart';
+import 'package:today_dinner/providers/data/Freetalk.dart';
+import 'package:today_dinner/providers/data/Recipe.dart';
 
 // firebase database => firestore
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -16,6 +16,7 @@ import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/foundation.dart';
 // firebase auth
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:today_dinner/screens/Home/index.dart';
 
 FirebaseFirestore firestore = FirebaseFirestore.instance;
 firebase_storage.FirebaseStorage storage =
@@ -41,7 +42,7 @@ class Reply with ChangeNotifier {
   String AlertContent = ""; // Alert 내용
 
   // 글쓰기 완료
-  void replyComplete(doc_id, user, auth, context, top_index) {
+  void replyComplete(doc_id, user, auth, context, top_index) async {
     // init
     Error = 0;
     AlertTitle = "";
@@ -55,120 +56,49 @@ class Reply with ChangeNotifier {
       return;
     }
 
+    // init
     var rand = new Random().nextInt(100000000);
 
-    print(1);
-    print(user);
+    var parameter = {
+      'content': reply,
+      'createdAt': FieldValue.serverTimestamp(),
+      'nickname': user['nickname'],
+      'profileimage': user['profileimage'],
+      'user': user['email'],
+    };
+
     //데이터베이스 저장
     // Feed
-    if (top_index == 1)
-      firestore
-          .collection("Feed")
-          .doc("${doc_id}")
-          .collection("reply")
-          .doc("${rand}")
-          .set({
-        'content': reply,
-        'createdAt': FieldValue.serverTimestamp(),
-        'nickname': user['nickname'],
-        'profileimage': user['profileimage'],
-        'user': user['email'],
-      }).then((_) => {
-                showDialog(
-                    context: context,
-                    barrierDismissible: false,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: new Text("댓글쓰기 완료"),
-                        content: new Text("댓글 쓰기가 완료되었습니다."),
-                        actions: <Widget>[
-                          new FlatButton(
-                            onPressed: () {
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => HomePage()),
-                              );
-                            },
-                            child: new Text("닫기"),
-                          ),
-                        ],
-                      );
-                    }),
-              });
+    if (top_index == 1) {
+      context.Feed().create_data(Parameter: parameter);
+    }
 
     // Freetalk
-    if (top_index == 2)
-      firestore
-          .collection("Freetalk")
-          .doc("${doc_id}")
-          .collection("reply")
-          .doc("${rand}")
-          .set({
-        'content': reply,
-        'createdAt': FieldValue.serverTimestamp(),
-        'nickname': user['nickname'],
-        'profileimage': user['profileimage'],
-        'user': user['email'],
-      }).then((_) => {
-                showDialog(
-                    context: context,
-                    barrierDismissible: false,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: new Text("댓글쓰기 완료"),
-                        content: new Text("댓글 쓰기가 완료되었습니다."),
-                        actions: <Widget>[
-                          new FlatButton(
-                            onPressed: () {
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => HomePage()),
-                              );
-                            },
-                            child: new Text("닫기"),
-                          ),
-                        ],
-                      );
-                    }),
-              });
+    if (top_index == 2) {
+      context.Freetalk().create_data(Parameter: parameter);
+    }
 
     // Recipe
-    if (top_index == 3)
-      firestore
-          .collection("Recipe")
-          .doc("${doc_id}")
-          .collection("reply")
-          .doc("${rand}")
-          .set({
-        'content': reply,
-        'createdAt': FieldValue.serverTimestamp(),
-        'nickname': user['nickname'],
-        'profileimage': user['profileimage'],
-        'user': user['email'],
-      }).then((_) => {
-                showDialog(
-                    context: context,
-                    barrierDismissible: false,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: new Text("댓글쓰기 완료"),
-                        content: new Text("댓글 쓰기가 완료되었습니다."),
-                        actions: <Widget>[
-                          new FlatButton(
-                            onPressed: () {
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => RecipePage()),
-                              );
-                            },
-                            child: new Text("닫기"),
-                          ),
-                        ],
-                      );
-                    }),
-              });
+    if (top_index == 3) {
+      context.Recipe().create_data(Parameter: parameter);
+    }
+
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: new Text("댓글쓰기 완료"),
+            content: new Text("댓글 쓰기가 완료되었습니다."),
+            actions: <Widget>[
+              new FlatButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: new Text("닫기"),
+              ),
+            ],
+          );
+        });
   }
 }
