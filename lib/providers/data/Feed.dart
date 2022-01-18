@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 // firebase database => firestore
@@ -20,190 +21,61 @@ FirebaseAuth auth = FirebaseAuth.instance;
 class Feed with ChangeNotifier {
   List<dynamic> Data = []; // Feed 데이터 호출
   dynamic Data_last_doc; // pagnation을 위해 호출 시 마지막 Doc 정보 저장
+  dynamic Firebase_Query =
+      firestore.collection("Feed"); // 호출할 Query를 저장하고 마지막에 호출
 
-  // 초기 데이터 호출 : 필터 / 개수 / 검색
+  // 데이터 호출 : 필터 / 개수 / 검색 / activity(Home / Scrap / Mypage)
   void get_data(
-      {List<dynamic>? Filter, int Limit = 10, String Search = ""}) async {
+      {List<dynamic>? Filter,
+      int Limit = 10,
+      String Search = "",
+      String Activity = "Home",
+      String Email = ""}) async {
     // init
     Data = [];
+    Firebase_Query = firestore
+        .collection("Feed")
+        .orderBy("createdAt", descending: true)
+        .limit(Limit);
 
-    // Filter & Search 동시 초기 호출
-    if (Filter != null && Search != "") {
-      await firestore
-          .collection("Feed")
-          .where('filter', arrayContainsAny: Filter)
-          .where('search', arrayContains: Search)
-          .orderBy("createdAt", descending: true)
-          .limit(Limit)
-          .get()
-          .then((QuerySnapshot querySnapshot) async {
-        // 데이터 있는 지 체크
-        if (querySnapshot.docs.length > 0) {
-          // 마지막 doc 체크
-          Data_last_doc = querySnapshot.docs.last;
-
-          for (var FeedDoc in querySnapshot.docs) {
-            Data.add(FeedDoc.data());
-          }
-        }
-      });
+    // 1. Activity가 Mypage인 경우 => 내 글
+    if (Activity == "Mypage") {
+      Firebase_Query = Firebase_Query.where('user', isEqualTo: Email);
     }
 
-    // Filter 초기 호출
-    else if (Filter != null) {
-      await firestore
-          .collection("Feed")
-          .where('filter', arrayContainsAny: Filter)
-          .orderBy("createdAt", descending: true)
-          .limit(Limit)
-          .get()
-          .then((QuerySnapshot querySnapshot) async {
-        // 데이터 있는 지 체크
-        if (querySnapshot.docs.length > 0) {
-          // 마지막 doc 체크
-          Data_last_doc = querySnapshot.docs.last;
-
-          for (var FeedDoc in querySnapshot.docs) {
-            Data.add(FeedDoc.data());
-          }
-        }
-      });
+    // ==================================================
+    // 2. Activity가 Scrap인 경우 => 스크랩한 글
+    if (Activity == "Scrap") {
+      Firebase_Query = Firebase_Query.where('bookmark', arrayContains: Email);
     }
 
-    // Search 초기 호출
-    else if (Search != "") {
-      await firestore
-          .collection("Feed")
-          .where('search', arrayContains: Search)
-          .orderBy("createdAt", descending: true)
-          .limit(Limit)
-          .get()
-          .then((QuerySnapshot querySnapshot) async {
-        // 데이터 있는 지 체크
-        if (querySnapshot.docs.length > 0) {
-          // 마지막 doc 체크
-          Data_last_doc = querySnapshot.docs.last;
-
-          for (var FeedDoc in querySnapshot.docs) {
-            Data.add(FeedDoc.data());
-          }
-        }
-      });
+    // Filter가 있는 경우
+    if (Filter != null) {
+      Firebase_Query = Firebase_Query.where('filter', arrayContainsAny: Filter);
     }
 
-    //초기 호출
-    else {
-      await firestore
-          .collection("Feed")
-          .orderBy("createdAt", descending: true)
-          .limit(Limit)
-          .get()
-          .then((QuerySnapshot querySnapshot) async {
-        // 데이터 있는 지 체크
-        if (querySnapshot.docs.length > 0) {
-          // 마지막 doc 체크
-          Data_last_doc = querySnapshot.docs.last;
-
-          for (var FeedDoc in querySnapshot.docs) {
-            Data.add(FeedDoc.data());
-          }
-        }
-      });
+    // Search가 있는 경우
+    if (Search != "") {
+      Firebase_Query = Firebase_Query.where('search', arrayContains: Search);
     }
 
-    notifyListeners();
-  }
-
-  // 추가 데이터 호출 : 필터 / 개수 / 검색
-  void get_data_append(
-      {List<dynamic>? Filter, int Limit = 10, String Search = ""}) async {
-    // Filter & Search 동시 추가 호출
-    if (Filter != null && Search != "") {
-      await firestore
-          .collection("Feed")
-          .where('filter', arrayContainsAny: Filter)
-          .where('search', arrayContains: Search)
-          .orderBy("createdAt", descending: true)
-          .startAfterDocument(Data_last_doc)
-          .limit(Limit)
-          .get()
-          .then((QuerySnapshot querySnapshot) async {
-        // 데이터 있는 지 체크
-        if (querySnapshot.docs.isNotEmpty) {
-          // 마지막 doc 체크
-          Data_last_doc = querySnapshot.docs.last;
-
-          for (var FeedDoc in querySnapshot.docs) {
-            Data.add(FeedDoc.data());
-          }
-        }
-      });
+    // 초기 호출이 아닌 경우
+    if (Data_last_doc != null) {
+      Firebase_Query = Firebase_Query.startAfterDocument(Data_last_doc);
     }
 
-    // Filter 추가 호출
-    else if (Filter != null) {
-      await firestore
-          .collection("Feed")
-          .where('filter', arrayContainsAny: Filter)
-          .orderBy("createdAt", descending: true)
-          .startAfterDocument(Data_last_doc)
-          .limit(Limit)
-          .get()
-          .then((QuerySnapshot querySnapshot) async {
-        // 데이터 있는 지 체크
-        if (querySnapshot.docs.length > 0) {
-          // 마지막 doc 체크
-          Data_last_doc = querySnapshot.docs.last;
+    //호출
+    await Firebase_Query.get().then((QuerySnapshot querySnapshot) async {
+      // 데이터 있는 지 체크
+      if (querySnapshot.docs.length > 0) {
+        // 마지막 doc 체크
+        Data_last_doc = querySnapshot.docs.last;
 
-          for (var FeedDoc in querySnapshot.docs) {
-            Data.add(FeedDoc.data());
-          }
+        for (var FeedDoc in querySnapshot.docs) {
+          Data.add(FeedDoc.data());
         }
-      });
-    }
-
-    // Search 추가 호출
-    else if (Search != "") {
-      await firestore
-          .collection("Feed")
-          .where('search', arrayContains: Search)
-          .orderBy("createdAt", descending: true)
-          .startAfterDocument(Data_last_doc)
-          .limit(Limit)
-          .get()
-          .then((QuerySnapshot querySnapshot) async {
-        // 데이터 있는 지 체크
-        if (querySnapshot.docs.length > 0) {
-          // 마지막 doc 체크
-          Data_last_doc = querySnapshot.docs.last;
-
-          for (var FeedDoc in querySnapshot.docs) {
-            Data.add(FeedDoc.data());
-          }
-        }
-      });
-    }
-
-    //일반 추가 호출
-    else {
-      await firestore
-          .collection("Feed")
-          .orderBy("createdAt", descending: true)
-          .startAfterDocument(Data_last_doc)
-          .limit(Limit)
-          .get()
-          .then((QuerySnapshot querySnapshot) async {
-        // 데이터 있는 지 체크
-        if (querySnapshot.docs.length > 0) {
-          // 마지막 doc 체크
-          Data_last_doc = querySnapshot.docs.last;
-
-          for (var FeedDoc in querySnapshot.docs) {
-            Data.add(FeedDoc.data());
-          }
-        }
-      });
-    }
+      }
+    });
 
     notifyListeners();
   }
@@ -226,25 +98,24 @@ class Feed with ChangeNotifier {
     // array init
     var array_field = ['like', 'bookmark', 'reply', 'filter', 'search'];
 
+    Firebase_Query = firestore.collection("Feed").doc(DocId);
+
     // parmeter로 여러 field를 한 번에 수정하는 경우
     if (Parameter != null) {
       // update
-      await firestore.collection("Feed").doc(DocId).update(Parameter);
+      await Firebase_Query.update(Parameter);
     }
 
     // array update => like, bookmark, reply, filter, search
     else if (array_field.contains(Field)) {
       // update
-      await firestore
-          .collection("Feed")
-          .doc(DocId)
-          .update({Field: FieldValue.arrayUnion(Value)});
+      await Firebase_Query.update({Field: FieldValue.arrayUnion(Value)});
     }
 
     // 일반 field update
     else {
       // update
-      await firestore.collection("Feed").doc(DocId).update({Field: Value});
+      await Firebase_Query.update({Field: Value});
     }
 
     notifyListeners();
@@ -259,28 +130,24 @@ class Feed with ChangeNotifier {
     // array update => like, bookmark, reply, filter, search
     var array_field = ['like', 'bookmark', 'reply', 'filter', 'search'];
 
+    Firebase_Query = firestore.collection("Feed").doc(DocId);
+
     // document 삭제의 경우
     if (State == "document") {
       // delete
-      await firestore.collection("Feed").doc(DocId).delete();
+      await Firebase_Query.delete();
     }
 
     // array field 삭제의 경우
     else if (array_field.contains(Field)) {
       // delete
-      await firestore
-          .collection("Feed")
-          .doc(DocId)
-          .update({Field: FieldValue.arrayRemove(Value)});
+      await Firebase_Query.update({Field: FieldValue.arrayRemove(Value)});
     }
 
     // 일반 field 삭제
     else {
       // delete
-      await firestore
-          .collection("Feed")
-          .doc(DocId)
-          .update({Field: FieldValue.delete()});
+      await Firebase_Query.update({Field: FieldValue.delete()});
     }
 
     notifyListeners();
