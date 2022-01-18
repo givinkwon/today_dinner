@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 // firebase database => firestore
@@ -9,14 +8,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 // provider listener 이용
 import 'package:flutter/foundation.dart';
-import 'package:today_dinner/providers/profile.dart';
 
 // firebase
 FirebaseFirestore firestore = FirebaseFirestore.instance;
 firebase_storage.FirebaseStorage storage =
     firebase_storage.FirebaseStorage.instance;
-// auth
-FirebaseAuth auth = FirebaseAuth.instance;
 
 class Type with ChangeNotifier {
   List<dynamic> Data = []; // Type 데이터 호출

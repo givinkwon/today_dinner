@@ -9,7 +9,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 // provider listener 이용
 import 'package:flutter/foundation.dart';
-import 'package:today_dinner/providers/profile.dart';
 
 // firebase
 FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -130,7 +129,7 @@ class Feed with ChangeNotifier {
           .get()
           .then((QuerySnapshot querySnapshot) async {
         // 데이터 있는 지 체크
-        if (querySnapshot.docs.length > 0) {
+        if (querySnapshot.docs.isNotEmpty) {
           // 마지막 doc 체크
           Data_last_doc = querySnapshot.docs.last;
 
@@ -222,17 +221,67 @@ class Feed with ChangeNotifier {
   }
 
   // 데이터 update
-  void update_data(String DocId, {Map<String, dynamic>? Parameter}) async {
-    // update
-    await firestore.collection("Feed").doc(DocId).update(Parameter!);
+  void update_data(String DocId, String Field, dynamic Value,
+      {Map<String, dynamic>? Parameter}) async {
+    // array init
+    var array_field = ['like', 'bookmark', 'reply', 'filter', 'search'];
+
+    // parmeter로 여러 field를 한 번에 수정하는 경우
+    if (Parameter != null) {
+      // update
+      await firestore.collection("Feed").doc(DocId).update(Parameter);
+    }
+
+    // array update => like, bookmark, reply, filter, search
+    else if (array_field.contains(Field)) {
+      // update
+      await firestore
+          .collection("Feed")
+          .doc(DocId)
+          .update({Field: FieldValue.arrayUnion(Value)});
+    }
+
+    // 일반 field update
+    else {
+      // update
+      await firestore.collection("Feed").doc(DocId).update({Field: Value});
+    }
 
     notifyListeners();
   }
 
   // 데이터 delete
-  void delete_data(String DocId) async {
-    // delete
-    await firestore.collection("Feed").doc(DocId).delete();
+  // 1. doc delete
+  // 2. fleid delte
+  void delete_data(String DocId, String State,
+      {String Field = "", dynamic Value}) async {
+    // array init
+    // array update => like, bookmark, reply, filter, search
+    var array_field = ['like', 'bookmark', 'reply', 'filter', 'search'];
+
+    // document 삭제의 경우
+    if (State == "document") {
+      // delete
+      await firestore.collection("Feed").doc(DocId).delete();
+    }
+
+    // array field 삭제의 경우
+    else if (array_field.contains(Field)) {
+      // delete
+      await firestore
+          .collection("Feed")
+          .doc(DocId)
+          .update({Field: FieldValue.arrayRemove(Value)});
+    }
+
+    // 일반 field 삭제
+    else {
+      // delete
+      await firestore
+          .collection("Feed")
+          .doc(DocId)
+          .update({Field: FieldValue.delete()});
+    }
 
     notifyListeners();
   }
