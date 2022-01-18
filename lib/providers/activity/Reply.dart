@@ -1,26 +1,12 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 
 // provider
-import 'package:today_dinner/providers/home.dart';
 import 'package:today_dinner/providers/data/Feed.dart';
 import 'package:today_dinner/providers/data/Freetalk.dart';
 import 'package:today_dinner/providers/data/Recipe.dart';
 
-// firebase database => firestore
-import 'package:cloud_firestore/cloud_firestore.dart';
-// firebase storage
-import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 // provider listener 이용
 import 'package:flutter/foundation.dart';
-// firebase auth
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:today_dinner/screens/Home/index.dart';
-
-FirebaseFirestore firestore = FirebaseFirestore.instance;
-firebase_storage.FirebaseStorage storage =
-    firebase_storage.FirebaseStorage.instance;
 
 class Reply with ChangeNotifier {
   int selected_index = 0;
@@ -42,7 +28,7 @@ class Reply with ChangeNotifier {
   String AlertContent = ""; // Alert 내용
 
   // 글쓰기 완료
-  void replyComplete(doc_id, user, auth, context, top_index) async {
+  void replyComplete(DocId, user, auth, context, top_index) async {
     // init
     Error = 0;
     AlertTitle = "";
@@ -56,31 +42,20 @@ class Reply with ChangeNotifier {
       return;
     }
 
-    // init
-    var rand = new Random().nextInt(100000000);
-
-    var parameter = {
-      'content': reply,
-      'createdAt': FieldValue.serverTimestamp(),
-      'nickname': user['nickname'],
-      'profileimage': user['profileimage'],
-      'user': user['email'],
-    };
-
     //데이터베이스 저장
     // Feed
     if (top_index == 1) {
-      context.Feed().create_data(Parameter: parameter);
+      Feed().update_data(DocId, 'reply', reply);
     }
 
     // Freetalk
     if (top_index == 2) {
-      context.Freetalk().create_data(Parameter: parameter);
+      Freetalk().update_data(DocId, 'reply', reply);
     }
 
     // Recipe
     if (top_index == 3) {
-      context.Recipe().create_data(Parameter: parameter);
+      Recipe().update_data(DocId, 'reply', reply);
     }
 
     showDialog(
