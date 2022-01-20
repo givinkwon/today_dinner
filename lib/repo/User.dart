@@ -103,8 +103,6 @@ class UserRepo {
   void update_data(String DocId, {Map<String, dynamic>? Parameter}) async {
     // update
     await firestore.collection("User").doc(DocId).update(Parameter!);
-
-    notifyListeners();
   }
 
   // 데이터 delete

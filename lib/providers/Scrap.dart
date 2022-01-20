@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 
 // provider import
-import 'package:today_dinner/providers/repo/Feed.dart';
-import 'package:today_dinner/providers/repo/Freetalk.dart';
-import 'package:today_dinner/providers/repo/Recipe.dart';
-import 'package:today_dinner/providers/repo/User.dart';
+import 'package:today_dinner/repo/Feed.dart';
+import 'package:today_dinner/repo/Freetalk.dart';
+import 'package:today_dinner/repo/Recipe.dart';
+import 'package:today_dinner/repo/User.dart';
 
 class ScrapViewmodel with ChangeNotifier {
   // 생성자
@@ -25,15 +25,15 @@ class ScrapViewmodel with ChangeNotifier {
 
     if (top_index == 1) {
       // 데이터 호출
-      Feed().get_data(Filter: filter_list);
+      // Feed().get_data(Filter: filter_list);
     }
     if (top_index == 2) {
       // 데이터 호출
-      Freetalk().get_data(Filter: filter_list);
+      // Freetalk().get_data(Filter: filter_list);
     }
     if (top_index == 3) {
       // 데이터 호출
-      Recipe().get_data(Filter: filter_list);
+      // Recipe().get_data(Filter: filter_list);
     }
     // 구독 widget에게 변화 알려서 re-build
     notifyListeners();
@@ -60,17 +60,17 @@ class ScrapViewmodel with ChangeNotifier {
   void add_like(GoalField, DocId, UserEmail) {
     // Feed
     if (top_index == 1) {
-      Feed().update_data(DocId, GoalField, UserEmail);
+      // Feed().update_data(DocId, GoalField, UserEmail);
     }
 
     // Freetalk
     if (top_index == 2) {
-      Freetalk().update_data(DocId, GoalField, UserEmail);
+      // Freetalk().update_data(DocId, GoalField, UserEmail);
     }
 
     // Recipe
     if (top_index == 3) {
-      Recipe().update_data(DocId, GoalField, UserEmail);
+      // Recipe().update_data(DocId, GoalField, UserEmail);
     }
     // 구독 widget에게 변화 알려서 re-build
     notifyListeners();
@@ -80,18 +80,18 @@ class ScrapViewmodel with ChangeNotifier {
   void remove_like(GoalField, DocId, UserEmail) {
     // Feed
     if (top_index == 1) {
-      Feed().delete_data(DocId, 'field', Field: GoalField, Value: UserEmail);
+      // Feed().delete_data(DocId, 'field', Field: GoalField, Value: UserEmail);
     }
 
     // Freetalk
     if (top_index == 2) {
-      Freetalk()
-          .delete_data(DocId, 'field', Field: GoalField, Value: UserEmail);
+      // Freetalk()
+      // .delete_data(DocId, 'field', Field: GoalField, Value: UserEmail);
     }
 
     // Recipe
     if (top_index == 3) {
-      Recipe().delete_data(DocId, 'field', Field: GoalField, Value: UserEmail);
+      // Recipe().delete_data(DocId, 'field', Field: GoalField, Value: UserEmail);
     }
     // 구독 widget에게 변화 알려서 re-build
     notifyListeners();

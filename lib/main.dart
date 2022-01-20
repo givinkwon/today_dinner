@@ -2,14 +2,15 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:today_dinner/providers/viewmodel/Home.dart';
-import 'package:today_dinner/providers/viewmodel/Login.dart';
-import 'package:today_dinner/providers/viewmodel/Mypage.dart';
-import 'package:today_dinner/providers/viewmodel/Recipe.dart';
-import 'package:today_dinner/providers/viewmodel/Reply.dart';
-import 'package:today_dinner/providers/viewmodel/Signup.dart';
-import 'package:today_dinner/providers/viewmodel/Video.dart';
-import 'package:today_dinner/providers/viewmodel/Write.dart';
+// provider
+import 'package:today_dinner/providers/Home.dart';
+import 'package:today_dinner/providers/Login.dart';
+import 'package:today_dinner/providers/Mypage.dart';
+import 'package:today_dinner/providers/Recipe.dart';
+import 'package:today_dinner/providers/Reply.dart';
+import 'package:today_dinner/providers/Signup.dart';
+import 'package:today_dinner/providers/Video.dart';
+import 'package:today_dinner/providers/Write.dart';
 import 'package:today_dinner/screens/Video/index.dart';
 // // 카카오 로그인
 // import 'package:kakao_flutter_sdk/all.dart';
@@ -17,15 +18,6 @@ import 'package:today_dinner/screens/Video/index.dart';
 import 'screens/Home/login.dart';
 
 import 'package:provider/provider.dart';
-// provider
-import 'package:today_dinner/providers/viewmodel/home.dart';
-import 'package:today_dinner/providers/viewmodel/signup.dart';
-import 'package:today_dinner/providers/viewmodel/login.dart';
-import 'package:today_dinner/providers/viewmodel/write.dart';
-import 'package:today_dinner/providers/viewmodel/recipe.dart';
-import 'package:today_dinner/providers/viewmodel/reply.dart';
-import 'package:today_dinner/providers/viewmodel/mypage.dart';
-import 'package:today_dinner/providers/viewmodel/profile.dart';
 
 // firebase database => firestore
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -115,6 +107,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       theme: ThemeData(
         fontFamily: 'Noto_Serif_KR',
+        scaffoldBackgroundColor: Color(0xFFEFEFEF),
       ),
 
       // debug 띠 없애기

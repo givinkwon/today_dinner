@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 // provider
-import 'package:today_dinner/providers/repo/Feed.dart';
-import 'package:today_dinner/providers/repo/Freetalk.dart';
-import 'package:today_dinner/providers/repo/Recipe.dart';
+import 'package:today_dinner/repo/Feed.dart';
+import 'package:today_dinner/repo/Freetalk.dart';
+import 'package:today_dinner/repo/Recipe.dart';
 
 // provider listener 이용
 import 'package:flutter/foundation.dart';
@@ -48,17 +48,17 @@ class ReplyViewmodel with ChangeNotifier {
     //데이터베이스 저장
     // Feed
     if (top_index == 1) {
-      Feed().update_data(DocId, 'reply', reply);
+      // Feed().update_data(DocId, 'reply', reply);
     }
 
     // Freetalk
     if (top_index == 2) {
-      Freetalk().update_data(DocId, 'reply', reply);
+      // Freetalk().update_data(DocId, 'reply', reply);
     }
 
     // Recipe
     if (top_index == 3) {
-      Recipe().update_data(DocId, 'reply', reply);
+      // Recipe().update_data(DocId, 'reply', reply);
     }
 
     showDialog(

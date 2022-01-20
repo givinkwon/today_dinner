@@ -4,11 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 
 // provider import
-import 'package:today_dinner/providers/repo/Feed.dart';
-import 'package:today_dinner/providers/repo/Freetalk.dart';
-import 'package:today_dinner/providers/repo/Recipe.dart';
-import 'package:today_dinner/providers/repo/User.dart';
-import 'package:today_dinner/providers/repo/Home.dart';
+import 'package:today_dinner/repo/Feed.dart';
+import 'package:today_dinner/repo/Freetalk.dart';
+import 'package:today_dinner/repo/Recipe.dart';
+import 'package:today_dinner/repo/User.dart';
 
 class HomeViewmodel with ChangeNotifier {
   late final RecipeRepo _RecipeRepo; // video Reopsitory

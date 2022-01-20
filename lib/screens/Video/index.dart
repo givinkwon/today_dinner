@@ -1,97 +1,71 @@
 import 'dart:convert';
+import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:today_dinner/providers/viewmodel/Video.dart';
+import 'package:today_dinner/providers/Video.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoScreen extends StatelessWidget {
-  final _VideoViewModel = VideoViewModel();
-
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        PageView.builder(
-          controller: PageController(
-            initialPage: 0,
-            viewportFraction: 1,
+    if (context.watch<VideoViewModel>().Video_length != 0) {
+      return Stack(
+        children: [
+          PageView.builder(
+            controller: PageController(
+              initialPage: 0,
+              viewportFraction: 1, // 화면 전체를 가림
+            ),
+            itemCount: context.read<VideoViewModel>().Video_length,
+            onPageChanged: (index) {
+              index = index % (context.read<VideoViewModel>().Video_length);
+              context.read<VideoViewModel>().changeVideo(index);
+            },
+            scrollDirection: Axis.vertical,
+            itemBuilder: (context, index) {
+              index = index % (context.read<VideoViewModel>().Video_length);
+              return videoCard(context);
+            },
           ),
-          itemCount: _VideoViewModel.Video_length,
-          onPageChanged: (index) {
-            index = index % (_VideoViewModel.Video_length);
-            _VideoViewModel.changeVideo(index);
-          },
-          scrollDirection: Axis.vertical,
-          itemBuilder: (context, index) {
-            index = index % (_VideoViewModel.Video_length);
-            return videoCard(_VideoViewModel.video_controller);
-          },
-        ),
-        SafeArea(
-          child: Container(
-            padding: EdgeInsets.only(top: 20),
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Text('Following',
-                      style: TextStyle(
-                          fontSize: 17.0,
-                          fontWeight: FontWeight.normal,
-                          color: Colors.white70)),
-                  SizedBox(
-                    width: 7,
-                  ),
-                  Container(
-                    color: Colors.white70,
-                    height: 10,
-                    width: 1.0,
-                  ),
-                  SizedBox(
-                    width: 7,
-                  ),
-                  Text('For You',
-                      style: TextStyle(
-                          fontSize: 17.0,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white))
-                ]),
-          ),
-        ),
-      ],
-    );
+        ],
+      );
+    } else {
+      return Container(
+          color: Color.fromRGBO(255, 255, 255, 1),
+          width: MediaQuery.of(context).size.width,
+          child: Image.asset(
+            'assets/loading.png',
+          ));
+    }
   }
 
-  Widget videoCard(VideoPlayerController _controller) {
+  Widget videoCard(BuildContext context) {
     return Stack(
       children: [
-        _controller != null
-            ? GestureDetector(
-                onTap: () {
-                  if (_controller.value.isPlaying) {
-                    _controller.pause();
-                  } else {
-                    _controller.play();
-                  }
-                },
-                child: SizedBox.expand(
-                    child: FittedBox(
-                  fit: BoxFit.cover,
-                  child: SizedBox(
-                    width: _controller.value.size.width,
-                    height: _controller.value.size.height,
-                    child: VideoPlayer(_controller),
-                  ),
-                )),
-              )
-            : Container(
-                color: Colors.black,
-                child: Center(
-                  child: Text("Loading"),
-                ),
-              ),
+        GestureDetector(
+          onTap: () {
+            if (context.read<VideoViewModel>().controller.value.isPlaying) {
+              context.read<VideoViewModel>().controller.pause();
+            } else {
+              context.read<VideoViewModel>().controller.play();
+            }
+          },
+          child: SizedBox.expand(
+              child: FittedBox(
+            fit: BoxFit.cover,
+            child: SizedBox(
+              width:
+                  context.read<VideoViewModel>().controller.value.size.width ??
+                      0,
+              height:
+                  context.read<VideoViewModel>().controller.value.size.height ??
+                      0,
+              child: VideoPlayer(context.read<VideoViewModel>().controller),
+            ),
+          )),
+        )
       ],
     );
   }
