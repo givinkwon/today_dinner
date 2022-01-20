@@ -1,36 +1,22 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-// firebase database => firestore
-import 'package:cloud_firestore/cloud_firestore.dart';
-// firebase storage
-import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+
 // provider listener 이용
 import 'package:flutter/foundation.dart';
-
-import 'package:today_dinner/screens/Home/index.dart';
-import 'package:today_dinner/screens/Mypage/Mywrite.dart';
-
-// firebase auth
-import 'package:firebase_auth/firebase_auth.dart';
 
 // 갤러리에서 이미지 가져오기
 import 'package:image_picker/image_picker.dart';
 
-// firebase 데이터 저장
-import 'package:firebase_storage/firebase_storage.dart';
 import 'dart:io';
 
 // provider
-import 'package:provider/provider.dart';
-import 'package:today_dinner/providers/home.dart';
+import 'package:today_dinner/providers/repo/Feed.dart';
+import 'package:today_dinner/providers/repo/Freetalk.dart';
+import 'package:today_dinner/providers/repo/Recipe.dart';
 
-FirebaseFirestore firestore = FirebaseFirestore.instance;
-firebase_storage.FirebaseStorage storage =
-    firebase_storage.FirebaseStorage.instance;
-FirebaseAuth auth = FirebaseAuth.instance;
+class WriteViewmodel with ChangeNotifier {
+  // 생성자
+  WriteViewModel() {}
 
-class Write with ChangeNotifier {
   List<String> ImageUrl = []; // 업로드된 이미지의 url
   String Content = ""; // 업로드 내용
   int top_index = 1; // 상단 메뉴 1 : 식사 , 2 : 자유 수다방
@@ -79,6 +65,7 @@ class Write with ChangeNotifier {
     Error = 0;
     AlertTitle = "";
     AlertContent = "";
+    Map<String, dynamic> parameter = {};
 
     // 예외처리
     if (Content == "") {
@@ -94,80 +81,15 @@ class Write with ChangeNotifier {
       return;
     }
 
-    var rand = new Random().nextInt(100000000);
-
     // 피드인 경우
     if (top_index == 1) {
-      //데이터베이스 저장
-      firestore.collection("Feed").doc("$rand").set({
-        'id': "${rand}",
-        'createdAt': FieldValue.serverTimestamp(),
-        'content': Content,
-        'user': auth.currentUser?.email,
-        'nickname': user_data[0]['nickname'],
-      }).then((_) => {
-            for (var Url in ImageUrl)
-              {
-                print(Url),
-                firestore
-                    .collection("Feed")
-                    .doc("$rand")
-                    .collection("image")
-                    .doc()
-                    .set({
-                  'value': Url,
-                }),
-              },
-            for (var filter in Selected_list)
-              {
-                print(filter),
-                firestore
-                    .collection("Feed")
-                    .doc("$rand")
-                    .collection("filter")
-                    .doc(filter)
-                    .set({
-                  'value': filter,
-                }),
-              },
-          });
+      Feed().create_data(Parameter: parameter);
     }
     // 자유게시판인 경우
     if (top_index == 2) {
-      //데이터베이스 저장
-      firestore.collection("Freetalk").doc("$rand").set({
-        'id': "${rand}",
-        'createdAt': FieldValue.serverTimestamp(),
-        'content': Content,
-        'user': auth.currentUser?.email,
-        'nickname': user_data[0]['nickname'],
-      }).then((_) => {
-            for (var Url in ImageUrl)
-              {
-                print(Url),
-                firestore
-                    .collection("Freetalk")
-                    .doc("$rand")
-                    .collection("image")
-                    .doc()
-                    .set({
-                  'value': Url,
-                }),
-              },
-            for (var filter in Selected_list)
-              {
-                print(filter),
-                firestore
-                    .collection("Freetalk")
-                    .doc("$rand")
-                    .collection("filter")
-                    .doc(filter)
-                    .set({
-                  'value': filter,
-                }),
-              },
-          });
+      Freetalk().create_data(Parameter: parameter);
     }
+
     showDialog(
         context: context,
         barrierDismissible: false,
@@ -178,10 +100,7 @@ class Write with ChangeNotifier {
             actions: <Widget>[
               new FlatButton(
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => MywritePage()),
-                  );
+                  Navigator.pop(context);
                 },
                 child: new Text("메인페이지로 이동"),
               ),

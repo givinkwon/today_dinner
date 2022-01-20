@@ -15,7 +15,10 @@ FirebaseFirestore firestore = FirebaseFirestore.instance;
 firebase_storage.FirebaseStorage storage =
     firebase_storage.FirebaseStorage.instance;
 
-class Signup with ChangeNotifier {
+class SignupViewmodel with ChangeNotifier {
+  // 생성자
+  SignupViewModel() {}
+
   String Email = "";
 
   // 이메일 입력

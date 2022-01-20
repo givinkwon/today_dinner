@@ -18,7 +18,7 @@ firebase_storage.FirebaseStorage storage =
 // auth
 FirebaseAuth auth = FirebaseAuth.instance;
 
-class Recipe with ChangeNotifier {
+class RecipeRepo with ChangeNotifier {
   List<dynamic> Data = []; // Recipe 데이터 호출
   dynamic Data_last_doc; // pagnation을 위해 호출 시 마지막 Doc 정보 저장
   dynamic Firebase_Query =

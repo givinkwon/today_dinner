@@ -18,11 +18,11 @@ firebase_storage.FirebaseStorage storage =
 // auth
 FirebaseAuth auth = FirebaseAuth.instance;
 
-class Freetalk with ChangeNotifier {
-  List<dynamic> Data = []; // Freetalk 데이터 호출
+class FeedRepo with ChangeNotifier {
+  List<dynamic> Data = []; // Feed 데이터 호출
   dynamic Data_last_doc; // pagnation을 위해 호출 시 마지막 Doc 정보 저장
   dynamic Firebase_Query =
-      firestore.collection("Freetalk"); // 호출할 Query를 저장하고 마지막에 호출
+      firestore.collection("Feed"); // 호출할 Query를 저장하고 마지막에 호출
 
   // 데이터 호출 : 필터 / 개수 / 검색 / activity(Home / Scrap / Mypage)
   void get_data(
@@ -34,7 +34,7 @@ class Freetalk with ChangeNotifier {
     // init
     Data = [];
     Firebase_Query = firestore
-        .collection("Freetalk")
+        .collection("Feed")
         .orderBy("createdAt", descending: true)
         .limit(Limit);
 
@@ -71,8 +71,8 @@ class Freetalk with ChangeNotifier {
         // 마지막 doc 체크
         Data_last_doc = querySnapshot.docs.last;
 
-        for (var FreetalkDoc in querySnapshot.docs) {
-          Data.add(FreetalkDoc.data());
+        for (var FeedDoc in querySnapshot.docs) {
+          Data.add(FeedDoc.data());
         }
       }
     });
@@ -87,7 +87,7 @@ class Freetalk with ChangeNotifier {
     var rand = new Random().nextInt(100000000);
 
     // 저장
-    await firestore.collection("Freetalk").doc("$rand").set(Parameter!);
+    await firestore.collection("Feed").doc("$rand").set(Parameter!);
 
     notifyListeners();
   }
@@ -98,7 +98,7 @@ class Freetalk with ChangeNotifier {
     // array init
     var array_field = ['like', 'bookmark', 'reply', 'filter', 'search'];
 
-    Firebase_Query = firestore.collection("Freetalk").doc(DocId);
+    Firebase_Query = firestore.collection("Feed").doc(DocId);
 
     // parmeter로 여러 field를 한 번에 수정하는 경우
     if (Parameter != null) {
@@ -130,7 +130,7 @@ class Freetalk with ChangeNotifier {
     // array update => like, bookmark, reply, filter, search
     var array_field = ['like', 'bookmark', 'reply', 'filter', 'search'];
 
-    Firebase_Query = firestore.collection("Freetalk").doc(DocId);
+    Firebase_Query = firestore.collection("Feed").doc(DocId);
 
     // document 삭제의 경우
     if (State == "document") {

@@ -9,10 +9,10 @@ import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/foundation.dart';
 
 // provider import
-import 'package:today_dinner/providers/data/Feed.dart';
-import 'package:today_dinner/providers/data/Freetalk.dart';
-import 'package:today_dinner/providers/data/Recipe.dart';
-import 'package:today_dinner/providers/data/User.dart';
+import 'package:today_dinner/providers/repo/Feed.dart';
+import 'package:today_dinner/providers/repo/Freetalk.dart';
+import 'package:today_dinner/providers/repo/Recipe.dart';
+import 'package:today_dinner/providers/repo/User.dart';
 
 // firebase auth
 import 'package:firebase_auth/firebase_auth.dart';
@@ -23,7 +23,10 @@ FirebaseFirestore firestore = FirebaseFirestore.instance;
 firebase_storage.FirebaseStorage storage =
     firebase_storage.FirebaseStorage.instance;
 
-class Login with ChangeNotifier {
+class LoginViewmodel with ChangeNotifier {
+  // 생성자
+  LoginViewModel() {}
+
   String Email = "";
 
   // 이메일 입력

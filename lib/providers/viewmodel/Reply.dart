@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 
 // provider
-import 'package:today_dinner/providers/data/Feed.dart';
-import 'package:today_dinner/providers/data/Freetalk.dart';
-import 'package:today_dinner/providers/data/Recipe.dart';
+import 'package:today_dinner/providers/repo/Feed.dart';
+import 'package:today_dinner/providers/repo/Freetalk.dart';
+import 'package:today_dinner/providers/repo/Recipe.dart';
 
 // provider listener 이용
 import 'package:flutter/foundation.dart';
 
-class Reply with ChangeNotifier {
+class ReplyViewmodel with ChangeNotifier {
+  // 생성자
+  ReplyViewModel() {}
+
   int selected_index = 0;
 
   // feed랑 freetalk에 사용

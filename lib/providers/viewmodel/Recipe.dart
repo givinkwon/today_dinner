@@ -10,7 +10,10 @@ FirebaseFirestore firestore = FirebaseFirestore.instance;
 firebase_storage.FirebaseStorage storage =
     firebase_storage.FirebaseStorage.instance;
 
-class Recipe with ChangeNotifier {
+class RecipeViewmodel with ChangeNotifier {
+  // 생성자
+  RecipeViewModel() {}
+
   dynamic Selected_data = []; // 선택된 데이터
 
   // 메인페이지 상단 메뉴 선택 시 데이터 호출

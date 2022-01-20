@@ -69,6 +69,8 @@ dependencies:
 
   # firebase_anayltics(contains gtag)
   firebase_analytics: ^9.0.5
+  stacked: ^2.2.8
+  video_player: ^2.2.13
 
 
 dev_dependencies:

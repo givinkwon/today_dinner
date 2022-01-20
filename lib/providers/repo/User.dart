@@ -17,7 +17,7 @@ firebase_storage.FirebaseStorage storage =
 // auth
 FirebaseAuth auth = FirebaseAuth.instance;
 
-class User with ChangeNotifier {
+class UserRepo with ChangeNotifier {
   List<dynamic> Data = []; // User 데이터 호출
   dynamic Data_last_doc; // pagnation을 위해 호출 시 마지막 Doc 정보 저장
 

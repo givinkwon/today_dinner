@@ -2,7 +2,15 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:today_dinner/providers/findpassword.dart';
+import 'package:today_dinner/providers/viewmodel/Home.dart';
+import 'package:today_dinner/providers/viewmodel/Login.dart';
+import 'package:today_dinner/providers/viewmodel/Mypage.dart';
+import 'package:today_dinner/providers/viewmodel/Recipe.dart';
+import 'package:today_dinner/providers/viewmodel/Reply.dart';
+import 'package:today_dinner/providers/viewmodel/Signup.dart';
+import 'package:today_dinner/providers/viewmodel/Video.dart';
+import 'package:today_dinner/providers/viewmodel/Write.dart';
+import 'package:today_dinner/screens/Video/index.dart';
 // // 카카오 로그인
 // import 'package:kakao_flutter_sdk/all.dart';
 
@@ -10,14 +18,14 @@ import 'screens/Home/login.dart';
 
 import 'package:provider/provider.dart';
 // provider
-import 'package:today_dinner/providers/home.dart';
-import 'package:today_dinner/providers/signup.dart';
-import 'package:today_dinner/providers/login.dart';
-import 'package:today_dinner/providers/write.dart';
-import 'package:today_dinner/providers/recipe.dart';
-import 'package:today_dinner/providers/reply.dart';
-import 'package:today_dinner/providers/mypage.dart';
-import 'package:today_dinner/providers/profile.dart';
+import 'package:today_dinner/providers/viewmodel/home.dart';
+import 'package:today_dinner/providers/viewmodel/signup.dart';
+import 'package:today_dinner/providers/viewmodel/login.dart';
+import 'package:today_dinner/providers/viewmodel/write.dart';
+import 'package:today_dinner/providers/viewmodel/recipe.dart';
+import 'package:today_dinner/providers/viewmodel/reply.dart';
+import 'package:today_dinner/providers/viewmodel/mypage.dart';
+import 'package:today_dinner/providers/viewmodel/profile.dart';
 
 // firebase database => firestore
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -33,6 +41,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 FirebaseAnalytics analytics = FirebaseAnalytics.instance;
 
 FirebaseMessaging messaging = FirebaseMessaging.instance;
+
 // 백그라운드 메세지
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   // If you're going to use other Firebase services in the background, such as Firestore,
@@ -47,6 +56,7 @@ void main() async {
   // KakaoContext.clientId = "457c2efc04af1b1dd6b18bcb2ab525bb";
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
   // push alarm 권한 요청
   NotificationSettings settings = await messaging.requestPermission(
     alert: true,
@@ -78,15 +88,7 @@ void main() async {
 
   runApp(
     MultiProvider(providers: [
-      ChangeNotifierProvider(create: (_) => Home()),
-      ChangeNotifierProvider(create: (_) => Signup()),
-      ChangeNotifierProvider(create: (_) => Login()),
-      ChangeNotifierProvider(create: (_) => Write()),
-      ChangeNotifierProvider(create: (_) => Recipe()),
-      ChangeNotifierProvider(create: (_) => Reply()),
-      ChangeNotifierProvider(create: (_) => Mypage()),
-      ChangeNotifierProvider(create: (_) => Profile()),
-      ChangeNotifierProvider(create: (_) => FindPassword()),
+      ChangeNotifierProvider(create: (_) => VideoViewModel()),
     ], child: const MyApp()),
   );
 }
@@ -117,7 +119,7 @@ class _MyAppState extends State<MyApp> {
 
       // debug 띠 없애기
       debugShowCheckedModeBanner: false,
-      home: LoginPage(),
+      home: VideoScreen(),
     );
   }
 }

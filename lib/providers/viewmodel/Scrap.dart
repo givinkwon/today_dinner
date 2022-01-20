@@ -4,12 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 
 // provider import
-import 'package:today_dinner/providers/data/Feed.dart';
-import 'package:today_dinner/providers/data/Freetalk.dart';
-import 'package:today_dinner/providers/data/Recipe.dart';
-import 'package:today_dinner/providers/data/User.dart';
+import 'package:today_dinner/providers/repo/Feed.dart';
+import 'package:today_dinner/providers/repo/Freetalk.dart';
+import 'package:today_dinner/providers/repo/Recipe.dart';
+import 'package:today_dinner/providers/repo/User.dart';
 
-class Scrap with ChangeNotifier {
+class ScrapViewmodel with ChangeNotifier {
+  // 생성자
+  ScrapViewModel() {}
+
   List<String> filter_list = []; // 선택된 필터 List
 
   int top_index = 3; // 메인페이지 상단 메뉴 1 : 피드, 2: 레시피, 3: 자유게시판
