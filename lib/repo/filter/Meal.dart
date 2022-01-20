@@ -14,8 +14,8 @@ FirebaseFirestore firestore = FirebaseFirestore.instance;
 firebase_storage.FirebaseStorage storage =
     firebase_storage.FirebaseStorage.instance;
 
-class BabyfoodRepo with ChangeNotifier {
-  List<dynamic> Data = []; // Babyfood 데이터 호출
+class MealRepo {
+  List<dynamic> Data = []; // Meal 데이터 호출
   dynamic Data_last_doc; // pagnation을 위해 호출 시 마지막 Doc 정보 저장
 
   // 초기 데이터 호출
@@ -24,7 +24,7 @@ class BabyfoodRepo with ChangeNotifier {
     Data = [];
 
     await firestore
-        .collection("Babyfood")
+        .collection("Meal")
         .orderBy("createdAt", descending: true)
         .get()
         .then((QuerySnapshot querySnapshot) async {
@@ -33,12 +33,10 @@ class BabyfoodRepo with ChangeNotifier {
         // 마지막 doc 체크
         Data_last_doc = querySnapshot.docs.last;
 
-        for (var BabyfoodDoc in querySnapshot.docs) {
-          Data.add(BabyfoodDoc.data());
+        for (var MealDoc in querySnapshot.docs) {
+          Data.add(MealDoc.data());
         }
       }
     });
-
-    notifyListeners();
   }
 }

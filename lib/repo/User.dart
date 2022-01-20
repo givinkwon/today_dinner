@@ -17,7 +17,7 @@ firebase_storage.FirebaseStorage storage =
 // auth
 FirebaseAuth auth = FirebaseAuth.instance;
 
-class UserRepo with ChangeNotifier {
+class UserRepo {
   List<dynamic> Data = []; // User 데이터 호출
   dynamic Data_last_doc; // pagnation을 위해 호출 시 마지막 Doc 정보 저장
 
@@ -65,8 +65,6 @@ class UserRepo with ChangeNotifier {
         }
       });
     }
-
-    notifyListeners();
   }
 
   // 추가 유저 데이터 호출
@@ -89,8 +87,6 @@ class UserRepo with ChangeNotifier {
         }
       }
     });
-
-    notifyListeners();
   }
 
   // 데이터 create
@@ -101,8 +97,6 @@ class UserRepo with ChangeNotifier {
 
     // 저장
     await firestore.collection("User").doc("$rand").set(Parameter!);
-
-    notifyListeners();
   }
 
   // 데이터 update
@@ -117,8 +111,6 @@ class UserRepo with ChangeNotifier {
   void delete_data(String DocId) async {
     // delete
     await firestore.collection("User").doc(DocId).delete();
-
-    notifyListeners();
   }
 }
 
