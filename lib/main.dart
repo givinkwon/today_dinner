@@ -107,7 +107,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       theme: ThemeData(
         fontFamily: 'Noto_Serif_KR',
-        scaffoldBackgroundColor: Color(0xFFEFEFEF),
+        scaffoldBackgroundColor: Colors.transparent,
       ),
 
       // debug 띠 없애기
