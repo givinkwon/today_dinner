@@ -3,19 +3,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 // provider
-import 'package:today_dinner/providers/Home.dart';
-import 'package:today_dinner/providers/Login.dart';
-import 'package:today_dinner/providers/Mypage.dart';
+
 import 'package:today_dinner/providers/Recipe.dart';
-import 'package:today_dinner/providers/Reply.dart';
-import 'package:today_dinner/providers/Signup.dart';
 import 'package:today_dinner/providers/Video.dart';
-import 'package:today_dinner/providers/Write.dart';
 import 'package:today_dinner/screens/Video/index.dart';
 // // 카카오 로그인
 // import 'package:kakao_flutter_sdk/all.dart';
-
-import 'screens/Home/login.dart';
 
 import 'package:provider/provider.dart';
 
@@ -81,6 +74,7 @@ void main() async {
   runApp(
     MultiProvider(providers: [
       ChangeNotifierProvider(create: (_) => VideoViewModel()),
+      ChangeNotifierProvider(create: (_) => RecipeViewmodel()),
     ], child: const MyApp()),
   );
 }

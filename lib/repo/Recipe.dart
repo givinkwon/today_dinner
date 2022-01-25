@@ -25,7 +25,7 @@ class RecipeRepo {
       firestore.collection("Recipe"); // 호출할 Query를 저장하고 마지막에 호출
 
   // 데이터 호출 : 필터 / 개수 / 검색 / activity(Home / Scrap / Mypage)
-  void get_data(
+  Future<void> get_data(
       {List<dynamic>? Filter,
       int Limit = 10,
       String Search = "",

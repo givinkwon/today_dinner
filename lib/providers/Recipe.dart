@@ -5,14 +5,27 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 // provider listener 이용
 import 'package:flutter/foundation.dart';
+import 'package:today_dinner/repo/Recipe.dart';
 
 FirebaseFirestore firestore = FirebaseFirestore.instance;
 firebase_storage.FirebaseStorage storage =
     firebase_storage.FirebaseStorage.instance;
 
 class RecipeViewmodel with ChangeNotifier {
+  late var _RecipeRepo = RecipeRepo();
+  var Data = [];
   // 생성자
-  RecipeViewModel() {}
+  RecipeViewModel() {
+    print(1);
+    _RecipeRepo = RecipeRepo();
+    load_data();
+  }
+
+  // data 호출
+  Future<void> load_data() async {
+    await _RecipeRepo.get_data();
+    var Data = _RecipeRepo.Data;
+  }
 
   dynamic Selected_data = []; // 선택된 데이터
 
