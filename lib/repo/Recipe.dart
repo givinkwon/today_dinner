@@ -30,7 +30,7 @@ class RecipeRepo {
       int Limit = 10,
       String Search = "",
       String Activity = "Home",
-      String Email = "",
+      String? Email = "",
       bool Add = false}) async {
     // init
     var Pre_Data = Data;

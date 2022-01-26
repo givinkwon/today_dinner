@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/src/provider.dart';
 import 'package:today_dinner/providers/Video.dart';
+import 'package:today_dinner/screens/Mypage/index.dart';
 import 'package:today_dinner/screens/Recipe/index.dart';
+import 'package:today_dinner/screens/Scrap/index.dart';
 import 'package:today_dinner/screens/Video/index.dart';
 
 var nav_index = 0;
@@ -39,15 +41,21 @@ Widget bottomNavigation(BuildContext context) {
               },
 
             // 스크랩
-            if (index == 2) {},
+            if (index == 2)
+              {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ScrapScreen()),
+                ),
+              },
 
             // 마이페이지
             if (index == 3)
               {
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(builder: (context) => MyPage()),
-                // ),
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => MyPage()),
+                ),
               },
           },
       items: [

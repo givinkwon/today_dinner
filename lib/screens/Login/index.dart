@@ -1,16 +1,5 @@
-// import 'package:firebase_core/firebase_core.dart';
-// import 'package:flutter/cupertino.dart';
 // import 'package:flutter/material.dart';
 // import 'package:provider/provider.dart';
-
-// // screen
-// import 'package:today_dinner/screens/Login/findpassword.dart';
-// // provider listener 이용
-// // provider => watch는 값이 변화할 때 리렌더링, read는 값이 변화해도 렌더링 x
-// // => watch는 값을 보여주는 UI에 read는 변경이 필요없는 함수에 주로 사용
-// import 'package:today_dinner/providers/login.dart';
-// // provider listener 이용
-// import 'package:flutter/foundation.dart';
 
 // // 로그인 기본 class
 // class LoginIndexPage extends StatefulWidget {
@@ -19,31 +8,31 @@
 // }
 
 // class _LoginIndexPageState extends State<LoginIndexPage> {
-//   // 로그인 클릭했을 때
-//   Future<void> _loginButtonPressed() async {
-//     context.read<Login>().login(context);
+//   // // 로그인 클릭했을 때
+//   // Future<void> _loginButtonPressed() async {
+//   //   context.read<Login>().login(context);
 
-//     // alert 창 띄우기
-//     if (context.read<Login>().AlertTitle != "") {
-//       showDialog(
-//           context: context,
-//           barrierDismissible: false,
-//           builder: (BuildContext context) {
-//             return AlertDialog(
-//               title: new Text(context.read<Login>().AlertTitle),
-//               content: new Text(context.read<Login>().AlertContent),
-//               actions: <Widget>[
-//                 new FlatButton(
-//                   onPressed: () {
-//                     Navigator.pop(context);
-//                   },
-//                   child: new Text("닫기"),
-//                 ),
-//               ],
-//             );
-//           });
-//     }
-//   }
+//   //   // alert 창 띄우기
+//   //   if (context.read<Login>().AlertTitle != "") {
+//   //     showDialog(
+//   //         context: context,
+//   //         barrierDismissible: false,
+//   //         builder: (BuildContext context) {
+//   //           return AlertDialog(
+//   //             title: new Text(context.read<Login>().AlertTitle),
+//   //             content: new Text(context.read<Login>().AlertContent),
+//   //             actions: <Widget>[
+//   //               new FlatButton(
+//   //                 onPressed: () {
+//   //                   Navigator.pop(context);
+//   //                 },
+//   //                 child: new Text("닫기"),
+//   //               ),
+//   //             ],
+//   //           );
+//   //         });
+//   //   }
+//   // }
 
 //   @override
 //   Widget build(BuildContext context) {
@@ -129,7 +118,7 @@
 //                 ),
 //                 Expanded(
 //                   child: TextButton(
-//                     onPressed: _loginButtonPressed,
+//                     // onPressed: _loginButtonPressed,
 //                     style: TextButton.styleFrom(
 //                         primary: Color.fromRGBO(201, 92, 57, 1),
 //                         backgroundColor: Color.fromRGBO(201, 92, 57, 1),

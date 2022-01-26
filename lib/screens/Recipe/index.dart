@@ -152,7 +152,7 @@ class _RecipeState extends State<Recipe> {
                 );
               },
               child: Container(
-                height: 180,
+                height: 160,
                 margin: EdgeInsets.only(left: 15, right: 15),
                 width: MediaQuery.of(context).size.width - 30,
                 child: ClipRRect(
@@ -181,21 +181,21 @@ class _RecipeState extends State<Recipe> {
                 ),
               ),
             ),
-            // if (auth.currentUser != null)
-            //   Positioned(
-            //     top: MediaQuery.of(context).size.height * 0.18,
-            //     left: MediaQuery.of(context).size.width - 80,
-            //     right: 0,
-            //     child: IconButton(
-            //       icon: false
-            //           ? Icon(Icons.bookmark, color: Colors.white, size: 32)
-            //           : Icon(Icons.bookmark_outline,
-            //               color: Colors.white, size: 32),
-            //       onPressed: () {
-            //         // Bookmark_Click(bookmark_check, widget.index);
-            //       },
-            //     ),
-            //   ),
+            if (auth.currentUser != null)
+              Positioned(
+                top: MediaQuery.of(context).size.height * 0.16,
+                left: MediaQuery.of(context).size.width - 100,
+                right: 0,
+                child: IconButton(
+                  icon: false
+                      ? Icon(Icons.bookmark, color: Colors.white, size: 32)
+                      : Icon(Icons.bookmark_outline,
+                          color: Colors.white, size: 32),
+                  onPressed: () {
+                    // Bookmark_Click(bookmark_check, widget.index);
+                  },
+                ),
+              ),
           ],
         ),
 

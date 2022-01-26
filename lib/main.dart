@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 // provider
 
 import 'package:today_dinner/providers/Recipe.dart';
+import 'package:today_dinner/providers/Scrap.dart';
 import 'package:today_dinner/providers/Video.dart';
 import 'package:today_dinner/screens/Video/index.dart';
 // // 카카오 로그인
@@ -78,6 +79,7 @@ void main() async {
     MultiProvider(providers: [
       ChangeNotifierProvider(create: (context) => VideoViewModel()),
       ChangeNotifierProvider(create: (context) => RecipeViewModel()),
+      ChangeNotifierProvider(create: (context) => ScrapViewModel()),
     ], child: const MyApp()),
   );
 }
