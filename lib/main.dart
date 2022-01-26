@@ -1,5 +1,3 @@
-// ignore_for_file: import_of_legacy_library_into_null_safe
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 // provider
@@ -22,6 +20,11 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 
 // GA & GTAG
 import 'package:firebase_analytics/firebase_analytics.dart';
+
+// auth
+import 'package:firebase_auth/firebase_auth.dart';
+
+FirebaseAuth auth = FirebaseAuth.instance;
 
 FirebaseAnalytics analytics = FirebaseAnalytics.instance;
 
@@ -73,8 +76,8 @@ void main() async {
 
   runApp(
     MultiProvider(providers: [
-      ChangeNotifierProvider(create: (_) => VideoViewModel()),
-      ChangeNotifierProvider(create: (_) => RecipeViewmodel()),
+      ChangeNotifierProvider(create: (context) => VideoViewModel()),
+      ChangeNotifierProvider(create: (context) => RecipeViewModel()),
     ], child: const MyApp()),
   );
 }

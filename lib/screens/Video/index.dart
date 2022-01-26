@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:today_dinner/providers/Video.dart';
 import 'package:today_dinner/utils/BottomNavigationBar.dart';
+import 'package:today_dinner/utils/Loading.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoScreen extends StatelessWidget {
@@ -75,15 +76,10 @@ class VideoScreen extends StatelessWidget {
               ),
             ),
           ]),
-          bottomNavigationBar: bottomNavigation(),
+          bottomNavigationBar: bottomNavigation(context),
           extendBody: true);
     } else {
-      return Container(
-          color: Color.fromRGBO(255, 255, 255, 1),
-          width: MediaQuery.of(context).size.width,
-          child: Image.asset(
-            'assets/loading.gif',
-          ));
+      return Loading(context);
     }
   }
 }

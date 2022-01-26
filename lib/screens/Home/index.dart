@@ -108,18 +108,18 @@ class RecipeScreen extends StatelessWidget {
       ),
       body: Column(
         children: <Widget>[
-          Expanded(
-            child: ListView.builder(
-                controller: _scrollController,
-                scrollDirection: Axis.vertical,
-                itemCount: 1,
-                itemBuilder: (BuildContext context, int index) {
-                  return Recipe(index);
-                }),
-          ),
+          // Expanded(
+          //   child: ListView.builder(
+          //       controller: _scrollController,
+          //       scrollDirection: Axis.vertical,
+          //       itemCount: 1,
+          //       itemBuilder: (BuildContext context, int index) {
+          //         return Recipe(index);
+          //       }),
+          // ),
         ],
       ),
-      bottomNavigationBar: bottomNavigation(),
+      bottomNavigationBar: bottomNavigation(context),
     );
   }
 }
