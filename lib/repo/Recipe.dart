@@ -30,8 +30,10 @@ class RecipeRepo {
       int Limit = 10,
       String Search = "",
       String Activity = "Home",
-      String Email = ""}) async {
+      String Email = "",
+      bool Add = false}) async {
     // init
+    var Pre_Data = Data;
     Data = [];
     Firebase_Query = firestore
         .collection("Recipe")
@@ -60,7 +62,8 @@ class RecipeRepo {
     }
 
     // 초기 호출이 아닌 경우
-    if (Data_last_doc != null) {
+    if (Add == true) {
+      Data = Pre_Data;
       Firebase_Query = Firebase_Query.startAfterDocument(Data_last_doc);
     }
 

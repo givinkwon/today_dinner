@@ -31,12 +31,10 @@ class RecipeViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  dynamic Selected_data = []; // 선택된 데이터
-
-  // 메인페이지 상단 메뉴 선택 시 데이터 호출
-  void select_data(data) {
-    Selected_data = data;
-    print(Selected_data);
+  // 스크롤 하단에 도착해서 추가 데이터 호출
+  Future<void> add_data() async {
+    await _RecipeRepo.get_data(Add: true);
+    Data = _RecipeRepo.Data;
     // 구독 widget에게 변화 알려서 re-build
     notifyListeners();
   }
@@ -53,17 +51,18 @@ class RecipeViewModel with ChangeNotifier {
 
   // 검색하기
   void Search() async {
+    print(search_text);
     await _RecipeRepo.get_data(Search: search_text);
+
     Data = _RecipeRepo.Data;
     notifyListeners();
   }
 
   // 레시피 디테일 보기
-  var recipe_data = "";
+  var recipe_data = {};
 
   void SelectRecipe(data) {
     recipe_data = data;
-
     // 구독 widget에게 변화 알려서 re-build
     notifyListeners();
   }

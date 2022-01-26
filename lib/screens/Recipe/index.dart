@@ -8,7 +8,13 @@ import 'package:today_dinner/utils/BottomNavigationBar.dart';
 import 'package:today_dinner/utils/Loading.dart';
 import 'package:today_dinner/utils/NoResult.dart';
 
-class RecipeScreen extends StatelessWidget {
+class RecipeScreen extends StatefulWidget {
+  const RecipeScreen({Key? key}) : super(key: key);
+  @override
+  _RecipeScreen createState() => _RecipeScreen();
+}
+
+class _RecipeScreen extends State<RecipeScreen> {
   // 현재 pixel 확인
   ScrollController _scrollController = new ScrollController();
 
@@ -18,9 +24,22 @@ class RecipeScreen extends StatelessWidget {
   }
 
   @override
+  void initState() {
+    super.initState();
+    //  데이터 가져오기
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
+        context.read<RecipeViewModel>().add_data();
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     if (context.watch<RecipeViewModel>().data_loading == true) {
       return Scaffold(
+        resizeToAvoidBottomInset: false, // 공사장 해결
         appBar: AppBar(
           bottomOpacity: 0.0,
           elevation: 0.0,
@@ -57,8 +76,8 @@ class RecipeScreen extends StatelessWidget {
 }
 
 // 검색창
+var search_text = "";
 Widget Search(BuildContext context, _scrollController) {
-  var search_text = "";
   return Row(
     children: <Widget>[
       Expanded(
@@ -114,11 +133,13 @@ class _RecipeState extends State<Recipe> {
             GestureDetector(
               onTap: () async {
                 // gtag
-                await analytics
-                    .logEvent(name: 'click_recipe_detail', parameters: {
-                  'recipe_name':
-                      context.read<RecipeViewModel>().Data[widget.index]['id']
-                });
+                await analytics.logEvent(
+                    name: 'click_recipe_detail',
+                    parameters: {
+                      'recipe_name': context
+                          .read<RecipeViewModel>()
+                          .Data[widget.index]['title']
+                    });
 
                 // 데이터 전달하기
                 context.read<RecipeViewModel>().SelectRecipe(
