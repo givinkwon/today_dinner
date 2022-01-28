@@ -136,7 +136,7 @@ class MyPage extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: bottomNavigation(context),
+      bottomNavigationBar: BottomNavBar(),
     );
   }
 }

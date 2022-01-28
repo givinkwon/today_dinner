@@ -226,7 +226,7 @@ class AccountScreen extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: bottomNavigation(context),
+      bottomNavigationBar: BottomNavBar(),
     );
   }
 }

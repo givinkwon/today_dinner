@@ -76,7 +76,7 @@ class VideoScreen extends StatelessWidget {
               ),
             ),
           ]),
-          bottomNavigationBar: bottomNavigation(context),
+          bottomNavigationBar: BottomNavBar(),
           extendBody: true);
     } else {
       return Loading(context);

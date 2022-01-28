@@ -67,7 +67,7 @@ class _RecipeScreen extends State<RecipeScreen> {
             ],
           ),
         ),
-        bottomNavigationBar: bottomNavigation(context),
+        bottomNavigationBar: BottomNavBar(),
       );
     } else {
       return Loading(context);

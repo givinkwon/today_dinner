@@ -264,7 +264,7 @@ class RecipeDetailScreen extends StatelessWidget {
             ]),
           ),
         ),
-        bottomNavigationBar: bottomNavigation(context),
+        bottomNavigationBar: BottomNavBar(),
       );
     } else {
       return Scaffold(

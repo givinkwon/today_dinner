@@ -73,7 +73,7 @@ class _ScrapScreen extends State<ScrapScreen> {
             ],
           ),
         ),
-        bottomNavigationBar: bottomNavigation(context),
+        bottomNavigationBar: BottomNavBar(),
       );
     } else {
       return Loading(context);
