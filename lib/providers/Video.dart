@@ -1,12 +1,19 @@
 // provider listener 이용 => ChangeNotifier import => listener에게 setState()와 동일하게 신호를 보내 rebuild하도록 함
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:today_dinner/providers/Recipe.dart';
+import 'package:today_dinner/repo/Recipe.dart';
 
 import 'package:today_dinner/repo/Video.dart';
 import 'package:stacked/stacked.dart';
+import 'package:today_dinner/screens/Recipe/index.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoViewModel with ChangeNotifier {
   late var _VideoRepo = VideoRepo();
+  late var _RecipeRepo = RecipeRepo();
   var controller = null; // video 컨트롤러
 
   int index = 0; // 현재 video index
@@ -17,6 +24,7 @@ class VideoViewModel with ChangeNotifier {
   // 생성자
   VideoViewModel() {
     _VideoRepo = VideoRepo();
+    _RecipeRepo = RecipeRepo();
     load_data();
   }
 
@@ -54,5 +62,21 @@ class VideoViewModel with ChangeNotifier {
     change_loading = false;
     notifyListeners();
     set_data(index);
+  }
+
+  // 관련 레시피 찾기
+  var Search = "";
+  Future<void> SearchRecipe(context, index) async {
+    print(_VideoRepo.Data[index]['search']);
+
+    RecipeViewModel().search_text = _VideoRepo.Data[index]['search'];
+    RecipeViewModel().Search();
+    // 레시피 스크린으로 이동
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => RecipeScreen()),
+    );
+
+    notifyListeners();
   }
 }

@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:today_dinner/main.dart';
 // provider listener 이용
 import 'package:today_dinner/providers/Recipe.dart';
+import 'package:today_dinner/providers/Video.dart';
 import 'package:today_dinner/screens/Recipe/detail.dart';
 import 'package:today_dinner/utils/BottomNavigationBar.dart';
 import 'package:today_dinner/utils/Loading.dart';
@@ -75,9 +76,9 @@ class _RecipeScreen extends State<RecipeScreen> {
   }
 }
 
-// 검색창
-var search_text = "";
 Widget Search(BuildContext context, _scrollController) {
+// 검색창
+  var search_text = context.read<VideoViewModel>().Search;
   return Row(
     children: <Widget>[
       Expanded(
