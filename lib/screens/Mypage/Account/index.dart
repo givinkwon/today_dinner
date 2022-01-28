@@ -162,7 +162,7 @@ class AccountScreen extends StatelessWidget {
               ),
               ListTile(
                 onTap: () {
-                  MypageViewModel().changeNicknameWidget(context);
+                  context.read<MypageViewModel>().changeNicknameWidget(context);
                 },
                 //leading. 타일 앞에 표시되는 위젯. 참고로 타일 뒤에는 trailing 위젯으로 사용 가능
 

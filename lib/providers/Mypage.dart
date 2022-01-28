@@ -99,7 +99,7 @@ class MypageViewModel with ChangeNotifier {
     Phone = value;
   }
 
-  // 닉네임 변경하는 위젯
+  // 휴대폰 변경하는 위젯
   Future<dynamic> changePhoneWidget(context) async {
     showDialog(
         context: context,
@@ -115,9 +115,9 @@ class MypageViewModel with ChangeNotifier {
                     height: 20,
                   ),
                   SizedBox(
-                      child: Phone.length == ""
+                      child: Phone == ""
                           ? Text(
-                              "현재 휴대폰 : ${_UserRepo.Data[0]['phone']}",
+                              "현재 휴대폰 : ${Data[0]['phone']}",
                               style: TextStyle(
                                   fontSize: 14, fontWeight: FontWeight.bold),
                             )
@@ -254,9 +254,9 @@ class MypageViewModel with ChangeNotifier {
                     height: 20,
                   ),
                   SizedBox(
-                    child: Nickname.length == ""
+                    child: Nickname == ""
                         ? Text(
-                            "현재 닉네임 : ${_UserRepo.Data[0]['nickname']}",
+                            "현재 닉네임 : ${Data[0]['nickname']}",
                             style: TextStyle(
                                 fontSize: 14, fontWeight: FontWeight.bold),
                           )
