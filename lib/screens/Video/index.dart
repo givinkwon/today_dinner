@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:today_dinner/providers/Recipe.dart';
 import 'package:today_dinner/providers/Video.dart';
-import 'package:today_dinner/screens/Recipe/index.dart';
 import 'package:today_dinner/utils/BottomNavigationBar.dart';
 import 'package:today_dinner/utils/Loading.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoScreen extends StatelessWidget {
-  var current_index = 0;
   @override
   Widget build(BuildContext context) {
     if (context.watch<VideoViewModel>().data_loading == true) {
@@ -28,8 +25,6 @@ class VideoScreen extends StatelessWidget {
               itemCount: context.read<VideoViewModel>().Video_length,
               onPageChanged: (index) {
                 index = index % (context.read<VideoViewModel>().Video_length);
-                // 지역 변수에 index 값 저장
-                current_index = index;
                 context.read<VideoViewModel>().changeVideo(index);
               },
               scrollDirection: Axis.vertical,
@@ -45,37 +40,29 @@ class VideoScreen extends StatelessWidget {
             ),
 
             // 스크랩 추가
-            // Positioned(
-            //   bottom: 200,
-            //   right: 20,
-            //   child: Icon(Icons.bookmark_add_outlined,
-            //       size: 36.0, color: Colors.white),
-            // ),
-            // Positioned(
-            //   bottom: 180,
-            //   right: 25,
-            //   child: Text(
-            //     "스크랩",
-            //     style: TextStyle(
-            //         fontSize: 9,
-            //         fontWeight: FontWeight.bold,
-            //         color: Colors.white),
-            //   ),
-            // ),
-            // 레시피 이동
+            Positioned(
+              bottom: 200,
+              right: 20,
+              child: Icon(Icons.bookmark_add_outlined,
+                  size: 36.0, color: Colors.white),
+            ),
+            Positioned(
+              bottom: 180,
+              right: 25,
+              child: Text(
+                "스크랩",
+                style: TextStyle(
+                    fontSize: 9,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white),
+              ),
+            ),
+            // 스크랩 추가
             Positioned(
               bottom: 120,
               right: 20,
-              child: IconButton(
-                icon: Icon(Icons.shortcut_outlined,
-                    size: 36.0, color: Colors.white),
-                onPressed: () {
-                  // 관련 레시피로 이동
-                  context
-                      .read<VideoViewModel>()
-                      .SearchRecipe(context, current_index);
-                },
-              ),
+              child: Icon(Icons.shortcut_outlined,
+                  size: 36.0, color: Colors.white),
             ),
             Positioned(
               bottom: 100,
