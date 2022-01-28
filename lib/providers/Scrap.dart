@@ -34,7 +34,7 @@ class ScrapViewModel with ChangeNotifier {
 
   // 스크롤 하단에 도착해서 추가 데이터 호출
   Future<void> add_data() async {
-    await _RecipeRepo.get_data(Add: true);
+    await _RecipeRepo.get_data(Add: true, Activity: "Scrap");
     Data = _RecipeRepo.Data;
     // 구독 widget에게 변화 알려서 re-build
     notifyListeners();
@@ -68,10 +68,30 @@ class ScrapViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  void ClickBookmark(data) {
-    recipe_data = data;
+  // 북마크 클릭 시
+  void ClickBookmark(data, index) {
+    print(data['bookmark']);
+    // 북마크가 있으면
+    if (data['bookmark'] != null &&
+        data['bookmark'].contains(auth.currentUser?.email)) {
+      _RecipeRepo.delete_data(data['title'], "field",
+          Field: 'bookmark', Value: auth.currentUser?.email);
+      // data 업데이트
+      Data[index]['bookmark'].remove(auth.currentUser?.email);
+    } else {
+      // 북마크가 없으면
+      _RecipeRepo.update_data(
+          data['title'], 'bookmark', auth.currentUser?.email);
 
+      if (Data[index]['bookmark'] == null) {
+        Data[index]['bookmark'] = [];
+        Data[index]['bookmark'].add(auth.currentUser?.email);
+      } else {
+        Data[index]['bookmark'].add(auth.currentUser?.email);
+      }
+    }
     // 구독 widget에게 변화 알려서 re-build
     notifyListeners();
+    print(Data[index]);
   }
 }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/src/provider.dart';
+import 'package:today_dinner/main.dart';
 import 'package:today_dinner/providers/Video.dart';
+import 'package:today_dinner/screens/Login/index.dart';
 import 'package:today_dinner/screens/Mypage/index.dart';
 import 'package:today_dinner/screens/Recipe/index.dart';
 import 'package:today_dinner/screens/Scrap/index.dart';
@@ -43,10 +45,38 @@ Widget bottomNavigation(BuildContext context) {
             // 스크랩
             if (index == 2)
               {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ScrapScreen()),
-                ),
+                if (auth.currentUser != null)
+                  {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ScrapScreen()),
+                    ),
+                  }
+                else
+                  {
+                    showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: new Text("로그인"),
+                            content: new Text("로그인이 필요합니다."),
+                            actions: <Widget>[
+                              new FlatButton(
+                                onPressed: () {
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            LoginIndexScreen()),
+                                  );
+                                },
+                                child: new Text("로그인 페이지로 이동"),
+                              ),
+                            ],
+                          );
+                        }),
+                  }
               },
 
             // 마이페이지

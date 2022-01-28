@@ -1,171 +1,115 @@
-// import 'package:flutter/material.dart';
-// import 'package:provider/provider.dart';
+import 'package:flutter/material.dart';
+import 'package:today_dinner/screens/Login/login.dart';
+import 'package:today_dinner/screens/Signup/index.dart';
+import 'package:today_dinner/screens/Video/index.dart';
 
-// // 로그인 기본 class
-// class LoginIndexPage extends StatefulWidget {
-//   @override
-//   _LoginIndexPageState createState() => _LoginIndexPageState();
-// }
+// 로그인 기본 class
+class LoginIndexScreen extends StatelessWidget {
+  // 로그인 창으로 이동하는 함수
+  _loginButtonPressed(BuildContext context) async {
+    // 페이지 이동
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => LoginScreen()),
+    );
+  }
 
-// class _LoginIndexPageState extends State<LoginIndexPage> {
-//   // // 로그인 클릭했을 때
-//   // Future<void> _loginButtonPressed() async {
-//   //   context.read<Login>().login(context);
+  // 홈페이지로 이동하는 함수
+  _nologinButtonPressed(BuildContext context) async {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => VideoScreen()),
+    );
+  }
 
-//   //   // alert 창 띄우기
-//   //   if (context.read<Login>().AlertTitle != "") {
-//   //     showDialog(
-//   //         context: context,
-//   //         barrierDismissible: false,
-//   //         builder: (BuildContext context) {
-//   //           return AlertDialog(
-//   //             title: new Text(context.read<Login>().AlertTitle),
-//   //             content: new Text(context.read<Login>().AlertContent),
-//   //             actions: <Widget>[
-//   //               new FlatButton(
-//   //                 onPressed: () {
-//   //                   Navigator.pop(context);
-//   //                 },
-//   //                 child: new Text("닫기"),
-//   //               ),
-//   //             ],
-//   //           );
-//   //         });
-//   //   }
-//   // }
+  // 회원가입으로 이동하는 함수
+  _signupButtonPressed(BuildContext context) async {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => SignupScreen()),
+    );
+  }
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         iconTheme: IconThemeData(
-//           color: Color.fromRGBO(40, 40, 40, 1), //색변경
-//         ),
-//         backgroundColor: Colors.white,
-//         title: Text(
-//           "로그인",
-//           style: TextStyle(
-//               fontWeight: FontWeight.bold,
-//               color: Color.fromRGBO(40, 40, 40, 1)),
-//         ),
-//         centerTitle: true,
-//       ),
-//       body: SingleChildScrollView(
-//         child: Column(
-//           children: <Widget>[
-//             Container(
-//               height: 200,
-//             ),
-//             Row(
-//               children: <Widget>[
-//                 SizedBox(
-//                   width: 30,
-//                 ),
-//                 Expanded(
-//                   child: Container(
-//                       height: 40,
-//                       child: TextField(
-//                         decoration: InputDecoration(
-//                           hintText: '이메일을 입력해주세요.',
-//                         ),
-//                         onChanged: (text) {
-//                           // watch가 아니라 read를 호출해야함 => read == listen : false => 이벤트 함수는 업데이트 변경 사항을 수신하지 않고 변경 작업을 수행해야함.
-//                           context.read<Login>().setEmail(text);
-//                         },
-//                       )),
-//                 ),
-//                 SizedBox(
-//                   width: 30,
-//                 ),
-//               ],
-//             ),
-//             Container(
-//               height: 30,
-//             ),
-//             Row(
-//               children: <Widget>[
-//                 SizedBox(
-//                   width: 30,
-//                 ),
-//                 Expanded(
-//                   child: Container(
-//                       height: 40,
-//                       child: TextField(
-//                         obscureText: true,
-//                         enableSuggestions: false,
-//                         autocorrect: false,
-//                         decoration: InputDecoration(
-//                           hintText: '비밀번호를 입력해주세요.',
-//                         ),
-//                         onChanged: (text) {
-//                           // watch가 아니라 read를 호출해야함 => read == listen : false => 이벤트 함수는 업데이트 변경 사항을 수신하지 않고 변경 작업을 수행해야함.
-//                           context.read<Login>().setPassword(text);
-//                         },
-//                       )),
-//                 ),
-//                 SizedBox(
-//                   width: 30,
-//                 ),
-//               ],
-//             ),
-//             Container(
-//               height: 30,
-//             ),
-//             Row(
-//               children: <Widget>[
-//                 SizedBox(
-//                   width: 30,
-//                 ),
-//                 Expanded(
-//                   child: TextButton(
-//                     // onPressed: _loginButtonPressed,
-//                     style: TextButton.styleFrom(
-//                         primary: Color.fromRGBO(201, 92, 57, 1),
-//                         backgroundColor: Color.fromRGBO(201, 92, 57, 1),
-//                         side: BorderSide(
-//                             color: Color.fromRGBO(201, 92, 57, 1), width: 2)),
-//                     child: Text(
-//                       "로그인하기",
-//                       style: TextStyle(fontSize: 17, color: Colors.white),
-//                     ),
-//                   ),
-//                 ),
-//                 SizedBox(
-//                   width: 30,
-//                 ),
-//               ],
-//             ),
-//             Row(
-//               children: <Widget>[
-//                 SizedBox(
-//                   width: 30,
-//                 ),
-//                 Expanded(
-//                   child: TextButton(
-//                     onPressed: () {
-//                       Navigator.pushReplacement(
-//                           context,
-//                           MaterialPageRoute(
-//                               builder: (context) => FindPasswordPage()));
-//                     },
-//                     style: TextButton.styleFrom(
-//                         primary: Color.fromRGBO(201, 92, 57, 1),
-//                         backgroundColor: Colors.grey,
-//                         side: BorderSide(color: Colors.grey, width: 2)),
-//                     child: Text(
-//                       "비밀번호 찾기",
-//                       style: TextStyle(fontSize: 17, color: Colors.white),
-//                     ),
-//                   ),
-//                 ),
-//                 SizedBox(
-//                   width: 30,
-//                 ),
-//               ],
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        bottomOpacity: 0.0,
+        elevation: 0.0,
+        backgroundColor: Color.fromRGBO(251, 246, 240, 1),
+        toolbarHeight: 0,
+      ),
+      backgroundColor: Color.fromRGBO(251, 246, 240, 1),
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            fit: BoxFit.fitWidth,
+            image: AssetImage('assets/main2.jpg'),
+          ),
+        ),
+        child: Column(
+          children: [
+            Container(
+              height: MediaQuery.of(context).size.height * 0.5,
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 50),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () => _loginButtonPressed(context),
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(
+                          Color.fromRGBO(201, 92, 57, 1),
+                        ),
+                        padding: MaterialStateProperty.all(
+                          EdgeInsets.all(15),
+                        ),
+                        shape: MaterialStateProperty.all(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30.0),
+                          ),
+                        ),
+                      ),
+                      child: Text(
+                        "로그인하고 살펴보기",
+                        style: TextStyle(fontSize: 17),
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () => _nologinButtonPressed(context),
+                      style: TextButton.styleFrom(
+                        primary: Colors.white,
+                      ),
+                      child: Text(
+                        "로그인 없이 살펴보기",
+                        style: TextStyle(
+                            fontSize: 17, color: Color.fromRGBO(89, 89, 89, 1)),
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () => _signupButtonPressed(context),
+                      style: TextButton.styleFrom(
+                        primary: Colors.white,
+                      ),
+                      child: Text(
+                        "가입하기",
+                        style: TextStyle(
+                            fontSize: 15, color: Color.fromRGBO(89, 89, 89, 1)),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

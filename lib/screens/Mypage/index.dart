@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:provider/src/provider.dart';
 import 'package:today_dinner/main.dart';
+import 'package:today_dinner/providers/Mypage.dart';
+
+import 'package:today_dinner/screens/Login/index.dart';
+import 'package:today_dinner/screens/Login/login.dart';
+import 'package:today_dinner/screens/Mypage/Account/index.dart';
 import 'package:today_dinner/screens/Scrap/index.dart';
+import 'package:today_dinner/screens/Signup/index.dart';
 import 'package:today_dinner/utils/BottomNavigationBar.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -44,12 +51,12 @@ class MyPage extends StatelessWidget {
               if (auth.currentUser != null)
                 ListTile(
                   onTap: () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //     builder: (context) => AccountPage(),
-                    //   ),
-                    // );
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AccountScreen(),
+                      ),
+                    );
                   },
                   leading: Icon(Icons.people),
                   title: Text('계정 설정'),
@@ -58,12 +65,12 @@ class MyPage extends StatelessWidget {
                 ListTile(
                   onTap: () {
                     auth.signOut();
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //     builder: (context) => HomePage(),
-                    //   ),
-                    // );
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => LoginIndexScreen(),
+                      ),
+                    );
                   },
                   leading: Icon(Icons.exit_to_app),
                   title: Text('로그아웃'),
@@ -71,12 +78,12 @@ class MyPage extends StatelessWidget {
               if (auth.currentUser == null)
                 ListTile(
                   onTap: () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //     builder: (context) => LoginIndexPage(),
-                    //   ),
-                    // );
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => LoginScreen(),
+                      ),
+                    );
                   },
                   leading: Icon(Icons.login),
                   title: Text('로그인'),
@@ -84,12 +91,12 @@ class MyPage extends StatelessWidget {
               if (auth.currentUser == null)
                 ListTile(
                   onTap: () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //     builder: (context) => SignupPage(),
-                    //   ),
-                    // );
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SignupScreen(),
+                      ),
+                    );
                   },
                   leading: Icon(Icons.people),
                   title: Text('회원가입'),
@@ -101,30 +108,30 @@ class MyPage extends StatelessWidget {
                 leading: Icon(Icons.dvr),
                 title: Text('피드백 남기기'),
               ),
-              // if (context.watch<Profile>().Marketing == true &&
-              //     auth.currentUser != null)
-              //   ListTile(
-              //     onTap: () {
-              //       context.read<Profile>().changeMarketing(
-              //           context,
-              //           auth.currentUser?.email,
-              //           context.read<Profile>().Marketing);
-              //     },
-              //     leading: Icon(Icons.search),
-              //     title: Text('혜택/정보 수신 동의 해제'),
-              //   ),
-              // if (context.watch<Profile>().Marketing == false &&
-              //     auth.currentUser != null)
-              //   ListTile(
-              //     onTap: () {
-              //       context.read<Profile>().changeMarketing(
-              //           context,
-              //           auth.currentUser?.email,
-              //           context.read<Profile>().Marketing);
-              //     },
-              //     leading: Icon(Icons.search),
-              //     title: Text('혜택/정보 수신 동의'),
-              //   ),
+              if (context.watch<MypageViewModel>().Marketing == true &&
+                  auth.currentUser != null)
+                ListTile(
+                  onTap: () {
+                    context.read<MypageViewModel>().changeMarketing(
+                        context,
+                        auth.currentUser?.email,
+                        context.read<MypageViewModel>().Marketing);
+                  },
+                  leading: Icon(Icons.search),
+                  title: Text('혜택/정보 수신 동의 해제'),
+                ),
+              if (context.watch<MypageViewModel>().Marketing == false &&
+                  auth.currentUser != null)
+                ListTile(
+                  onTap: () {
+                    context.read<MypageViewModel>().changeMarketing(
+                        context,
+                        auth.currentUser?.email,
+                        context.read<MypageViewModel>().Marketing);
+                  },
+                  leading: Icon(Icons.search),
+                  title: Text('혜택/정보 수신 동의'),
+                ),
             ],
           ),
         ),

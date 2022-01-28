@@ -120,8 +120,26 @@ class Recipe extends StatefulWidget {
 }
 
 class _RecipeState extends State<Recipe> {
+  var BookMark = false;
+
+  _CheckBookmark() {
+    // 북마크가 있으면
+    if (context.read<RecipeViewModel>().Data[widget.index]['bookmark'] !=
+            null &&
+        context
+            .read<RecipeViewModel>()
+            .Data[widget.index]['bookmark']
+            .contains(auth.currentUser?.email)) {
+      BookMark = true;
+    } else {
+      BookMark = false;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    // 북마크 체크하기
+    _CheckBookmark();
     return Container(
       width: MediaQuery.of(context).size.width,
       child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
@@ -183,16 +201,18 @@ class _RecipeState extends State<Recipe> {
             ),
             if (auth.currentUser != null)
               Positioned(
-                top: MediaQuery.of(context).size.height * 0.16,
+                top: MediaQuery.of(context).size.height * 0.14,
                 left: MediaQuery.of(context).size.width - 100,
                 right: 0,
                 child: IconButton(
-                  icon: false
+                  icon: BookMark
                       ? Icon(Icons.bookmark, color: Colors.white, size: 32)
                       : Icon(Icons.bookmark_outline,
                           color: Colors.white, size: 32),
                   onPressed: () {
-                    // Bookmark_Click(bookmark_check, widget.index);
+                    context.read<RecipeViewModel>().ClickBookmark(
+                        context.read<RecipeViewModel>().Data[widget.index],
+                        widget.index);
                   },
                 ),
               ),

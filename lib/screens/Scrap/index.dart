@@ -26,7 +26,10 @@ class _ScrapScreen extends State<ScrapScreen> {
 
   @override
   void initState() {
-    super.initState();
+    // 스크랩 데이터로 초기화
+
+    context.read<ScrapViewModel>().load_data();
+
     //  데이터 가져오기
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
@@ -34,6 +37,8 @@ class _ScrapScreen extends State<ScrapScreen> {
         context.read<ScrapViewModel>().add_data();
       }
     });
+
+    super.initState();
   }
 
   @override
@@ -121,8 +126,28 @@ class Recipe extends StatefulWidget {
 }
 
 class _RecipeState extends State<Recipe> {
+  var BookMark = false;
+
+  _CheckBookmark() {
+    // 북마크가 있으면
+    if (context.read<ScrapViewModel>().Data[widget.index]['bookmark'] != null &&
+        context
+            .read<ScrapViewModel>()
+            .Data[widget.index]['bookmark']
+            .contains(auth.currentUser?.email)) {
+      BookMark = true;
+    } else {
+      BookMark = false;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    // 북마크 체크하기
+    if (context.read<ScrapViewModel>().Data.length != 0) {
+      _CheckBookmark();
+    }
+
     return Container(
       width: MediaQuery.of(context).size.width,
       child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
@@ -186,12 +211,14 @@ class _RecipeState extends State<Recipe> {
                 left: MediaQuery.of(context).size.width - 100,
                 right: 0,
                 child: IconButton(
-                  icon: false
+                  icon: BookMark
                       ? Icon(Icons.bookmark, color: Colors.white, size: 32)
                       : Icon(Icons.bookmark_outline,
                           color: Colors.white, size: 32),
                   onPressed: () {
-                    // Bookmark_Click(bookmark_check, widget.index);
+                    context.read<ScrapViewModel>().ClickBookmark(
+                        context.read<ScrapViewModel>().Data[widget.index],
+                        widget.index);
                   },
                 ),
               ),

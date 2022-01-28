@@ -108,7 +108,9 @@ class RecipeRepo {
     // array update => like, bookmark, reply, filter, search
     else if (array_field.contains(Field)) {
       // update
-      await Firebase_Query.update({Field: FieldValue.arrayUnion(Value)});
+      await Firebase_Query.update({
+        Field: FieldValue.arrayUnion([Value])
+      });
     }
 
     // 일반 field update
@@ -138,7 +140,9 @@ class RecipeRepo {
     // array field 삭제의 경우
     else if (array_field.contains(Field)) {
       // delete
-      await Firebase_Query.update({Field: FieldValue.arrayRemove(Value)});
+      await Firebase_Query.update({
+        Field: FieldValue.arrayRemove([Value])
+      });
     }
 
     // 일반 field 삭제

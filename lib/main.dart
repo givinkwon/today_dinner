@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:today_dinner/providers/Login.dart';
+import 'package:today_dinner/providers/Mypage.dart';
 // provider
 
 import 'package:today_dinner/providers/Recipe.dart';
 import 'package:today_dinner/providers/Scrap.dart';
+import 'package:today_dinner/providers/Signup.dart';
 import 'package:today_dinner/providers/Video.dart';
 import 'package:today_dinner/screens/Video/index.dart';
 // // 카카오 로그인
@@ -80,6 +83,9 @@ void main() async {
       ChangeNotifierProvider(create: (context) => VideoViewModel()),
       ChangeNotifierProvider(create: (context) => RecipeViewModel()),
       ChangeNotifierProvider(create: (context) => ScrapViewModel()),
+      ChangeNotifierProvider(create: (context) => SignupViewModel()),
+      ChangeNotifierProvider(create: (context) => LoginViewModel()),
+      ChangeNotifierProvider(create: (context) => MypageViewModel()),
     ], child: const MyApp()),
   );
 }

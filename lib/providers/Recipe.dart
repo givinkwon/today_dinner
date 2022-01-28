@@ -51,9 +51,7 @@ class RecipeViewModel with ChangeNotifier {
 
   // 검색하기
   void Search() async {
-    print(search_text);
     await _RecipeRepo.get_data(Search: search_text);
-
     Data = _RecipeRepo.Data;
     notifyListeners();
   }
@@ -67,10 +65,30 @@ class RecipeViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  void ClickBookmark(data) {
-    recipe_data = data;
+  // 북마크 클릭 시
+  void ClickBookmark(data, index) {
+    print(data['bookmark']);
+    // 북마크가 있으면
+    if (data['bookmark'] != null &&
+        data['bookmark'].contains(auth.currentUser?.email)) {
+      _RecipeRepo.delete_data(data['title'], "field",
+          Field: 'bookmark', Value: auth.currentUser?.email);
+      // data 업데이트
+      Data[index]['bookmark'].remove(auth.currentUser?.email);
+    } else {
+      // 북마크가 없으면
+      _RecipeRepo.update_data(
+          data['title'], 'bookmark', auth.currentUser?.email);
 
+      if (Data[index]['bookmark'] == null) {
+        Data[index]['bookmark'] = [];
+        Data[index]['bookmark'].add(auth.currentUser?.email);
+      } else {
+        Data[index]['bookmark'].add(auth.currentUser?.email);
+      }
+    }
     // 구독 widget에게 변화 알려서 re-build
     notifyListeners();
+    print(Data[index]);
   }
 }
