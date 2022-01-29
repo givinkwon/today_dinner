@@ -35,6 +35,7 @@ class RecipeRepo {
     // init
     var Pre_Data = Data;
     Data = [];
+    print(1);
     print(Search);
     Firebase_Query = firestore
         .collection("Recipe")

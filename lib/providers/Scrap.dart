@@ -52,7 +52,6 @@ class ScrapViewModel with ChangeNotifier {
 
   // 검색하기
   void Search() async {
-    print(search_text);
     await _RecipeRepo.get_data(Search: search_text);
 
     Data = _RecipeRepo.Data;

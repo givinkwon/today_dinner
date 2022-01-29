@@ -43,7 +43,22 @@ class VideoScreen extends StatelessWidget {
             Positioned(
               top: 20,
               right: 20,
-              child: Icon(Icons.search, size: 36.0, color: Colors.white),
+              child: IconButton(
+                icon: Icon(Icons.search, size: 36.0, color: Colors.white),
+                onPressed: () async {
+                  // 페이지 이동
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => RecipeScreen()),
+                  );
+
+                  // 하단 BottomNav UI 변경
+                  context.read<VideoViewModel>().ChangeBottomIndex(1);
+
+                  // 비디오 중지
+                  context.read<VideoViewModel>().controller.pause();
+                },
+              ),
             ),
 
             // 레시피 이동
@@ -65,11 +80,14 @@ class VideoScreen extends StatelessWidget {
                       .read<VideoViewModel>()
                       .Data[context.read<VideoViewModel>().index]['search']);
 
-                  // 레시피 스크린으로 이동
+                  // 하단 BottomNav UI 변경
                   context.read<VideoViewModel>().ChangeBottomIndex(1);
 
                   // 비디오 중지
                   context.read<VideoViewModel>().controller.pause();
+
+                  // 검색
+                  context.read<RecipeViewModel>().Search();
                 },
               ),
             ),

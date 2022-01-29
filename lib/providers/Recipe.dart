@@ -19,6 +19,7 @@ class RecipeViewModel with ChangeNotifier {
   // 생성자
   RecipeViewModel() {
     _RecipeRepo = RecipeRepo();
+    _RecipeRepo.Data = [];
     load_data();
   }
 
@@ -27,13 +28,14 @@ class RecipeViewModel with ChangeNotifier {
     await _RecipeRepo.get_data();
     Data = _RecipeRepo.Data;
     data_loading = true;
+
     // 구독 widget에게 변화 알려서 re-build
     notifyListeners();
   }
 
   // 스크롤 하단에 도착해서 추가 데이터 호출
-  Future<void> add_data() async {
-    await _RecipeRepo.get_data(Add: true);
+  Future<void> add_data({Search: ""}) async {
+    await _RecipeRepo.get_data(Add: true, Search: Search);
     Data = _RecipeRepo.Data;
     // 구독 widget에게 변화 알려서 re-build
     notifyListeners();

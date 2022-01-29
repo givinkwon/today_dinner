@@ -17,12 +17,12 @@ class BottomNavBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return BottomNavigationBar(
         currentIndex: context.watch<VideoViewModel>().bottom_index,
-        backgroundColor: context.watch<VideoViewModel>().bottom_index == 0
+        backgroundColor: context.read<VideoViewModel>().bottom_index == 0
             ? Colors.black.withOpacity(0.1)
             : Colors.white,
         elevation: 0,
         selectedItemColor: Color.fromRGBO(201, 92, 57, 1),
-        unselectedItemColor: context.watch<VideoViewModel>().bottom_index == 0
+        unselectedItemColor: context.read<VideoViewModel>().bottom_index == 0
             ? Colors.white
             : Colors.grey,
         type: BottomNavigationBarType.fixed,

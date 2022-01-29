@@ -29,16 +29,15 @@ class _RecipeScreen extends State<RecipeScreen> {
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
           _scrollController.position.maxScrollExtent) {
-        context.read<RecipeViewModel>().add_data();
+        context
+            .read<RecipeViewModel>()
+            .add_data(Search: context.read<RecipeViewModel>().search_text);
       }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    if (context.read<RecipeViewModel>().search_text != "") {
-      context.read<RecipeViewModel>().Search();
-    }
     if (context.watch<RecipeViewModel>().data_loading == true) {
       return Scaffold(
         resizeToAvoidBottomInset: false, // 공사장 해결
@@ -58,7 +57,7 @@ class _RecipeScreen extends State<RecipeScreen> {
                 child: ListView.builder(
                     controller: _scrollController,
                     scrollDirection: Axis.vertical,
-                    itemCount: context.watch<RecipeViewModel>().Data.length,
+                    itemCount: context.read<RecipeViewModel>().Data.length,
                     itemBuilder: (BuildContext context, int index) {
                       return Recipe(index);
                     }),
@@ -82,7 +81,7 @@ Widget Search(BuildContext context, _scrollController) {
   return Row(
     children: <Widget>[
       Expanded(
-        child: TextField(
+        child: TextFormField(
           decoration: InputDecoration(
             hintText: "레시피를 검색해보세요.",
             hintStyle: TextStyle(
@@ -90,8 +89,8 @@ Widget Search(BuildContext context, _scrollController) {
             ),
             border: InputBorder.none,
           ),
+          initialValue: context.read<RecipeViewModel>().search_text,
           onChanged: (text) {
-            // // // watch가 아니라 read를 호출해야함 => read == listen : false => 이벤트 함수는 업데이트 변경 사항을 수신하지 않고 변경 작업을 수행해야함.
             context.read<RecipeViewModel>().search_text = text;
           },
         ),
@@ -223,7 +222,7 @@ class _RecipeState extends State<Recipe> {
         Container(
           padding: EdgeInsets.only(top: 20, left: 20, right: 20),
           child: Text(
-            context.watch<RecipeViewModel>().Data[widget.index]['title'],
+            context.read<RecipeViewModel>().Data[widget.index]['title'],
             textAlign: TextAlign.center,
             style: TextStyle(
                 fontSize: 14,
