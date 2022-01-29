@@ -19,12 +19,13 @@ class RecipeViewModel with ChangeNotifier {
   // 생성자
   RecipeViewModel() {
     _RecipeRepo = RecipeRepo();
-    _RecipeRepo.Data = [];
-    load_data();
   }
 
   // data 호출
   Future<void> load_data() async {
+    // 검색어 초기화
+    search_text = "";
+
     await _RecipeRepo.get_data();
     Data = _RecipeRepo.Data;
     data_loading = true;
@@ -55,6 +56,7 @@ class RecipeViewModel with ChangeNotifier {
   void Search() async {
     await _RecipeRepo.get_data(Search: search_text);
     Data = _RecipeRepo.Data;
+    data_loading = true;
 
     notifyListeners();
   }

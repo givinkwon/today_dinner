@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/src/provider.dart';
 import 'package:today_dinner/main.dart';
+import 'package:today_dinner/providers/Recipe.dart';
 import 'package:today_dinner/providers/Video.dart';
 import 'package:today_dinner/screens/Login/index.dart';
 import 'package:today_dinner/screens/Mypage/index.dart';
@@ -42,6 +43,9 @@ class BottomNavBar extends StatelessWidget {
               // 레시피
               if (index == 1)
                 {
+                  // 데이터 로딩
+                  context.read<RecipeViewModel>().load_data(),
+                  // 페이지 이동
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => RecipeScreen()),
