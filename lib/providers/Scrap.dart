@@ -19,7 +19,6 @@ class ScrapViewModel with ChangeNotifier {
   // 생성자
   ScrapViewModel() {
     _RecipeRepo = RecipeRepo();
-    load_data();
   }
 
   // data 호출

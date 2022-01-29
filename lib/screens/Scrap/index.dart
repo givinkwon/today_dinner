@@ -7,7 +7,7 @@ import 'package:today_dinner/providers/Scrap.dart';
 import 'package:today_dinner/screens/Recipe/detail.dart';
 import 'package:today_dinner/utils/BottomNavigationBar.dart';
 import 'package:today_dinner/utils/Loading.dart';
-import 'package:today_dinner/utils/NoResult.dart';
+import 'package:today_dinner/utils/NoScrap.dart';
 
 class ScrapScreen extends StatefulWidget {
   const ScrapScreen({Key? key}) : super(key: key);
@@ -69,7 +69,7 @@ class _ScrapScreen extends State<ScrapScreen> {
               ),
               // 데이터 없을 때
               if (context.watch<ScrapViewModel>().Data.length == 0)
-                NoResult(context),
+                NoScrap(context),
             ],
           ),
         ),
