@@ -9,7 +9,6 @@ import 'package:today_dinner/utils/Loading.dart';
 import 'package:today_dinner/utils/NoResult.dart';
 
 class RecipeScreen extends StatefulWidget {
-  const RecipeScreen({Key? key}) : super(key: key);
   @override
   _RecipeScreen createState() => _RecipeScreen();
 }
@@ -37,6 +36,9 @@ class _RecipeScreen extends State<RecipeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (context.read<RecipeViewModel>().search_text != "") {
+      context.read<RecipeViewModel>().Search();
+    }
     if (context.watch<RecipeViewModel>().data_loading == true) {
       return Scaffold(
         resizeToAvoidBottomInset: false, // 공사장 해결
@@ -76,7 +78,6 @@ class _RecipeScreen extends State<RecipeScreen> {
 }
 
 // 검색창
-var search_text = "";
 Widget Search(BuildContext context, _scrollController) {
   return Row(
     children: <Widget>[
@@ -91,13 +92,12 @@ Widget Search(BuildContext context, _scrollController) {
           ),
           onChanged: (text) {
             // // // watch가 아니라 read를 호출해야함 => read == listen : false => 이벤트 함수는 업데이트 변경 사항을 수신하지 않고 변경 작업을 수행해야함.
-            search_text = text;
+            context.read<RecipeViewModel>().search_text = text;
           },
         ),
       ),
       GestureDetector(
           onTap: () async {
-            context.read<RecipeViewModel>().setSearchText(search_text);
             context.read<RecipeViewModel>().Search();
             //스크롤 상단으로
             _scrollController.animateTo(0.0,

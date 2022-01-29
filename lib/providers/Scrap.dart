@@ -70,7 +70,6 @@ class ScrapViewModel with ChangeNotifier {
 
   // 북마크 클릭 시
   void ClickBookmark(data, index) {
-    print(data['bookmark']);
     // 북마크가 있으면
     if (data['bookmark'] != null &&
         data['bookmark'].contains(auth.currentUser?.email)) {

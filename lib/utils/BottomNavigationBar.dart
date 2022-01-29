@@ -10,40 +10,30 @@ import 'package:today_dinner/screens/Video/index.dart';
 
 var nav_index = 0;
 
-class BottomNavBar extends StatefulWidget {
-  const BottomNavBar({Key? key}) : super(key: key);
-  @override
-  _BottomNavBarState createState() => _BottomNavBarState();
-}
-
-class _BottomNavBarState extends State<BottomNavBar> {
-  int _selectedIndex = 0;
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
+class BottomNavBar extends StatelessWidget {
+  int _currentIndex = 0;
 
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
-        currentIndex: _selectedIndex,
-        backgroundColor:
-            nav_index == 0 ? Colors.black.withOpacity(0.1) : Colors.white,
+        currentIndex: context.watch<VideoViewModel>().bottom_index,
+        backgroundColor: context.watch<VideoViewModel>().bottom_index == 0
+            ? Colors.black.withOpacity(0.1)
+            : Colors.white,
         elevation: 0,
         selectedItemColor: Color.fromRGBO(201, 92, 57, 1),
-        unselectedItemColor: nav_index == 0 ? Colors.white : Colors.grey,
+        unselectedItemColor: context.watch<VideoViewModel>().bottom_index == 0
+            ? Colors.white
+            : Colors.grey,
         type: BottomNavigationBarType.fixed,
         onTap: (index) => {
-              // 인덱스 값 저장
-              nav_index = index,
+              context.read<VideoViewModel>().bottom_index = index,
               // 비디오 정지
               context.read<VideoViewModel>().controller.pause(),
               // 레시피
               if (index == 0)
                 {
-                  Navigator.push(
+                  Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(builder: (context) => VideoScreen()),
                   ),

@@ -53,6 +53,7 @@ class RecipeViewModel with ChangeNotifier {
   void Search() async {
     await _RecipeRepo.get_data(Search: search_text);
     Data = _RecipeRepo.Data;
+
     notifyListeners();
   }
 
@@ -67,7 +68,6 @@ class RecipeViewModel with ChangeNotifier {
 
   // 북마크 클릭 시
   void ClickBookmark(data, index) {
-    print(data['bookmark']);
     // 북마크가 있으면
     if (data['bookmark'] != null &&
         data['bookmark'].contains(auth.currentUser?.email)) {
@@ -89,6 +89,11 @@ class RecipeViewModel with ChangeNotifier {
     }
     // 구독 widget에게 변화 알려서 re-build
     notifyListeners();
-    print(Data[index]);
+  }
+
+  // 레시피 클릭 시
+  Future<void> SearchRecipe(data) async {
+    search_text = data;
+    notifyListeners();
   }
 }

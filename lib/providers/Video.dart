@@ -1,5 +1,8 @@
 // provider listener 이용 => ChangeNotifier import => listener에게 setState()와 동일하게 신호를 보내 rebuild하도록 함
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:provider/src/provider.dart';
+import 'package:today_dinner/providers/Recipe.dart';
 
 import 'package:today_dinner/repo/Video.dart';
 import 'package:stacked/stacked.dart';
@@ -8,7 +11,7 @@ import 'package:video_player/video_player.dart';
 class VideoViewModel with ChangeNotifier {
   late var _VideoRepo = VideoRepo();
   var controller = null; // video 컨트롤러
-
+  var Data = [];
   int index = 0; // 현재 video index
   int Video_length = 0; // 현재 video_list length
   bool data_loading = false; // data patch 중에 로딩
@@ -23,6 +26,7 @@ class VideoViewModel with ChangeNotifier {
   // video 호출
   Future<void> load_data() async {
     await _VideoRepo.get_data();
+    Data = _VideoRepo.Data;
     Video_length = _VideoRepo.Data.length; // 가져온 비디오 리스트의 길이
     set_data(index);
     data_loading = true;
@@ -54,5 +58,13 @@ class VideoViewModel with ChangeNotifier {
     change_loading = false;
     notifyListeners();
     set_data(index);
+  }
+
+  // bottom index 저장
+  var bottom_index = 0;
+  Future<void> ChangeBottomIndex(value) async {
+    bottom_index = value;
+
+    notifyListeners();
   }
 }

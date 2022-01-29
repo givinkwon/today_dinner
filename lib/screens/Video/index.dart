@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:today_dinner/providers/Recipe.dart';
 import 'package:today_dinner/providers/Video.dart';
+import 'package:today_dinner/screens/Recipe/index.dart';
 import 'package:today_dinner/utils/BottomNavigationBar.dart';
 import 'package:today_dinner/utils/Loading.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoScreen extends StatelessWidget {
-  var current_index = 0;
   @override
   Widget build(BuildContext context) {
     if (context.watch<VideoViewModel>().data_loading == true) {
@@ -24,11 +25,14 @@ class VideoScreen extends StatelessWidget {
                 viewportFraction: 1, // 화면 전체를 가림
               ),
               itemCount: context.read<VideoViewModel>().Video_length,
-              onPageChanged: (index) {
-                index = index % (context.read<VideoViewModel>().Video_length);
+              onPageChanged: (_) {
                 // 지역 변수에 index 값 저장
-                current_index = index;
-                context.read<VideoViewModel>().changeVideo(index);
+                context.read<VideoViewModel>().index =
+                    (context.read<VideoViewModel>().index + 1) %
+                        (context.read<VideoViewModel>().Video_length);
+                context
+                    .read<VideoViewModel>()
+                    .changeVideo(context.read<VideoViewModel>().index);
               },
               scrollDirection: Axis.vertical,
               itemBuilder: (context, index) {
@@ -46,8 +50,28 @@ class VideoScreen extends StatelessWidget {
             Positioned(
               bottom: 120,
               right: 20,
-              child: Icon(Icons.shortcut_outlined,
-                  size: 36.0, color: Colors.white),
+              child: IconButton(
+                icon: Icon(Icons.shortcut_outlined,
+                    size: 36.0, color: Colors.white),
+                onPressed: () async {
+                  // 페이지 이동
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => RecipeScreen()),
+                  );
+
+                  // 관련 레시피 데이터 검색
+                  await context.read<RecipeViewModel>().SearchRecipe(context
+                      .read<VideoViewModel>()
+                      .Data[context.read<VideoViewModel>().index]['search']);
+
+                  // 레시피 스크린으로 이동
+                  context.read<VideoViewModel>().ChangeBottomIndex(1);
+
+                  // 비디오 중지
+                  context.read<VideoViewModel>().controller.pause();
+                },
+              ),
             ),
             Positioned(
               bottom: 100,
