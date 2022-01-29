@@ -72,6 +72,8 @@ dependencies:
   stacked: ^2.2.8
   video_player: ^2.2.13
 
+  # 결제용 bootpay
+  bootpay: ^1.7.5
 
 dev_dependencies:
   flutter_test:

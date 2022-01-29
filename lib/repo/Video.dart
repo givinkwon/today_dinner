@@ -24,15 +24,23 @@ class VideoRepo {
       firestore.collection("Video"); // 호출할 Query를 저장하고 마지막에 호출
 
   // 데이터 호출
-  Future<void> get_data({int Limit = 10, bool Add = false}) async {
+  Future<void> get_data(
+      {bool Init = false, int Limit = 10, bool Add = false}) async {
+    // 랜덤 넘버 만들기
+    Random random = Random();
+    int randomNumber = random.nextInt(100);
+    print("$randomNumber");
     // init
     var Pre_Data = Data;
     Data = [];
 
-    Firebase_Query = firestore
-        .collection("Video")
-        .orderBy("createdAt", descending: true)
-        .limit(Limit);
+    Firebase_Query = firestore.collection("Video").orderBy('index');
+
+    // 초기 호출인 경우
+    if (Init == true) {
+      Firebase_Query =
+          Firebase_Query.startAfter([randomNumber.toString()]).limit(Limit);
+    }
 
     // 초기 호출이 아닌 경우
     if (Add == true) {
@@ -49,6 +57,9 @@ class VideoRepo {
         for (var VideoDoc in querySnapshot.docs) {
           Data.add(VideoDoc.data());
         }
+      } else {
+        // 데이터가 없다면 => 데이터 끝 => 0부터 새로 가져오기
+        await get_data();
       }
     });
   }

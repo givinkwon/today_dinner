@@ -25,7 +25,7 @@ class VideoViewModel with ChangeNotifier {
 
   // video 호출
   Future<void> load_data() async {
-    await _VideoRepo.get_data();
+    await _VideoRepo.get_data(Init: true);
     Data = _VideoRepo.Data;
     Video_length = _VideoRepo.Data.length; // 가져온 비디오 리스트의 길이
     set_data(index);
