@@ -57,12 +57,11 @@ class _ScrapScreen extends State<ScrapScreen> {
           color: Color.fromRGBO(255, 255, 255, 1),
           child: Column(
             children: <Widget>[
-              Search(context, _scrollController),
               Expanded(
                 child: ListView.builder(
                     controller: _scrollController,
                     scrollDirection: Axis.vertical,
-                    itemCount: context.watch<ScrapViewModel>().Data.length,
+                    itemCount: context.read<ScrapViewModel>().Data.length,
                     itemBuilder: (BuildContext context, int index) {
                       return Recipe(index);
                     }),
@@ -79,42 +78,6 @@ class _ScrapScreen extends State<ScrapScreen> {
       return Loading(context);
     }
   }
-}
-
-// 검색창
-var search_text = "";
-Widget Search(BuildContext context, _scrollController) {
-  return Row(
-    children: <Widget>[
-      Expanded(
-        child: TextField(
-          decoration: InputDecoration(
-            hintText: "레시피를 검색해보세요.",
-            hintStyle: TextStyle(
-              color: Color.fromRGBO(40, 40, 40, 1).withAlpha(120),
-            ),
-            border: InputBorder.none,
-          ),
-          onChanged: (text) {
-            // // // watch가 아니라 read를 호출해야함 => read == listen : false => 이벤트 함수는 업데이트 변경 사항을 수신하지 않고 변경 작업을 수행해야함.
-            search_text = text;
-          },
-        ),
-      ),
-      GestureDetector(
-          onTap: () async {
-            context.read<ScrapViewModel>().setSearchText(search_text);
-            context.read<ScrapViewModel>().Search();
-            //스크롤 상단으로
-            _scrollController.animateTo(0.0,
-                duration: Duration(seconds: 3), curve: Curves.linear);
-          },
-          child: Icon(
-            Icons.search,
-            color: Color.fromRGBO(40, 40, 40, 1).withAlpha(120),
-          )),
-    ],
-  );
 }
 
 class Recipe extends StatefulWidget {
@@ -144,10 +107,7 @@ class _RecipeState extends State<Recipe> {
   @override
   Widget build(BuildContext context) {
     // 북마크 체크하기
-    if (context.read<ScrapViewModel>().Data.length != 0) {
-      _CheckBookmark();
-    }
-
+    _CheckBookmark();
     return Container(
       width: MediaQuery.of(context).size.width,
       child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
@@ -166,7 +126,7 @@ class _RecipeState extends State<Recipe> {
                 });
 
                 // 데이터 전달하기
-                context.read<ScrapViewModel>().SelectRecipe(
+                context.read<RecipeViewModel>().SelectRecipe(
                     context.read<ScrapViewModel>().Data[widget.index]);
 
                 // 페이지 이동
@@ -207,7 +167,7 @@ class _RecipeState extends State<Recipe> {
             ),
             if (auth.currentUser != null)
               Positioned(
-                top: MediaQuery.of(context).size.height * 0.16,
+                top: MediaQuery.of(context).size.height * 0.14,
                 left: MediaQuery.of(context).size.width - 100,
                 right: 0,
                 child: IconButton(
@@ -229,7 +189,7 @@ class _RecipeState extends State<Recipe> {
         Container(
           padding: EdgeInsets.only(top: 20, left: 20, right: 20),
           child: Text(
-            context.watch<ScrapViewModel>().Data[widget.index]['title'],
+            context.read<ScrapViewModel>().Data[widget.index]['title'],
             textAlign: TextAlign.center,
             style: TextStyle(
                 fontSize: 14,

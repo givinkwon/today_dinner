@@ -33,6 +33,13 @@ class VideoViewModel with ChangeNotifier {
     change_loading = true;
   }
 
+  // video 추가 호출
+  Future<void> add_data() async {
+    await _VideoRepo.get_data(Add: true);
+    Data = _VideoRepo.Data;
+    Video_length = _VideoRepo.Data.length; // 가져온 비디오 리스트의 길이
+  }
+
   // video 설정
   Future<void> set_data(index) async {
     var index_url = _VideoRepo.Data[index]['url']; // 현재 index의 영상 url

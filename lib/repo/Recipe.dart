@@ -80,8 +80,6 @@ class RecipeRepo {
         }
       }
     });
-
-    print(Data);
   }
 
   // 데이터 create

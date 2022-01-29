@@ -33,6 +33,12 @@ class VideoScreen extends StatelessWidget {
                 context
                     .read<VideoViewModel>()
                     .changeVideo(context.read<VideoViewModel>().index);
+
+                // 마지막 비디오인 경우 추가 데이터 호출
+                if (context.read<VideoViewModel>().Video_length - 1 ==
+                    context.read<VideoViewModel>().index) {
+                  context.read<VideoViewModel>().add_data();
+                }
               },
               scrollDirection: Axis.vertical,
               itemBuilder: (context, index) {
