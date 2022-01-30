@@ -75,6 +75,9 @@ dependencies:
   # 결제용 bootpay
   bootpay: ^1.7.5
 
+  # 구글 로그인
+  google_sign_in: ^5.2.3
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -100,6 +103,8 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/
+    - assets/login/
+    - assets/signup/
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 
@@ -121,6 +126,26 @@ flutter:
       - asset: assets/fonts/Noto_Serif_KR/NotoSansKR-Black.otf
         weight: 900
 
+  - family: Pretendard
+    fonts:
+        - asset: assets/fonts/Pretendard/Pretendard-Black.otf
+          weight: 900
+        - asset: assets/fonts/Pretendard/Pretendard-ExtraBold.otf
+          weight: 800
+        - asset: assets/fonts/Pretendard/Pretendard-Bold.otf
+          weight: 700
+        - asset: assets/fonts/Pretendard/Pretendard-SemiBold.otf
+          weight: 600
+        - asset: assets/fonts/Pretendard/Pretendard-Medium.otf
+          weight: 500
+        - asset: assets/fonts/Pretendard/Pretendard-Regular.otf
+          weight: 400
+        - asset: assets/fonts/Pretendard/Pretendard-Light.otf
+          weight: 300
+        - asset: assets/fonts/Pretendard/Pretendard-Light.otf
+          weight: 200
+        - asset: assets/fonts/Pretendard/Pretendard-Thin.otf
+          weight: 100
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

@@ -7,7 +7,7 @@ import 'package:today_dinner/screens/Signup/index.dart';
 import 'package:today_dinner/screens/Video/index.dart';
 
 // 로그인 기본 class
-class FindPasswordScreen extends StatelessWidget {
+class FindIdScreen extends StatelessWidget {
   // "다음" 버튼 클릭했을 때
   _clicknext(BuildContext context) async {
     // Todo :  유효성 검증 pop up
@@ -23,7 +23,7 @@ class FindPasswordScreen extends StatelessWidget {
           color: Color.fromRGBO(0, 0, 0, 1), //색변경
         ),
         title: Text(
-          "비밀번호 찾기",
+          "아이디 찾기",
           style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 17,
@@ -47,39 +47,7 @@ class FindPasswordScreen extends StatelessWidget {
           ),
         ),
 
-        // findpassword email
-        Container(
-          margin: EdgeInsets.only(
-              left: MediaQuery.of(context).size.width * 0.044, bottom: 4),
-          child: Text(
-            "이메일",
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-          ),
-        ),
-
-        // email textbox
-        Container(
-          margin: EdgeInsets.only(
-              left: MediaQuery.of(context).size.width * 0.044,
-              right: MediaQuery.of(context).size.width * 0.044,
-              bottom: 16),
-          decoration: BoxDecoration(
-              color: Color.fromRGBO(255, 255, 255, 1),
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: Color.fromRGBO(221, 227, 233, 1))),
-          child: TextField(
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              hintText: '이메일을 입력해주세요.',
-              contentPadding: EdgeInsets.all(12.0),
-            ),
-            onChanged: (text) {
-              // watch가 아니라 read를 호출해야함 => read == listen : false => 이벤트 함수는 업데이트 변경 사항을 수신하지 않고 변경 작업을 수행해야함.
-              // context.read<SignupViewModel>().setEmail(text);
-            },
-          ),
-        ),
-        // findpassword phone
+        // findid phone
         Container(
           margin: EdgeInsets.only(
               left: MediaQuery.of(context).size.width * 0.044, bottom: 4),
@@ -89,7 +57,7 @@ class FindPasswordScreen extends StatelessWidget {
           ),
         ),
 
-        // phone textbox
+        // signup textbox
         Container(
           margin: EdgeInsets.only(
               left: MediaQuery.of(context).size.width * 0.044,

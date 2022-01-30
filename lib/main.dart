@@ -112,7 +112,7 @@ class _MyAppState extends State<MyApp> {
     ));
     return MaterialApp(
       theme: ThemeData(
-        fontFamily: 'Noto_Serif_KR',
+        fontFamily: 'Pretendard',
         scaffoldBackgroundColor: Colors.transparent,
       ),
 

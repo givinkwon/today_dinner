@@ -94,7 +94,7 @@ class MyPage extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => SignupScreen(),
+                        builder: (context) => SignupFirstScreen(),
                       ),
                     );
                   },
