@@ -5,13 +5,39 @@ import 'package:flutter/foundation.dart';
 
 // firebase auth
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:today_dinner/repo/User.dart';
 
 import 'package:today_dinner/screens/Login/login.dart';
 import 'package:today_dinner/screens/Video/index.dart';
 
 class LoginViewModel with ChangeNotifier {
+  late var _UserRepo = UserRepo();
+  var Data = [];
+
   // 생성자
-  LoginViewModel() {}
+  LoginViewModel() {
+    _UserRepo = UserRepo();
+  }
+
+  // data 호출
+  Future<void> load_data({String? email = ""}) async {
+    Data = [];
+    await _UserRepo.get_data(Email: email);
+    Data = _UserRepo.Data;
+
+    // 구독 widget에게 변화 알려서 re-build
+    notifyListeners();
+  }
+
+  // data 호출
+  Future<void> create_data(email) async {
+    Data = [];
+    await _UserRepo.get_data(Email: email);
+    Data = _UserRepo.Data;
+
+    // 구독 widget에게 변화 알려서 re-build
+    notifyListeners();
+  }
 
   String Email = "";
 
@@ -142,6 +168,77 @@ class LoginViewModel with ChangeNotifier {
                 child: new Text("닫기"),
               ),
             ],
+          );
+        });
+  }
+
+  // 준비중입니다.
+  Future<void> Alert(context, title,
+      {String content1 = "", String content2 = "", String close = "확인"}) async {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return Scaffold(
+            body: Center(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                width: MediaQuery.of(context).size.width * 0.911,
+                height: 190,
+                child: Column(children: [
+                  // title
+                  Container(
+                    margin: EdgeInsets.only(top: 32, bottom: 16),
+                    child: Text(title,
+                        style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black)),
+                  ),
+
+                  // content
+                  Container(
+                    margin: EdgeInsets.only(bottom: 6),
+                    child: Text(
+                      content1,
+                      style: TextStyle(
+                          fontSize: 16,
+                          color: Color.fromRGBO(129, 128, 128, 1)),
+                    ),
+                  ),
+
+                  // content
+                  Container(
+                    child: Text(
+                      content2,
+                      style: TextStyle(
+                          fontSize: 16,
+                          color: Color.fromRGBO(129, 128, 128, 1)),
+                    ),
+                  ),
+
+                  // button
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: Container(
+                      margin: EdgeInsets.only(top: 28),
+                      child: Text(
+                        close,
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ]),
+              ),
+            ),
           );
         });
   }

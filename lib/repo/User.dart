@@ -22,7 +22,7 @@ class UserRepo {
   dynamic Data_last_doc; // pagnation을 위해 호출 시 마지막 Doc 정보 저장
 
   // 초기 데이터 호출 : 필터 / 개수 / 검색
-  Future<void> get_data({String Email = "", int Limit = 10}) async {
+  Future<void> get_data({String? Email = "", int Limit = 10}) async {
     // init
     Data = [];
 

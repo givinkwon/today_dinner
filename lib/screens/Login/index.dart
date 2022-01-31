@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:provider/src/provider.dart';
 import 'package:today_dinner/main.dart';
+import 'package:today_dinner/providers/Login.dart';
 import 'package:today_dinner/screens/Login/login.dart';
 import 'package:today_dinner/screens/Signup/index.dart';
 import 'package:today_dinner/screens/Video/index.dart';
@@ -9,15 +11,30 @@ import 'package:today_dinner/screens/Video/index.dart';
 // 로그인 기본 class
 class LoginIndexScreen extends StatelessWidget {
   // 구글 로그인
-  Future<dynamic> _signInWithGoogle() async {
+  Future<dynamic> _signInWithGoogle(BuildContext context) async {
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
     final GoogleSignInAuthentication googleAuth =
         await googleUser!.authentication;
     final OAuthCredential credential = GoogleAuthProvider.credential(
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
-    return await FirebaseAuth.instance.signInWithCredential(credential);
+    final awitAsult =
+        await FirebaseAuth.instance.signInWithCredential(credential);
+    final user = awitAsult.user;
+
+    // 새로 회원가입했으면 데이터베이스 만들기
+    // 1. 데이터 호출
+    await context.read<LoginViewModel>().load_data(email: user?.email);
+
+    // 2. 데이터가 없다면 회원가입창으로 이동
+    if (context.read<LoginViewModel>().Data.length == 0) {
+      _signupButtonPressed(context);
+    } else {
+      // 데이터가 있다면 본 페이지로 이동
+      _nologinButtonPressed(context);
+    }
   }
 
   // 로그인 창으로 이동하는 함수
@@ -127,7 +144,7 @@ class LoginIndexScreen extends StatelessWidget {
           // Google login
           GestureDetector(
             onTap: () {
-              _signInWithGoogle();
+              _signInWithGoogle(context);
             },
             child: Container(
               width: MediaQuery.of(context).size.width * 0.75,
@@ -181,34 +198,45 @@ class LoginIndexScreen extends StatelessWidget {
             child: Row(
               children: [
                 // kakao login
-                Container(
-                  padding: EdgeInsets.all(12),
-                  width: 44,
-                  height: 44,
-                  margin: EdgeInsets.only(
-                      right: MediaQuery.of(context).size.width * 0.0889),
-                  decoration: BoxDecoration(
-                    color: Color.fromRGBO(249, 224, 1, 1),
-                    borderRadius: BorderRadius.circular(44),
-                  ),
-                  child: Image.asset(
-                    'assets/login/ic_kakao.png',
+                GestureDetector(
+                  onTap: () {
+                    context.read<LoginViewModel>().Alert(context, "준비중입니다.",
+                        content1: "빠른 시일 내로 준비하도록 할게요.");
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(12),
+                    width: 44,
+                    height: 44,
+                    margin: EdgeInsets.only(
+                        right: MediaQuery.of(context).size.width * 0.0889),
+                    decoration: BoxDecoration(
+                      color: Color.fromRGBO(249, 224, 1, 1),
+                      borderRadius: BorderRadius.circular(44),
+                    ),
+                    child: Image.asset(
+                      'assets/login/ic_kakao.png',
+                    ),
                   ),
                 ),
-
                 // naver login
-                Container(
-                  padding: EdgeInsets.all(12),
-                  width: 44,
-                  height: 44,
-                  margin: EdgeInsets.only(
-                      right: MediaQuery.of(context).size.width * 0.0889),
-                  decoration: BoxDecoration(
-                    color: Color.fromRGBO(3, 199, 90, 1),
-                    borderRadius: BorderRadius.circular(44),
-                  ),
-                  child: Image.asset(
-                    'assets/login/ic_naver.png',
+                GestureDetector(
+                  onTap: () {
+                    context.read<LoginViewModel>().Alert(context, "준비중입니다.",
+                        content1: "빠른 시일 내로 준비하도록 할게요.");
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(12),
+                    width: 44,
+                    height: 44,
+                    margin: EdgeInsets.only(
+                        right: MediaQuery.of(context).size.width * 0.0889),
+                    decoration: BoxDecoration(
+                      color: Color.fromRGBO(3, 199, 90, 1),
+                      borderRadius: BorderRadius.circular(44),
+                    ),
+                    child: Image.asset(
+                      'assets/login/ic_naver.png',
+                    ),
                   ),
                 ),
 
