@@ -20,9 +20,9 @@ class LoginViewModel with ChangeNotifier {
   }
 
   // data 호출
-  Future<void> load_data({String? email = ""}) async {
+  Future<void> load_data({String? phone = "", String? email = ""}) async {
     Data = [];
-    await _UserRepo.get_data(Email: email);
+    await _UserRepo.get_data(Email: email, Phone: phone);
     Data = _UserRepo.Data;
 
     // 구독 widget에게 변화 알려서 re-build
@@ -53,126 +53,134 @@ class LoginViewModel with ChangeNotifier {
     Password = value;
   }
 
+  String Phone = "";
+
+  // 아이디 찾기 => 전화번호 입력
+  void setPhone(value) {
+    Phone = value;
+  }
+
   int Error = 0; // Error state => 1일 때 Error 발생
   String AlertTitle = ""; // Alert 제목
   String AlertContent = ""; // Alert 내용
-  int EmailCheckState = 0; // email check가 완료되면 1
-
-  int isUser = 0; // 0이면 user가 없는 것, 1이면 user가 있는 것
 
   // 로그인
   Future<dynamic> login(context) async {
     // init
-    isUser = 0;
     Error = 0;
-    AlertTitle = "";
-    AlertContent = "";
 
     // 예외처리
     if (Email == "") {
       Error = 1;
       AlertTitle = "로그인 에러";
       AlertContent = "이메일을 입력해주세요.";
-      return;
-    }
-    if (!RegExp(
+    } else if (!RegExp(
             r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
         .hasMatch(Email.toString())) {
       Error = 1;
       AlertTitle = "로그인 에러";
       AlertContent = "이메일 형식을 확인해주세요.";
-      return;
-    }
-    if (Password == "") {
+    } else if (Password == "") {
       Error = 1;
       AlertTitle = "로그인 에러";
       AlertContent = "비밀번호를 입력해주세요.";
-      return;
     }
 
-    // 로그인하기
-    try {
-      await FirebaseAuth.instance
-          .signInWithEmailAndPassword(
-            email: Email,
-            password: Password,
-          )
-          .then((_) => {
-                // 페이지 이동
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => VideoScreen()),
-                )
-              });
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        showDialog(
-            context: context,
-            barrierDismissible: false,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: new Text("로그인 에러"),
-                content: new Text("없는 계정입니다."),
-                actions: <Widget>[
-                  new FlatButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: new Text("닫기"),
-                  ),
-                ],
-              );
-            });
-      } else if (e.code == 'wrong-password') {
-        showDialog(
-            context: context,
-            barrierDismissible: false,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: new Text("로그인 에러"),
-                content: new Text("비밀번호가 틀립니다."),
-                actions: <Widget>[
-                  new FlatButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: new Text("닫기"),
-                  ),
-                ],
-              );
-            });
+    // error가 있으면
+    if (Error == 1) {
+      Alert(context, AlertTitle, content1: AlertContent);
+    } else {
+      // 로그인하기
+      try {
+        await FirebaseAuth.instance
+            .signInWithEmailAndPassword(
+              email: Email,
+              password: Password,
+            )
+            .then((_) => {
+                  // 페이지 이동
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => VideoScreen()),
+                  )
+                });
+      } on FirebaseAuthException catch (e) {
+        if (e.code == 'user-not-found') {
+          AlertTitle = "로그인 에러";
+          AlertContent = "없는 계정입니다.";
+          Alert(context, AlertTitle, content1: AlertContent);
+        } else if (e.code == 'wrong-password') {
+          AlertTitle = "로그인 에러";
+          AlertContent = "비밀번호가 틀렸습니다.";
+          Alert(context, AlertTitle, content1: AlertContent);
+        }
       }
     }
   }
 
-  // 비밀번호 리셋 이메일 발송
-  Future<void> resetPassword(context) async {
-    await FirebaseAuth.instance.sendPasswordResetEmail(email: Email);
+  // 아이디 찾기
+  Future<dynamic> FindId(context) async {
+    // 기 회원가입이 있는 경우 에러 발생
+    await load_data(phone: Phone);
 
-    showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: new Text("비밀번호 찾기"),
-            content: new Text("비밀번호 재설정 이메일을 보냈습니다."),
-            actions: <Widget>[
-              new FlatButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => LoginScreen()),
-                  );
-                },
-                child: new Text("닫기"),
-              ),
-            ],
-          );
-        });
+    if (Phone == "") {
+      AlertTitle = "아이디 찾기";
+      AlertContent = "휴대폰을 입력해주세요.";
+      Alert(context, AlertTitle, content1: AlertContent);
+    }
+
+    // 예외처리
+    else if (Data.length > 0) {
+      print(Data);
+      AlertTitle = "아이디 찾기";
+      AlertContent = "회원님의 아이디는 ${_UserRepo.Data[0]['email']}입니다.";
+      Alert(context, AlertTitle, content1: AlertContent);
+    } else {
+      AlertTitle = "아이디 찾기";
+      AlertContent = "해당 번호로 가입한 아이디가 없습니다.";
+      Alert(context, AlertTitle, content1: AlertContent);
+    }
+
+    // 이전으로 돌아가기
+    Navigator.pop(context);
   }
 
-  // 준비중입니다.
+  // 비밀번호 리셋 이메일 발송
+  Future<void> resetPassword(context) async {
+    // 기 회원가입이 있는 경우 에러 발생
+    await load_data(phone: Phone);
+
+    // 예외 처리
+    if (Phone == "") {
+      AlertTitle = "비밀번호 찾기";
+      AlertContent = "휴대폰을 입력해주세요.";
+      Alert(context, AlertTitle, content1: AlertContent);
+    } else if (Email == "") {
+      AlertTitle = "비밀번호 찾기";
+      AlertContent = "이메일을 입력해주세요.";
+      Alert(context, AlertTitle, content1: AlertContent);
+    }
+
+    // data가 있을 때
+    else if (Data.length > 0) {
+      // 이메일과 비밀번호가 다른 경우 에러 처리
+      if (Data[0]['email'] != Email) {
+        AlertTitle = "비밀번호 찾기";
+        AlertContent = "가입 이메일과 전화번호가 다릅니다.";
+        Alert(context, AlertTitle, content1: AlertContent);
+      } else {
+        // 비밀번호 리셋 이메일 보내기
+        await FirebaseAuth.instance.sendPasswordResetEmail(email: Email);
+
+        // 알람 띄우기
+        AlertTitle = "비밀번호 찾기";
+        AlertContent = "비밀번호 재설정 이메일을 보냈습니다.";
+        Alert(context, AlertTitle, content1: AlertContent);
+      }
+    }
+  }
+
+  // Alert
   Future<void> Alert(context, title,
       {String content1 = "", String content2 = "", String close = "확인"}) async {
     showDialog(

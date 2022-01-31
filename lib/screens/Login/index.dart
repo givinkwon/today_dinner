@@ -159,7 +159,7 @@ class LoginIndexScreen extends StatelessWidget {
                   border: Border.all(color: Color.fromRGBO(210, 210, 210, 1))),
               child: Row(
                 children: [
-                  // kakao login logo
+                  // google login logo
                   Container(
                     margin: EdgeInsets.only(
                       left: 14,
@@ -170,7 +170,7 @@ class LoginIndexScreen extends StatelessWidget {
                     child: Image.asset('assets/login/ic_google.png'),
                   ),
 
-                  // kakao login text
+                  // google login text
                   Container(
                     width: MediaQuery.of(context).size.width * 0.526,
                     margin: EdgeInsets.only(

@@ -22,16 +22,36 @@ class UserRepo {
   dynamic Data_last_doc; // pagnation을 위해 호출 시 마지막 Doc 정보 저장
 
   // 초기 데이터 호출 : 필터 / 개수 / 검색
-  Future<void> get_data({String? Email = "", int Limit = 10}) async {
+  Future<void> get_data(
+      {String? Phone = "", String? Email = "", int Limit = 10}) async {
     // init
     Data = [];
 
     // Email 현재 USER를 넣어 currentuser data 가져오기
-    if (Email != null) {
+    if (Email != "") {
       await firestore
           .collection("User")
           .where('email', isEqualTo: Email)
           .orderBy("createdAt", descending: true)
+          .get()
+          .then((QuerySnapshot querySnapshot) async {
+        // 데이터 있는 지 체크
+        if (querySnapshot.docs.length > 0) {
+          // 마지막 doc 체크
+          Data_last_doc = querySnapshot.docs.last;
+
+          for (var UserDoc in querySnapshot.docs) {
+            Data.add(UserDoc.data());
+          }
+        }
+      });
+    }
+
+    // 휴대폰이 있는 경우 => 아이디 찾기
+    else if (Phone != "") {
+      await firestore
+          .collection("User")
+          .where('phone', isEqualTo: Phone)
           .get()
           .then((QuerySnapshot querySnapshot) async {
         // 데이터 있는 지 체크

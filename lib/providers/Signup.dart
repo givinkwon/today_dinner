@@ -122,8 +122,16 @@ class SignupViewModel with ChangeNotifier {
       Error = 1;
       AlertTitle = "회원가입 에러";
       AlertContent = "휴대폰 인증을 완료해주세요.";
-    }
+    } else {
+      // 기 회원가입이 있는 경우 에러 발생 => 전화번호 중복 체크
+      await _UserRepo.get_data(Phone: Phone);
 
+      if (_UserRepo.Data[0]['phone'] == Phone) {
+        Error = 1;
+        AlertTitle = "회원가입 에러";
+        AlertContent = "기 가입된 휴대폰입니다.";
+      }
+    }
     // 에러가 있는 경우 알람 띄우기
     if (Error == 1) {
       Alert(context, AlertTitle, content1: AlertContent);

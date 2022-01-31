@@ -1,9 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:provider/src/provider.dart';
 import 'package:today_dinner/main.dart';
+import 'package:today_dinner/providers/Login.dart';
+import 'package:today_dinner/providers/Signup.dart';
 import 'package:today_dinner/screens/Login/login.dart';
-import 'package:today_dinner/screens/Signup/index.dart';
 import 'package:today_dinner/screens/Video/index.dart';
 
 // 로그인 기본 class
@@ -74,8 +76,7 @@ class FindIdScreen extends StatelessWidget {
               contentPadding: EdgeInsets.all(12.0),
             ),
             onChanged: (text) {
-              // watch가 아니라 read를 호출해야함 => read == listen : false => 이벤트 함수는 업데이트 변경 사항을 수신하지 않고 변경 작업을 수행해야함.
-              // context.read<SignupViewModel>().setEmail(text);
+              context.read<LoginViewModel>().setPhone(text);
             },
           ),
         ),
@@ -88,13 +89,13 @@ class FindIdScreen extends StatelessWidget {
           ),
           width: MediaQuery.of(context).size.width * 0.911,
           decoration: BoxDecoration(
-              color: Color.fromRGBO(255, 227, 206, 1),
+              color: Color.fromRGBO(255, 127, 34, 1),
               borderRadius: BorderRadius.circular(10),
               border: Border.all(color: Color.fromRGBO(221, 227, 233, 1))),
           child: TextButton(
-            onPressed: () => _clicknext(context),
+            onPressed: () => context.read<LoginViewModel>().FindId(context),
             child: Text(
-              "다음",
+              "확인",
               style: TextStyle(fontSize: 17, color: Colors.white),
             ),
           ),
