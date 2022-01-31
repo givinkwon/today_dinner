@@ -65,6 +65,7 @@ class LoginIndexScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false, // 공사장 해결
       appBar: AppBar(
         bottomOpacity: 0.0,
         elevation: 0.0,

@@ -2,11 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:today_dinner/repo/User.dart';
 import 'package:today_dinner/screens/Recipe/index.dart';
 
 // firebase storage
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:today_dinner/screens/Signup/index.dart';
+import 'package:today_dinner/screens/Video/index.dart';
 
 FirebaseFirestore firestore = FirebaseFirestore.instance;
 firebase_storage.FirebaseStorage storage =
@@ -42,16 +45,9 @@ class SignupViewModel with ChangeNotifier {
 
   String Nickname = "";
 
-  // 비밀번호 입력
+  // 닉네임 입력
   void setNickname(value) {
     Nickname = value;
-  }
-
-  String Name = "";
-
-  // 이름 입력
-  void setName(value) {
-    Name = value;
   }
 
   String Phone = "";
@@ -61,169 +57,113 @@ class SignupViewModel with ChangeNotifier {
     Phone = value;
   }
 
+  var SMSCode = "";
+  // 인증번호 입력
+  void setSMSCode(value) {
+    SMSCode = value;
+  }
+
+  // 마케팅 수신 동의
   bool Marketing = true;
 
-  void setMarketing(value) {
-    Marketing = value;
+  void setMarketing() {
+    Marketing = !Marketing;
     notifyListeners();
   }
 
   int Error = 0; // Error state => 1일 때 Error 발생
   String AlertTitle = ""; // Alert 제목
   String AlertContent = ""; // Alert 내용
-  int EmailCheckState = 0; // email check가 완료되면 1
 
-  // 이메일 중복 확인 => 비동기 문제로 state 가 1인 경우에는 회원가입까지, 0인 경우에는 중복확인만
-  Future<dynamic> EmailCheck(context, state) async {
+  // 회원가입 첫번째 페이지 "다음" 눌렀을 때
+  Future<dynamic> signupNext(context) async {
     // init
     Error = 0;
-    AlertTitle = "";
-    AlertContent = "";
-    EmailCheckState = 0;
+
     // 기 회원가입이 있는 경우 에러 발생
     await _UserRepo.get_data(Email: Email);
-    if (_UserRepo.Data.length > 0) {
-      Error = 1;
-      AlertTitle = "회원가입 에러";
-      AlertContent = "기존에 가입된 이메일입니다.";
-    }
-
-    // 에러가 없는 경우 유효성 체크
-    if (Error == 0) {
-      if (Email == "" ||
-          !RegExp(r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
-              .hasMatch(Email.toString())) {
-        AlertTitle = "이메일 중복 확인";
-        AlertContent = "이메일 형식을 확인해주세요";
-      } else if (state == 0) {
-        AlertTitle = "이메일 중복 확인";
-        AlertContent = "이메일로 사용이 가능합니다.";
-      }
-      if (state == 1) {
-        // Authencication 저장
-        await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: Email,
-          password: Password,
-        );
-
-        // 데이터베이스 저장
-        await _UserRepo.create_data(Email, Parameter: {
-          'createdAt': FieldValue.serverTimestamp(),
-          'email': Email,
-          'nickname': Nickname,
-          'password': Password,
-          'phone': Phone,
-          'name': Name,
-          'profileimage': '',
-          'marketing': Marketing,
-        });
-
-        // 회원가입 완료 표시
-        showDialog(
-            context: context,
-            barrierDismissible: false,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: new Text("회원가입 완료"),
-                content: new Text("회원가입이 완료되었습니다."),
-                actions: <Widget>[
-                  new FlatButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => RecipeScreen()),
-                      );
-                    },
-                    child: new Text("메인페이지로 이동"),
-                  ),
-                ],
-              );
-            });
-      }
-    }
-    // alert 창 띄우기
-    if (AlertTitle != "") {
-      showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: new Text(AlertTitle),
-              content: new Text(AlertContent),
-              actions: <Widget>[
-                new FlatButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: new Text("닫기"),
-                ),
-              ],
-            );
-          });
-    }
-    return;
-  }
-
-  // 회원가입완료
-  Future<dynamic> signupComplete(context) async {
-    // init
-    Error = 0;
-    AlertTitle = "";
-    AlertContent = "";
 
     // 예외처리
     if (Email == "") {
       Error = 1;
       AlertTitle = "회원가입 에러";
       AlertContent = "이메일을 입력해주세요.";
-      return;
-    }
-    if (!RegExp(
+    } else if (_UserRepo.Data.length > 0) {
+      Error = 1;
+      AlertTitle = "회원가입 에러";
+      AlertContent = "기존에 가입된 이메일입니다.";
+    } else if (!RegExp(
             r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
         .hasMatch(Email.toString())) {
       Error = 1;
       AlertTitle = "회원가입 에러";
       AlertContent = "이메일 형식을 확인해주세요.";
-      return;
-    }
-    if (Password == "") {
+    } else if (Password == "") {
       Error = 1;
       AlertTitle = "회원가입 에러";
       AlertContent = "비밀번호를 입력해주세요.";
-      return;
-    }
-    if (Password.length < 6) {
+    } else if (Password.length < 8) {
       Error = 1;
       AlertTitle = "회원가입 에러";
-      AlertContent = "비밀번호는 최소 6글자 이상이어야 합니다.";
-      return;
-    }
-    if (Password != Password_check) {
+      AlertContent = "비밀번호는 최소 8글자 이상이어야 합니다.";
+    } else if (Password != Password_check) {
       Error = 1;
       AlertTitle = "회원가입 에러";
       AlertContent = "입력한 비밀번호가 다릅니다.";
-      return;
-    }
-    if (Nickname == "") {
+    } else if (Nickname == "") {
       Error = 1;
       AlertTitle = "회원가입 에러";
       AlertContent = "사용할 닉네임을 입력해주세요.";
-      return;
-    }
-    if (Name == "") {
-      Error = 1;
-      AlertTitle = "회원가입 에러";
-      AlertContent = "이름을 입력해주세요.";
-      return;
-    }
-    if (Phone == "") {
+    } else if (Phone == "") {
       Error = 1;
       AlertTitle = "회원가입 에러";
       AlertContent = "휴대폰을 입력해주세요.";
-      return;
+    } else if (phone_authentication_request == false) {
+      Error = 1;
+      AlertTitle = "회원가입 에러";
+      AlertContent = "휴대폰 인증을 완료해주세요.";
     }
 
-    await EmailCheck(context, 1);
+    // 에러가 있는 경우 알람 띄우기
+    if (Error == 1) {
+      Alert(context, AlertTitle, content1: AlertContent);
+    } else {
+      // 에러가 없는 경우 다음으로 보내기
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => SignupSecondScreen()),
+      );
+    }
+  }
+
+  // 회원가입완료
+  Future<dynamic> signupComplete(context) async {
+    // Authencication 저장
+    try {
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: Email,
+        password: Password,
+      );
+    } catch (e) {}
+
+    // 데이터베이스 저장
+    await _UserRepo.create_data(Email, Parameter: {
+      'createdAt': FieldValue.serverTimestamp(),
+      'email': Email,
+      'nickname': Nickname,
+      'password': Password,
+      'phone': Phone,
+      'profileimage': '',
+      'marketing': Marketing,
+    });
+
+    // 페이지 이동
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => VideoScreen(),
+      ),
+    );
   }
 
   // 휴대폰 인증
@@ -235,15 +175,158 @@ class SignupViewModel with ChangeNotifier {
     // 안드로이드는 자동 인증
     await auth.verifyPhoneNumber(
       phoneNumber: '+82' + Phone,
+
       verificationCompleted: (PhoneAuthCredential credential) async {
-        print(1);
-        await auth.signInWithCredential(credential);
+        print("인증이 성공했습니다.");
+        phone_authentication_request = true;
       },
+
+      // 시간 초과
       codeAutoRetrievalTimeout: (String verificationId) {},
-      codeSent: (String verificationId, int? forceResendingToken) {},
-      verificationFailed: (FirebaseAuthException error) {},
+
+      // 코드 보냈을 때
+      codeSent: (String verificationId, int? forceResendingToken) async {
+        Alert(context, "인증 번호 입력",
+            texthint: "인증번호를 입력해주세요.",
+            verificationId: verificationId,
+            forceResendingToken: forceResendingToken);
+      },
+
+      // 실패했을 때
+      verificationFailed: (FirebaseAuthException error) {
+        Alert(context, "인증 실패", content1: "올바른 전화번호를 입력해주세요.");
+      },
     );
 
     notifyListeners();
+  }
+
+  Future<void> Alert(context, title,
+      {String texthint = "",
+      String content1 = "",
+      String content2 = "",
+      String close = "확인",
+      String verificationId = "",
+      int? forceResendingToken = 0}) async {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return Scaffold(
+            resizeToAvoidBottomInset: false, // 공사장 해결
+            body: Center(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                width: MediaQuery.of(context).size.width * 0.911,
+                height: 190,
+                child: Column(children: [
+                  // title
+                  Container(
+                    margin: EdgeInsets.only(top: 32, bottom: 16),
+                    child: Text(title,
+                        style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black)),
+                  ),
+                  if (texthint != "")
+                    Container(
+                      width: 150,
+                      child: TextField(
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: '인증번호를 입력하세요',
+                        ),
+                        onChanged: (text) {
+                          setSMSCode(text);
+                        },
+                      ),
+                    ),
+
+                  // content
+                  if (texthint == "")
+                    Container(
+                      margin: EdgeInsets.only(bottom: 6),
+                      child: Text(
+                        content1,
+                        style: TextStyle(
+                            fontSize: 16,
+                            color: Color.fromRGBO(129, 128, 128, 1)),
+                      ),
+                    ),
+
+                  // content
+                  if (texthint == "")
+                    Container(
+                      child: Text(
+                        content2,
+                        style: TextStyle(
+                            fontSize: 16,
+                            color: Color.fromRGBO(129, 128, 128, 1)),
+                      ),
+                    ),
+
+                  // 인증번호 입력 시
+                  if (texthint != "")
+                    GestureDetector(
+                      onTap: () async {
+                        // 휴대폰 인증
+                        PhoneAuthCredential credential =
+                            PhoneAuthProvider.credential(
+                                verificationId: verificationId,
+                                smsCode: SMSCode);
+
+                        try {
+                          await auth.signInWithCredential(credential);
+                          // sucess
+                          print("인증이 성공했습니다.");
+                          phone_authentication_request = true;
+                          Navigator.pop(context);
+
+                          // 성공 알람
+                          Alert(context, "인증 성공", content1: "인증에 성공했습니다.");
+                        } catch (e) {
+                          // fail
+                          Alert(context, "인증 실패",
+                              content1: "올바른 인증번호를 입력해주세요.");
+                        }
+                      },
+                      child: Container(
+                        margin: EdgeInsets.only(top: 28),
+                        child: Text(
+                          close,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  // 그외
+                  if (texthint == "")
+                    // button
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Container(
+                        margin: EdgeInsets.only(top: 28),
+                        child: Text(
+                          close,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                ]),
+              ),
+            ),
+          );
+        });
   }
 }

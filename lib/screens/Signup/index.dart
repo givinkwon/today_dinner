@@ -12,25 +12,10 @@ import 'package:url_launcher/url_launcher.dart';
 
 // 회원가입 기본정보 입력
 class SignupFirstScreen extends StatelessWidget {
-  // "다음" 버튼 클릭했을 때
-  _clicknext(BuildContext context) async {
-    // Todo :  유효성 검증 pop up
-
-    // Screen 이동
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => SignupSecondScreen()),
-    );
-  }
-
-  // 중복확인 클릭했을 때
-  _emailCheckButtonPressed(BuildContext context) async {
-    context.read<SignupViewModel>().EmailCheck(context, 0);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false, // 공사장 해결
       appBar: AppBar(
         elevation: 0,
         iconTheme: IconThemeData(
@@ -80,8 +65,7 @@ class SignupFirstScreen extends StatelessWidget {
               contentPadding: EdgeInsets.all(12.0),
             ),
             onChanged: (text) {
-              // watch가 아니라 read를 호출해야함 => read == listen : false => 이벤트 함수는 업데이트 변경 사항을 수신하지 않고 변경 작업을 수행해야함.
-              // context.read<SignupViewModel>().setEmail(text);
+              context.read<SignupViewModel>().setEmail(text);
             },
           ),
         ),
@@ -113,8 +97,7 @@ class SignupFirstScreen extends StatelessWidget {
               contentPadding: EdgeInsets.all(12.0),
             ),
             onChanged: (text) {
-              // watch가 아니라 read를 호출해야함 => read == listen : false => 이벤트 함수는 업데이트 변경 사항을 수신하지 않고 변경 작업을 수행해야함.
-              // context.read<SignupViewModel>().setEmail(text);
+              context.read<SignupViewModel>().setPassword(text);
             },
           ),
         ),
@@ -135,8 +118,7 @@ class SignupFirstScreen extends StatelessWidget {
               contentPadding: EdgeInsets.all(12.0),
             ),
             onChanged: (text) {
-              // watch가 아니라 read를 호출해야함 => read == listen : false => 이벤트 함수는 업데이트 변경 사항을 수신하지 않고 변경 작업을 수행해야함.
-              // context.read<SignupViewModel>().setEmail(text);
+              context.read<SignupViewModel>().setPasswordCheck(text);
             },
           ),
         ),
@@ -168,8 +150,7 @@ class SignupFirstScreen extends StatelessWidget {
               contentPadding: EdgeInsets.all(12.0),
             ),
             onChanged: (text) {
-              // watch가 아니라 read를 호출해야함 => read == listen : false => 이벤트 함수는 업데이트 변경 사항을 수신하지 않고 변경 작업을 수행해야함.
-              // context.read<SignupViewModel>().setEmail(text);
+              context.read<SignupViewModel>().setNickname(text);
             },
           ),
         ),
@@ -203,64 +184,37 @@ class SignupFirstScreen extends StatelessWidget {
                 contentPadding: EdgeInsets.all(12.0),
               ),
               onChanged: (text) {
-                // watch가 아니라 read를 호출해야함 => read == listen : false => 이벤트 함수는 업데이트 변경 사항을 수신하지 않고 변경 작업을 수행해야함.
-                // context.read<SignupViewModel>().setEmail(text);
+                context.read<SignupViewModel>().setPhone(text);
               },
             ),
           ),
-          Container(
-            width: MediaQuery.of(context).size.width * 0.303,
-            padding: EdgeInsets.only(top: 13, bottom: 13, left: 42, right: 42),
-            margin: EdgeInsets.only(bottom: 16),
-            decoration: BoxDecoration(
-                color: Color.fromRGBO(255, 255, 255, 1),
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: Color.fromRGBO(255, 127, 34, 1))),
-            child: Align(
-              alignment: Alignment.center,
-              child: Text(
-                "인증",
-                style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: Color.fromRGBO(255, 127, 34, 1)),
+          GestureDetector(
+            onTap: () {
+              // 인증번호 보내기
+              context.read<SignupViewModel>().PhoneRequest(context);
+            },
+            child: Container(
+              width: MediaQuery.of(context).size.width * 0.303,
+              padding:
+                  EdgeInsets.only(top: 13, bottom: 13, left: 42, right: 42),
+              margin: EdgeInsets.only(bottom: 16),
+              decoration: BoxDecoration(
+                  color: Color.fromRGBO(255, 255, 255, 1),
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: Color.fromRGBO(255, 127, 34, 1))),
+              child: Align(
+                alignment: Alignment.center,
+                child: Text(
+                  "인증",
+                  style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: Color.fromRGBO(255, 127, 34, 1)),
+                ),
               ),
             ),
           ),
         ]),
-
-        // signup cretification
-        Container(
-          margin: EdgeInsets.only(
-              left: MediaQuery.of(context).size.width * 0.044, bottom: 4),
-          child: Text(
-            "인증번호 6자리",
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-          ),
-        ),
-
-        // celtification textbox
-        Container(
-          margin: EdgeInsets.only(
-              left: MediaQuery.of(context).size.width * 0.044,
-              right: MediaQuery.of(context).size.width * 0.044,
-              bottom: 16),
-          decoration: BoxDecoration(
-              color: Color.fromRGBO(255, 255, 255, 1),
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: Color.fromRGBO(221, 227, 233, 1))),
-          child: TextField(
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              hintText: '인증번호 6자리를 입력해주세요.',
-              contentPadding: EdgeInsets.all(12.0),
-            ),
-            onChanged: (text) {
-              // watch가 아니라 read를 호출해야함 => read == listen : false => 이벤트 함수는 업데이트 변경 사항을 수신하지 않고 변경 작업을 수행해야함.
-              // context.read<SignupViewModel>().setEmail(text);
-            },
-          ),
-        ),
 
         // next button
         Container(
@@ -270,11 +224,12 @@ class SignupFirstScreen extends StatelessWidget {
           ),
           width: MediaQuery.of(context).size.width * 0.911,
           decoration: BoxDecoration(
-              color: Color.fromRGBO(255, 227, 206, 1),
+              color: Color.fromRGBO(255, 127, 34, 1),
               borderRadius: BorderRadius.circular(10),
               border: Border.all(color: Color.fromRGBO(221, 227, 233, 1))),
           child: TextButton(
-            onPressed: () => _clicknext(context),
+            onPressed: () =>
+                context.read<SignupViewModel>().signupNext(context),
             child: Text(
               "다음",
               style: TextStyle(fontSize: 17, color: Colors.white),
@@ -288,13 +243,6 @@ class SignupFirstScreen extends StatelessWidget {
 
 // 회원가입 기본정보 입력
 class SignupSecondScreen extends StatelessWidget {
-  // "완료" 버튼 클릭했을 때
-  _clicknext(BuildContext context) async {
-    // Todo :  유효성 검증 pop up
-
-    // Screen 이동
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -335,43 +283,20 @@ class SignupSecondScreen extends StatelessWidget {
                   Border.all(width: 2, color: Color.fromRGBO(255, 127, 34, 1))),
           child: Row(
             children: [
-              Container(
-                child: Image.asset(
-                  'assets/signup/ic_check_active.png',
+              GestureDetector(
+                onTap: () {
+                  context.read<SignupViewModel>().setMarketing();
+                },
+                child: Container(
+                  child: context.watch<SignupViewModel>().Marketing == true
+                      ? Image.asset('assets/signup/ic_check_active.png')
+                      : Image.asset('assets/signup/ic_check_inacitve.png'),
                 ),
               ),
               Container(
                 margin: EdgeInsets.only(left: 12),
                 child: Text(
                   "모두 동의합니다.",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-              ),
-            ],
-          ),
-        ),
-
-        // 필수 동의
-        Container(
-          width: MediaQuery.of(context).size.width * 0.911,
-          height: 48,
-          padding: EdgeInsets.only(top: 14, bottom: 14, left: 14),
-          margin: EdgeInsets.only(
-              left: MediaQuery.of(context).size.width * 0.044, bottom: 0),
-          decoration: BoxDecoration(
-            color: Color.fromRGBO(255, 255, 255, 1),
-          ),
-          child: Row(
-            children: [
-              Container(
-                child: Image.asset(
-                  'assets/signup/ic_check_active.png',
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.only(left: 12),
-                child: Text(
-                  "(필수) 만 14세 이상입니다.",
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
               ),
@@ -408,8 +333,6 @@ class SignupSecondScreen extends StatelessWidget {
         ),
 
         // 마케팅 및 수신 동의
-
-        // 서비스 이용약관 동의
         Container(
           width: MediaQuery.of(context).size.width * 0.911,
           height: 48,
@@ -421,10 +344,14 @@ class SignupSecondScreen extends StatelessWidget {
           ),
           child: Row(
             children: [
-              Container(
-                child: Image.asset(
-                  'assets/signup/ic_check_active.png',
-                ),
+              GestureDetector(
+                onTap: () {
+                  context.read<SignupViewModel>().setMarketing();
+                },
+                child: Container(
+                    child: context.watch<SignupViewModel>().Marketing == true
+                        ? Image.asset('assets/signup/ic_check_active.png')
+                        : Image.asset('assets/signup/ic_check_inacitve.png')),
               ),
               Container(
                 margin: EdgeInsets.only(left: 12),
@@ -445,11 +372,12 @@ class SignupSecondScreen extends StatelessWidget {
           ),
           width: MediaQuery.of(context).size.width * 0.911,
           decoration: BoxDecoration(
-              color: Color.fromRGBO(255, 227, 206, 1),
+              color: Color.fromRGBO(255, 127, 34, 1),
               borderRadius: BorderRadius.circular(10),
               border: Border.all(color: Color.fromRGBO(221, 227, 233, 1))),
           child: TextButton(
-            onPressed: () => _clicknext(context),
+            onPressed: () =>
+                context.read<SignupViewModel>().signupComplete(context),
             child: Text(
               "완료",
               style: TextStyle(fontSize: 17, color: Colors.white),
