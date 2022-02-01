@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -87,290 +88,6 @@ class MypageViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  int Error = 0; // Error state => 1일 때 Error 발생
-  String AlertTitle = ""; // Alert 제목
-  String AlertContent = ""; // Alert 내용
-  int EmailCheckState = 0; // email check가 완료되면 1
-
-  String Phone = "";
-
-  // 휴대폰 입력
-  void setPhone(value) {
-    Phone = value;
-  }
-
-  // 휴대폰 변경하는 위젯
-  Future<dynamic> changePhoneWidget(context) async {
-    showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('휴대폰 변경하기'),
-            content: Container(
-              height: 200,
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: 20,
-                  ),
-                  SizedBox(
-                      child: Phone == ""
-                          ? Text(
-                              "현재 휴대폰 : ${Data[0]['phone']}",
-                              style: TextStyle(
-                                  fontSize: 14, fontWeight: FontWeight.bold),
-                            )
-                          : Text(
-                              "현재 휴대폰 : ${Phone}",
-                              style: TextStyle(
-                                  fontSize: 14, fontWeight: FontWeight.bold),
-                            )),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  SizedBox(
-                    child: Text(
-                      "변경할 휴대폰",
-                      style: TextStyle(fontSize: 12),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  SizedBox(
-                      child: TextField(
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintText: '휴대폰을 입력해주세요.',
-                    ),
-                    onChanged: (text) {
-                      // // watch가 아니라 read를 호출해야함 => read == listen : false => 이벤트 함수는 업데이트 변경 사항을 수신하지 않고 변경 작업을 수행해야함.
-                      setPhone(text);
-                    },
-                  )),
-                ],
-              ),
-            ),
-            actions: <Widget>[
-              FlatButton(
-                child: Text('변경하기'),
-                onPressed: () {
-                  changePhone(context);
-                },
-              ),
-              FlatButton(
-                child: Text('취소하기'),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-            ],
-          );
-        });
-  }
-
-  // 휴대폰 변경하기
-  Future<dynamic> changePhone(context) async {
-    // init
-    Error = 0;
-    AlertTitle = "";
-    AlertContent = "";
-
-    if (Phone == "") {
-      Error = 1;
-      AlertTitle = "휴대폰 변경 에러";
-      AlertContent = "휴대폰을 입력해주세요.";
-    }
-
-    // alert 창 띄우기
-    if (AlertTitle != "") {
-      showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: new Text(AlertTitle),
-              content: new Text(AlertContent),
-              actions: <Widget>[
-                new FlatButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: new Text("닫기"),
-                ),
-              ],
-            );
-          });
-    }
-
-    if (AlertTitle == "") {
-      // 데이터베이스 저장
-      firestore.collection("User").doc(auth.currentUser?.email).update({
-        'phone': Phone,
-      }).then((_) => {
-            showDialog(
-                context: context,
-                barrierDismissible: false,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: new Text("휴대폰 변경 완료"),
-                    content: new Text("휴대폰 변경이 완료되었습니다."),
-                    actions: <Widget>[
-                      new FlatButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                          Navigator.pop(context);
-                        },
-                        child: new Text("닫기"),
-                      ),
-                    ],
-                  );
-                }),
-          });
-    }
-  }
-
-  String Nickname = "";
-
-  // 닉네임 입력
-  void setNickname(value) {
-    Nickname = value;
-  }
-
-  // 닉네임 변경하는 위젯
-  Future<dynamic> changeNicknameWidget(context) async {
-    showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('닉네임 변경하기'),
-            content: Container(
-              height: 200,
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: 20,
-                  ),
-                  SizedBox(
-                    child: Nickname == ""
-                        ? Text(
-                            "현재 닉네임 : ${Data[0]['nickname']}",
-                            style: TextStyle(
-                                fontSize: 14, fontWeight: FontWeight.bold),
-                          )
-                        : Text(
-                            "현재 닉네임 : ${Nickname}",
-                            style: TextStyle(
-                                fontSize: 14, fontWeight: FontWeight.bold),
-                          ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  SizedBox(
-                    child: Text(
-                      "변경할 닉네임",
-                      style: TextStyle(fontSize: 12),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  SizedBox(
-                      child: TextField(
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintText: '닉네임을 입력해주세요.',
-                    ),
-                    onChanged: (text) {
-                      // // watch가 아니라 read를 호출해야함 => read == listen : false => 이벤트 함수는 업데이트 변경 사항을 수신하지 않고 변경 작업을 수행해야함.
-                      setNickname(text);
-                    },
-                  )),
-                ],
-              ),
-            ),
-            actions: <Widget>[
-              FlatButton(
-                child: Text('변경하기'),
-                onPressed: () {
-                  changeNickname(context);
-                },
-              ),
-              FlatButton(
-                child: Text('취소하기'),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-            ],
-          );
-        });
-  }
-
-  // 닉네임 변경하기
-  Future<dynamic> changeNickname(context) async {
-    // init
-    Error = 0;
-    AlertTitle = "";
-    AlertContent = "";
-
-    if (Nickname == "") {
-      Error = 1;
-      AlertTitle = "닉네임 변경 에러";
-      AlertContent = "닉네임을 입력해주세요.";
-    }
-
-    // alert 창 띄우기
-    if (AlertTitle != "") {
-      showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: new Text(AlertTitle),
-              content: new Text(AlertContent),
-              actions: <Widget>[
-                new FlatButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: new Text("닫기"),
-                ),
-              ],
-            );
-          });
-    }
-
-    if (AlertTitle == "") {
-      // 데이터베이스 저장
-      firestore.collection("User").doc(auth.currentUser?.email).update({
-        'nickname': Nickname,
-      }).then((_) => {
-            showDialog(
-                context: context,
-                barrierDismissible: false,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: new Text("닉네임 변경 완료"),
-                    content: new Text("닉네임 변경이 완료되었습니다."),
-                    actions: <Widget>[
-                      new FlatButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                          Navigator.pop(context);
-                        },
-                        child: new Text("닫기"),
-                      ),
-                    ],
-                  );
-                }),
-          });
-    }
-  }
-
   // 갤러리에서 이미지 가져오기
   Future<dynamic> getGalleryImage() async {
     // init
@@ -394,208 +111,217 @@ class MypageViewModel with ChangeNotifier {
     }
   }
 
-  String Remove = "";
+  // 닉네임 변경하기
+  Future<dynamic> changeNickname(context) async {
+    // 데이터베이스 저장
+    firestore.collection("User").doc(auth.currentUser?.email).update({
+      'nickname': accounttext,
+    });
 
-  // 비밀번호 입력
-  void setRemove(value) {
-    Remove = value;
+    // 데이터 다시 불러오기
+    load_data();
   }
 
-  //회원 탈퇴
-  Future<dynamic> withdrawalAccountWidget(context) async {
-    showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('회원 탈퇴하기'),
-            content: Container(
-              height: 200,
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: 20,
-                  ),
-                  SizedBox(
-                    child: Text(
-                      "정말 회원탈퇴하시겠어요? 탈퇴 시 계정 복구가 어렵습니다.",
-                      style:
-                          TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  SizedBox(
-                    child: Text(
-                      "[탈퇴하겠습니다]라고 작성해주세요.",
-                      style: TextStyle(fontSize: 12),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  SizedBox(
-                      child: TextField(
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintText: '탈퇴하겠습니다',
-                    ),
-                    onChanged: (text) {
-                      // // watch가 아니라 read를 호출해야함 => read == listen : false => 이벤트 함수는 업데이트 변경 사항을 수신하지 않고 변경 작업을 수행해야함.
-                      setRemove(text);
-                    },
-                  )),
-                ],
-              ),
-            ),
-            actions: <Widget>[
-              FlatButton(
-                child: Text('탈퇴하기'),
-                onPressed: () {
-                  withdrawalAccount(context);
-                },
-              ),
-              FlatButton(
-                child: Text('취소하기'),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-            ],
-          );
-        });
+  // 비밀번호 변경하기
+  Future<dynamic> changePassword(context) async {
+    try {
+      auth.currentUser?.updatePassword(accounttext); // 비밀번호 DB 동기화
+      // // 데이터베이스 저장
+      firestore.collection("User").doc(auth.currentUser?.email).update({
+        'password': accounttext,
+      });
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'requires-recent-login') {
+        Alert(context, "변경 에러", content1: "변경을 위해 재로그인해주세요.");
+      }
+    }
+
+    // 데이터 다시 불러오기
+    load_data();
+  }
+
+  // 휴대폰 변경하기
+  Future<dynamic> changePhone(context) async {
+    // 데이터베이스 저장
+    firestore.collection("User").doc(auth.currentUser?.email).update({
+      'phone': accounttext,
+    });
+
+    // 데이터 다시 불러오기
+    load_data();
   }
 
   // 회원 탈퇴
   Future<dynamic> withdrawalAccount(context) async {
-    // init
-    Error = 0;
-    AlertTitle = "";
-    AlertContent = "";
-
-    if (Remove != "탈퇴하겠습니다") {
-      Error = 1;
-      AlertTitle = "계정 삭제 에러";
-      AlertContent = "[탈퇴하겠습니다]를 입력해주세요.";
-    }
-
-    // alert 창 띄우기
-    if (AlertTitle != "") {
-      showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: new Text(AlertTitle),
-              content: new Text(AlertContent),
-              actions: <Widget>[
-                new FlatButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: new Text("닫기"),
-                ),
-              ],
-            );
-          });
-    }
-
-    if (AlertTitle == "") {
-      try {
-        var deleteEmail = auth.currentUser?.email;
-        await auth.currentUser?.delete().then((_) => {
-              showDialog(
-                  context: context,
-                  barrierDismissible: false,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: new Text("계정 탈퇴 완료"),
-                      content: new Text("계정 탈퇴가 완료되었습니다."),
-                      actions: <Widget>[
-                        new FlatButton(
-                          onPressed: () {
-                            // 페이지 이동
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => LoginScreen()),
-                            );
-                          },
-                          child: new Text("닫기"),
-                        ),
-                      ],
-                    );
-                  }),
-              // 데이터베이스 저장
-              firestore.collection("User").doc(deleteEmail).update({
-                'deactivate': true,
-              }),
-            });
-      } on FirebaseAuthException catch (e) {
-        if (e.code == 'requires-recent-login') {
-          showDialog(
-              context: context,
-              barrierDismissible: false,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  title: new Text("계정 탈퇴 실패"),
-                  content: new Text(
-                      "세션이 만료되어 계정 탈퇴가 제대로 되지 않았습니다. 재로그인 후 탈퇴처리 해주세요."),
-                  actions: <Widget>[
-                    new FlatButton(
-                      onPressed: () {
-                        // 페이지 이동
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => LoginScreen()),
-                        );
-                      },
-                      child: new Text("닫기"),
-                    ),
-                  ],
-                );
-              });
-        }
+    var deleteEmail = auth.currentUser?.email;
+    try {
+      await auth.currentUser?.delete();
+      // 데이터베이스 저장
+      firestore.collection("User").doc(deleteEmail).update({
+        'deactivate': true,
+      });
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'requires-recent-login') {
+        Alert(context, "탈퇴 오류", content1: "재로그인 후 탈퇴해주세요.");
       }
+    }
+
+    // 데이터 다시 불러오기
+    load_data();
+  }
+
+  // 계정 정보 수정 텍스트
+  var accounttext = "";
+  SetAccountText(value) {
+    accounttext = value;
+  }
+
+  // 계정 정보 수정
+  Future<dynamic> EditAccount(context, purpose) async {
+    // 닉네임 수정
+    if (purpose == "nickname") {
+      Alert(context, "닉네임 수정",
+          purpose: "nickname", content1: "현재 닉네임 : ${Data[0]['nickname']}");
+    }
+
+    // 비밀번호 수정
+    if (purpose == "password") {
+      Alert(context, "비밀번호 변경", purpose: "password");
+    }
+
+    // 휴대폰 수정
+    if (purpose == "phone") {
+      Alert(context, "휴대폰 변경",
+          purpose: "phone", content1: "현재 휴대폰 : ${Data[0]['phone']}");
+    }
+
+    // 회원탈퇴
+    if (purpose == "deactivate") {
+      Alert(context, "회원 탈퇴",
+          purpose: "deactivate", content1: "탈퇴하시려면 '탈퇴합니다.'를 적어주세요.");
     }
   }
 
-  // 블랙리스트 추가
-  void AddBlacklist(context, email, userdata) async {
-    //데이터베이스 저장
-    firestore
-        .collection("User")
-        .doc(email)
-        .collection('blacklist')
-        .doc(userdata)
-        .set({
-      'value': userdata,
-    }).then((_) => {
-              showDialog(
-                  context: context,
-                  barrierDismissible: false,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: new Text("사용자 차단"),
-                      content: new Text("해당 사용자의 글이 차단되었습니다."),
-                      actions: <Widget>[
-                        new FlatButton(
-                          onPressed: () {
-                            Navigator.pushReplacement(
+  Future<void> Alert(
+    context,
+    title, {
+    String purpose = "",
+    String content1 = "",
+    String content2 = "",
+  }) async {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return Scaffold(
+            resizeToAvoidBottomInset: false, // 공사장 해결
+            body: Center(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                width: MediaQuery.of(context).size.width * 0.911,
+                height: 190,
+                child: Column(children: [
+                  // title
+                  Container(
+                    margin: EdgeInsets.only(top: 32, bottom: 16),
+                    child: Text(title,
+                        style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black)),
+                  ),
+
+                  // content1
+                  Container(
+                    margin: EdgeInsets.only(bottom: 6),
+                    child: Text(
+                      content1,
+                      style: TextStyle(
+                          fontSize: 16,
+                          color: Color.fromRGBO(129, 128, 128, 1)),
+                    ),
+                  ),
+
+                  // textfield
+                  if (purpose != "")
+                    Container(
+                      width: 150,
+                      child: TextField(
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: "변경 내용을 입력하세요",
+                        ),
+                        onChanged: (text) {
+                          SetAccountText(text);
+                        },
+                      ),
+                    ),
+
+                  if (purpose == "")
+                    Container(
+                      child: Text(""),
+                    ),
+
+                  // button
+                  GestureDetector(
+                    onTap: () async {
+                      if (purpose == "deactivate" && accounttext != "탈퇴합니다.") {
+                        Alert(context, "탈퇴 오류", content1: "정확히 작성해주세요.");
+                      } else if (accounttext == "") {
+                        Alert(context, "수정 오류", content1: "변경 내용을 작성해주세요.");
+                      } else {
+                        // alert 끄기
+                        Navigator.pop(context);
+
+                        if (purpose == "deactivate" &&
+                            accounttext == "탈퇴합니다.") {
+                          Alert(context, "회원 탈퇴", content1: "회원 탈퇴되었습니다.");
+
+                          // 메인 페이지로 이동
+                          Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => RecipeScreen()),
-                            );
-                          },
-                          child: new Text("닫기"),
+                                  builder: (context) => LoginScreen()));
+                        }
+
+                        // nickname 수정
+                        else if (purpose == "nickname") {
+                          Alert(context, "수정 완료", content1: "변경되었습니다.");
+                          changeNickname(context);
+                        }
+
+                        // 비밀번호 수정
+                        else if (purpose == "password") {
+                          await changePassword(context); // 비밀번호 변경
+
+                          Alert(context, "수정 완료", content1: "변경되었습니다.");
+                        }
+
+                        // 휴대폰 수정
+                        else if (purpose == "phone") {
+                          Alert(context, "수정 완료", content1: "변경되었습니다.");
+                          changePhone(context);
+                        }
+                      }
+                    },
+                    child: Container(
+                      margin: EdgeInsets.only(top: 14),
+                      child: Text(
+                        "확인",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
                         ),
-                      ],
-                    );
-                  }),
-            });
-    // 구독 widget에게 변화 알려서 re-build
-    notifyListeners();
+                      ),
+                    ),
+                  ),
+                ]),
+              ),
+            ),
+          );
+        });
   }
 }

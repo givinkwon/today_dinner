@@ -162,7 +162,9 @@ class AccountScreen extends StatelessWidget {
               ),
               ListTile(
                 onTap: () {
-                  context.read<MypageViewModel>().changeNicknameWidget(context);
+                  context
+                      .read<MypageViewModel>()
+                      .EditAccount(context, "nickname");
                 },
                 //leading. 타일 앞에 표시되는 위젯. 참고로 타일 뒤에는 trailing 위젯으로 사용 가능
 
@@ -175,25 +177,9 @@ class AccountScreen extends StatelessWidget {
               ),
               ListTile(
                 onTap: () {
-                  resetPassword(
-                      context.read<MypageViewModel>().Data[0]['email']);
-                  showDialog(
-                      context: context,
-                      barrierDismissible: false,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: new Text("비밀번호 재설정"),
-                          content: new Text("비밀번호 재설정 메일이 이메일로 발송되었습니다."),
-                          actions: <Widget>[
-                            new FlatButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              child: new Text("닫기"),
-                            ),
-                          ],
-                        );
-                      });
+                  context
+                      .read<MypageViewModel>()
+                      .EditAccount(context, "password");
                 },
                 leading: Icon(Icons.lock),
                 title: Text('비밀번호'),
@@ -204,7 +190,7 @@ class AccountScreen extends StatelessWidget {
               ),
               ListTile(
                 onTap: () {
-                  context.read<MypageViewModel>().changePhoneWidget(context);
+                  context.read<MypageViewModel>().EditAccount(context, "phone");
                 },
                 leading: Icon(Icons.phone),
                 title: Text('휴대폰'),
@@ -217,7 +203,7 @@ class AccountScreen extends StatelessWidget {
                 onTap: () {
                   context
                       .read<MypageViewModel>()
-                      .withdrawalAccountWidget(context);
+                      .EditAccount(context, "deactivate");
                 },
                 leading: Icon(Icons.person_off),
                 title: Text('회원 탈퇴'),
