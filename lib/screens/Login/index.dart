@@ -44,10 +44,16 @@ class LoginIndexScreen extends StatelessWidget {
         _signupButtonPressed(context);
         // 이메일 설정
         context.read<SignupViewModel>().Email = user?.email;
+        // 가입 유저 설정 => Password DB 동기화
+        context.read<SignupViewModel>().SignupUser = user;
       }
 
       // 3. 데이터가 있다면 본 페이지로 이동
       if (context.read<LoginViewModel>().Data.length > 0) {
+        // 비밀번호 DB 동기화
+        auth.currentUser?.updatePassword(
+            context.read<LoginViewModel>().Data[0]['password']);
+        // 페이지 이동
         _nologinButtonPressed(context);
       }
     } catch (e) {
@@ -67,6 +73,7 @@ class LoginIndexScreen extends StatelessWidget {
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
+
     try {
       final awitAsult =
           await FirebaseAuth.instance.signInWithCredential(credential);
@@ -82,7 +89,11 @@ class LoginIndexScreen extends StatelessWidget {
 
         // 이메일 설정
         context.read<SignupViewModel>().Email = user?.email;
+        // 가입 유저 설정 => Password DB 동기화
+        context.read<SignupViewModel>().SignupUser = user;
       } else {
+        auth.currentUser?.updatePassword(
+            context.read<LoginViewModel>().Data[0]['password']);
         // 데이터가 있다면 본 페이지로 이동
         _nologinButtonPressed(context);
       }

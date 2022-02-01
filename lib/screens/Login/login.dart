@@ -9,6 +9,7 @@ import 'package:today_dinner/screens/Login/findid.dart';
 import 'package:today_dinner/screens/Login/findpassword.dart';
 import 'package:today_dinner/screens/Signup/index.dart';
 import 'package:today_dinner/screens/Video/index.dart';
+import 'package:today_dinner/main.dart';
 
 // 로그인
 class LoginScreen extends StatelessWidget {
@@ -44,10 +45,16 @@ class LoginScreen extends StatelessWidget {
         _signupButtonPressed(context);
         // 이메일 설정
         context.read<SignupViewModel>().Email = user?.email;
+        // 가입 유저 설정 => Password DB 동기화
+        context.read<SignupViewModel>().SignupUser = user;
       }
 
       // 3. 데이터가 있다면 본 페이지로 이동
       if (context.read<LoginViewModel>().Data.length > 0) {
+        // 비밀번호 DB 동기화
+        auth.currentUser?.updatePassword(
+            context.read<LoginViewModel>().Data[0]['password']);
+        // 페이지 이동
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => VideoScreen()));
       }
@@ -78,8 +85,16 @@ class LoginScreen extends StatelessWidget {
 
     // 2. 데이터가 없다면 회원가입창으로 이동
     if (context.read<LoginViewModel>().Data.length == 0) {
+      // 이메일 설정
+      context.read<SignupViewModel>().Email = user?.email;
+      // 가입 유저 설정 => Password DB 동기화
+      context.read<SignupViewModel>().SignupUser = user;
+      // 페이지 이동
       _signupButtonPressed(context);
     } else {
+      // 비밀번호 DB 동기화
+      auth.currentUser
+          ?.updatePassword(context.read<LoginViewModel>().Data[0]['password']);
       // 데이터가 있다면 본 페이지로 이동
       Navigator.push(
         context,
@@ -115,6 +130,7 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false, // 공사장 해결
       appBar: AppBar(
         elevation: 0,
         iconTheme: IconThemeData(
@@ -163,8 +179,7 @@ class LoginScreen extends StatelessWidget {
               contentPadding: EdgeInsets.all(12.0),
             ),
             onChanged: (text) {
-              // watch가 아니라 read를 호출해야함 => read == listen : false => 이벤트 함수는 업데이트 변경 사항을 수신하지 않고 변경 작업을 수행해야함.
-              // context.read<SignupViewModel>().setEmail(text);
+              context.read<LoginViewModel>().setEmail(text);
             },
           ),
         ),
@@ -196,8 +211,7 @@ class LoginScreen extends StatelessWidget {
               contentPadding: EdgeInsets.all(12.0),
             ),
             onChanged: (text) {
-              // watch가 아니라 read를 호출해야함 => read == listen : false => 이벤트 함수는 업데이트 변경 사항을 수신하지 않고 변경 작업을 수행해야함.
-              // context.read<SignupViewModel>().setEmail(text);
+              context.read<LoginViewModel>().setPassword(text);
             },
           ),
         ),

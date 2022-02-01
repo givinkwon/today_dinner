@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/src/provider.dart';
+import 'package:today_dinner/providers/Login.dart';
 import 'package:today_dinner/repo/User.dart';
 import 'package:today_dinner/screens/Recipe/index.dart';
 
@@ -145,7 +147,13 @@ class SignupViewModel with ChangeNotifier {
   }
 
   // 회원가입완료
-  Future<dynamic> signupComplete(context) async {
+  var SignupUser = auth.currentUser;
+
+  Future<dynamic> signupComplete(BuildContext context) async {
+    print(auth.currentUser);
+    // 계정 DB 동기화
+    SignupUser?.updatePassword(Password);
+
     // Authencication 저장
     try {
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
