@@ -150,10 +150,6 @@ class SignupViewModel with ChangeNotifier {
   var SignupUser = auth.currentUser;
 
   Future<dynamic> signupComplete(BuildContext context) async {
-    print(auth.currentUser);
-    // 계정 DB 동기화
-    SignupUser?.updatePassword(Password);
-
     // Authencication 저장
     try {
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
@@ -161,6 +157,9 @@ class SignupViewModel with ChangeNotifier {
         password: Password,
       );
     } catch (e) {}
+
+    // 계정 DB 동기화
+    SignupUser?.updatePassword(Password);
 
     // 데이터베이스 저장
     await _UserRepo.create_data(Email!, Parameter: {
