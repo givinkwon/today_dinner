@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/src/provider.dart';
 import 'package:today_dinner/repo/User.dart';
 import 'package:today_dinner/screens/Login/login.dart';
+import 'package:today_dinner/screens/Mypage/Account/index.dart';
 import 'package:today_dinner/screens/Recipe/index.dart';
 
 class MypageViewModel with ChangeNotifier {
@@ -124,23 +125,21 @@ class MypageViewModel with ChangeNotifier {
     load_data();
   }
 
+  var Error = 0;
   // 비밀번호 변경하기
   Future<dynamic> changePassword(BuildContext context) async {
-    var Error = 0;
+    Error = 0;
     // 비밀번호 DB 동기화
     try {
       await auth.currentUser?.updatePassword(accounttext);
-      // Alert(context, "수정 완료", content1: "변경되었습니다.");
+      Alert(context, "수정 완료", content1: "변경되었습니다.");
       // // 데이터베이스 저장
       firestore.collection("User").doc(auth.currentUser?.email).update({
         'password': accounttext,
       });
     } catch (convertPlatformException) {
-      // 재로그인 요청
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => LoginScreen()),
-      );
+      Alert(context, "변경 에러", content1: "변경을 위해 재로그인해주세요.");
+      Error = 1;
     } catch (e) {}
 
     // 데이터 다시 불러오기
@@ -167,11 +166,15 @@ class MypageViewModel with ChangeNotifier {
       firestore.collection("User").doc(deleteEmail).update({
         'deactivate': true,
       });
+      await auth.signOut();
+      Error = 1;
+      Alert(context, "탈퇴 성공", content1: "탈퇴되었습니다.");
     } on FirebaseAuthException catch (e) {
       if (e.code == 'requires-recent-login') {
-        Alert(context, "탈퇴 오류", content1: "재로그인 후 탈퇴해주세요.");
+        Alert(context, "탈퇴 에러", content1: "탈퇴를 위해 재로그인해주세요.");
+        Error = 1;
       }
-    }
+    } catch (e) {}
 
     // 데이터 다시 불러오기
     load_data();
@@ -275,27 +278,37 @@ class MypageViewModel with ChangeNotifier {
                   // button
                   GestureDetector(
                     onTap: () async {
+                      if (Error == 0) {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => AccountScreen()));
+                      }
+
+                      if (Error != 0) {
+                        // 메인 페이지로 이동
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => LoginScreen()));
+                        Error = 0;
+                      }
+
                       if (purpose == "deactivate" && accounttext != "탈퇴합니다.") {
                         Alert(context, "탈퇴 오류", content1: "정확히 작성해주세요.");
                       } else if (accounttext == "") {
-                        Alert(context, "수정 오류", content1: "변경 내용을 작성해주세요.");
+                        await Alert(context, "수정 오류",
+                            content1: "변경 내용을 작성해주세요.");
                       } else {
                         if (purpose == "deactivate" &&
                             accounttext == "탈퇴합니다.") {
-                          Alert(context, "회원 탈퇴", content1: "회원 탈퇴되었습니다.");
-
-                          auth.signOut();
-                          // 메인 페이지로 이동
-                          Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => LoginScreen()));
+                          await withdrawalAccount(context);
                         }
 
                         // nickname 수정
                         else if (purpose == "nickname") {
                           Alert(context, "수정 완료", content1: "변경되었습니다.");
-                          changeNickname(context);
+                          await changeNickname(context);
                         }
 
                         // 비밀번호 수정
@@ -306,11 +319,8 @@ class MypageViewModel with ChangeNotifier {
                         // 휴대폰 수정
                         else if (purpose == "phone") {
                           Alert(context, "수정 완료", content1: "변경되었습니다.");
-                          changePhone(context);
+                          await changePhone(context);
                         }
-
-                        // alert 끄기
-                        Navigator.pop(context);
                       }
                     },
                     child: Container(
