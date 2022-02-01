@@ -196,19 +196,23 @@ class RecipeDetailScreen extends StatelessWidget {
                 ]),
               ),
 
-              if ((context.read<RecipeViewModel>().recipe_data['secondary']
-                          as Map<String, dynamic>)
-                      .length >
-                  0)
+              if (context.read<RecipeViewModel>().recipe_data['secondary'] !=
+                      null &&
+                  (context.read<RecipeViewModel>().recipe_data['secondary']
+                              as Map<String, dynamic>)
+                          .length >
+                      0)
                 ListTile(
                   //leading. 타일 앞에 표시되는 위젯. 참고로 타일 뒤에는 trailing 위젯으로 사용 가능
                   title: Text('양념/소스 재료',
                       style: TextStyle(fontWeight: FontWeight.bold)),
                 ),
-              if ((context.read<RecipeViewModel>().recipe_data['secondary']
-                          as Map<String, dynamic>)
-                      .length >
-                  0)
+              if (context.read<RecipeViewModel>().recipe_data['secondary'] !=
+                      null &&
+                  (context.read<RecipeViewModel>().recipe_data['secondary']
+                              as Map<String, dynamic>)
+                          .length >
+                      0)
                 Container(
                   decoration: BoxDecoration(
                     border: Border(

@@ -7,6 +7,8 @@ import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/foundation.dart';
 import 'package:today_dinner/repo/Recipe.dart';
 
+import 'dart:collection';
+
 FirebaseFirestore firestore = FirebaseFirestore.instance;
 firebase_storage.FirebaseStorage storage =
     firebase_storage.FirebaseStorage.instance;
@@ -64,7 +66,16 @@ class RecipeViewModel with ChangeNotifier {
   // 레시피 디테일 보기
   var recipe_data = {};
 
-  void SelectRecipe(data) {
+  void SelectRecipe(data) async {
+    // tag sort
+    var unsorted = data['tag'];
+
+    final sorted = new SplayTreeMap<String, String>.from(
+        unsorted,
+        (key1, key2) =>
+            int.parse(unsorted[key1]).compareTo(int.parse(unsorted[key2])));
+    data['tag'] = sorted;
+
     recipe_data = data;
     // 구독 widget에게 변화 알려서 re-build
     notifyListeners();

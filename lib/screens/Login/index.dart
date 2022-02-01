@@ -179,8 +179,8 @@ class LoginIndexScreen extends StatelessWidget {
                   margin: EdgeInsets.only(
                     left: 14,
                     right: 0,
-                    top: 14,
-                    bottom: 15,
+                    top: MediaQuery.of(context).size.height * 0.017,
+                    bottom: MediaQuery.of(context).size.height * 0.017,
                   ),
                   child: Image.asset('assets/login/ic_facebook.png'),
                 ),
@@ -195,8 +195,8 @@ class LoginIndexScreen extends StatelessWidget {
                     margin: EdgeInsets.only(
                       left: 18,
                       right: 0,
-                      top: 13,
-                      bottom: 13,
+                      top: MediaQuery.of(context).size.height * 0.017,
+                      bottom: MediaQuery.of(context).size.height * 0.017,
                     ),
                     child: Align(
                       alignment: Alignment.center,
@@ -236,8 +236,8 @@ class LoginIndexScreen extends StatelessWidget {
                     margin: EdgeInsets.only(
                       left: 14,
                       right: 0,
-                      top: 14,
-                      bottom: 15,
+                      top: MediaQuery.of(context).size.height * 0.017,
+                      bottom: MediaQuery.of(context).size.height * 0.017,
                     ),
                     child: Image.asset('assets/login/ic_google.png'),
                   ),
@@ -248,8 +248,8 @@ class LoginIndexScreen extends StatelessWidget {
                     margin: EdgeInsets.only(
                       left: 18,
                       right: 0,
-                      top: 13,
-                      bottom: 13,
+                      top: MediaQuery.of(context).size.height * 0.017,
+                      bottom: MediaQuery.of(context).size.height * 0.017,
                     ),
                     child: Align(
                       alignment: Alignment.center,
