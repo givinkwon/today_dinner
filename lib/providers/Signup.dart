@@ -23,7 +23,7 @@ class SignupViewModel with ChangeNotifier {
     _UserRepo = UserRepo();
   }
 
-  String Email = "";
+  String? Email = "";
 
   // 이메일 입력
   void setEmail(value) {
@@ -126,7 +126,7 @@ class SignupViewModel with ChangeNotifier {
       // 기 회원가입이 있는 경우 에러 발생 => 전화번호 중복 체크
       await _UserRepo.get_data(Phone: Phone);
 
-      if (_UserRepo.Data[0]['phone'] == Phone) {
+      if (_UserRepo.Data.length > 0 && _UserRepo.Data[0]['phone'] == Phone) {
         Error = 1;
         AlertTitle = "회원가입 에러";
         AlertContent = "기 가입된 휴대폰입니다.";
@@ -149,13 +149,13 @@ class SignupViewModel with ChangeNotifier {
     // Authencication 저장
     try {
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: Email,
+        email: Email!,
         password: Password,
       );
     } catch (e) {}
 
     // 데이터베이스 저장
-    await _UserRepo.create_data(Email, Parameter: {
+    await _UserRepo.create_data(Email!, Parameter: {
       'createdAt': FieldValue.serverTimestamp(),
       'email': Email,
       'nickname': Nickname,

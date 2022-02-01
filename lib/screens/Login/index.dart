@@ -4,12 +4,59 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/src/provider.dart';
 import 'package:today_dinner/main.dart';
 import 'package:today_dinner/providers/Login.dart';
+import 'package:today_dinner/providers/Signup.dart';
 import 'package:today_dinner/screens/Login/login.dart';
 import 'package:today_dinner/screens/Signup/index.dart';
 import 'package:today_dinner/screens/Video/index.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 
 // 로그인 기본 class
 class LoginIndexScreen extends StatelessWidget {
+  // 페이스북 로그인
+  Future<dynamic> _signInWithFacebook(BuildContext context) async {
+    // Trigger the sign-in flow
+    final LoginResult loginResult = await FacebookAuth.instance.login();
+
+    // Create a credential from the access token
+    final OAuthCredential facebookAuthCredential =
+        await FacebookAuthProvider.credential(loginResult.accessToken!.token);
+
+    // Once signed in, return the UserCredential
+    try {
+      final awitAsult = await FirebaseAuth.instance
+          .signInWithCredential(facebookAuthCredential);
+
+      final user = awitAsult.user;
+
+      // 페이스북은 이메일이나 전화번호가 안잡히는 경우가 있는데 이런 경우에는 아이디 가입 비허용
+      if (user?.email == null) {
+        return context.read<LoginViewModel>().Alert(context, "가입 에러",
+            content1: "계정에 이메일이 등록되어 있지 않습니다.", content2: "이메일 가입을 이용해주세요.");
+      }
+
+      // 새로 회원가입했으면 데이터베이스 만들기
+
+      // 1. 데이터 호출
+      await context.read<LoginViewModel>().load_data(email: user?.email);
+
+      // 2. 데이터가 없다면 회원가입창으로 이동
+      if (context.read<LoginViewModel>().Data.length == 0) {
+        _signupButtonPressed(context);
+        // 이메일 설정
+        context.read<SignupViewModel>().Email = user?.email;
+      }
+
+      // 3. 데이터가 있다면 본 페이지로 이동
+      if (context.read<LoginViewModel>().Data.length > 0) {
+        _nologinButtonPressed(context);
+      }
+    } catch (e) {
+      context
+          .read<LoginViewModel>()
+          .Alert(context, "가입 에러", content1: "이미 해당 아이디로 가입한 아이디가 있습니다.");
+    }
+  }
+
   // 구글 로그인
   Future<dynamic> _signInWithGoogle(BuildContext context) async {
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
@@ -20,20 +67,29 @@ class LoginIndexScreen extends StatelessWidget {
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
-    final awitAsult =
-        await FirebaseAuth.instance.signInWithCredential(credential);
-    final user = awitAsult.user;
+    try {
+      final awitAsult =
+          await FirebaseAuth.instance.signInWithCredential(credential);
+      final user = awitAsult.user;
 
-    // 새로 회원가입했으면 데이터베이스 만들기
-    // 1. 데이터 호출
-    await context.read<LoginViewModel>().load_data(email: user?.email);
+      // 새로 회원가입했으면 데이터베이스 만들기
+      // 1. 데이터 호출
+      await context.read<LoginViewModel>().load_data(email: user?.email);
 
-    // 2. 데이터가 없다면 회원가입창으로 이동
-    if (context.read<LoginViewModel>().Data.length == 0) {
-      _signupButtonPressed(context);
-    } else {
-      // 데이터가 있다면 본 페이지로 이동
-      _nologinButtonPressed(context);
+      // 2. 데이터가 없다면 회원가입창으로 이동
+      if (context.read<LoginViewModel>().Data.length == 0) {
+        _signupButtonPressed(context);
+
+        // 이메일 설정
+        context.read<SignupViewModel>().Email = user?.email;
+      } else {
+        // 데이터가 있다면 본 페이지로 이동
+        _nologinButtonPressed(context);
+      }
+    } catch (e) {
+      context
+          .read<LoginViewModel>()
+          .Alert(context, "가입 에러", content1: "이미 해당 이메일로 가입한 아이디가 있습니다.");
     }
   }
 
@@ -119,22 +175,27 @@ class LoginIndexScreen extends StatelessWidget {
                 ),
 
                 // kakao login text
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.526,
-                  margin: EdgeInsets.only(
-                    left: 18,
-                    right: 0,
-                    top: 13,
-                    bottom: 13,
-                  ),
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: Text(
-                      "페이스북으로 시작하기",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold),
+                GestureDetector(
+                  onTap: () {
+                    _signInWithFacebook(context);
+                  },
+                  child: Container(
+                    width: MediaQuery.of(context).size.width * 0.526,
+                    margin: EdgeInsets.only(
+                      left: 18,
+                      right: 0,
+                      top: 13,
+                      bottom: 13,
+                    ),
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        "페이스북으로 시작하기",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold),
+                      ),
                     ),
                   ),
                 ),

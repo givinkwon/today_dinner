@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:today_dinner/providers/Login.dart';
 import 'package:today_dinner/providers/Mypage.dart';
 // provider
@@ -43,6 +44,14 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 }
 
 void main() async {
+  // facebook login
+  // initialiaze the facebook javascript SDK
+  FacebookAuth.instance.webInitialize(
+    appId: "314172300596289",
+    cookie: true,
+    xfbml: true,
+    version: "v12.0",
+  );
   // gtag
   // analytics.logEvent(name: 'add_folder');
 

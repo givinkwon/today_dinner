@@ -58,7 +58,8 @@ class SignupFirstScreen extends StatelessWidget {
               color: Color.fromRGBO(255, 255, 255, 1),
               borderRadius: BorderRadius.circular(10),
               border: Border.all(color: Color.fromRGBO(221, 227, 233, 1))),
-          child: TextField(
+          child: TextFormField(
+            initialValue: context.read<SignupViewModel>().Email,
             decoration: InputDecoration(
               border: InputBorder.none,
               hintText: '이메일을 입력해주세요.',
