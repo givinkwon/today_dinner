@@ -69,7 +69,7 @@ class LoginIndexScreen extends StatelessWidget {
 
     final GoogleSignInAuthentication googleAuth =
         await googleUser!.authentication;
-    final OAuthCredential credential = GoogleAuthProvider.credential(
+    final OAuthCredential credential = await GoogleAuthProvider.credential(
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );

@@ -196,8 +196,7 @@ class SignupFirstScreen extends StatelessWidget {
             },
             child: Container(
               width: MediaQuery.of(context).size.width * 0.303,
-              padding:
-                  EdgeInsets.only(top: 13, bottom: 13, left: 42, right: 42),
+              padding: EdgeInsets.only(top: 13, bottom: 13, left: 0, right: 0),
               margin: EdgeInsets.only(bottom: 16),
               decoration: BoxDecoration(
                   color: Color.fromRGBO(255, 255, 255, 1),

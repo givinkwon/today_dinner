@@ -261,7 +261,7 @@ class MypageViewModel with ChangeNotifier {
                       width: 150,
                       child: TextField(
                         decoration: InputDecoration(
-                          border: InputBorder.none,
+                          // border: InputBorder.none,
                           hintText: "변경 내용을 입력하세요",
                         ),
                         onChanged: (text) {

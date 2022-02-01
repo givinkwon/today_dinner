@@ -252,7 +252,7 @@ class SignupViewModel with ChangeNotifier {
                       width: 150,
                       child: TextField(
                         decoration: InputDecoration(
-                          border: InputBorder.none,
+                          // border: InputBorder.none,
                           hintText: '인증번호를 입력하세요',
                         ),
                         onChanged: (text) {
