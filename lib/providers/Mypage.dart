@@ -50,6 +50,8 @@ class MypageViewModel with ChangeNotifier {
             ],
           );
         });
+
+    load_data();
   }
 
   var Marketing = true;
@@ -280,6 +282,7 @@ class MypageViewModel with ChangeNotifier {
                             accounttext == "탈퇴합니다.") {
                           Alert(context, "회원 탈퇴", content1: "회원 탈퇴되었습니다.");
 
+                          auth.signOut();
                           // 메인 페이지로 이동
                           Navigator.pushReplacement(
                               context,
