@@ -125,18 +125,23 @@ class MypageViewModel with ChangeNotifier {
   }
 
   // 비밀번호 변경하기
-  Future<dynamic> changePassword(context) async {
+  Future<dynamic> changePassword(BuildContext context) async {
+    var Error = 0;
+    // 비밀번호 DB 동기화
     try {
-      auth.currentUser?.updatePassword(accounttext); // 비밀번호 DB 동기화
+      await auth.currentUser?.updatePassword(accounttext);
+      // Alert(context, "수정 완료", content1: "변경되었습니다.");
       // // 데이터베이스 저장
       firestore.collection("User").doc(auth.currentUser?.email).update({
         'password': accounttext,
       });
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'requires-recent-login') {
-        Alert(context, "변경 에러", content1: "변경을 위해 재로그인해주세요.");
-      }
-    }
+    } catch (convertPlatformException) {
+      // 재로그인 요청
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => LoginScreen()),
+      );
+    } catch (e) {}
 
     // 데이터 다시 불러오기
     load_data();
@@ -205,7 +210,7 @@ class MypageViewModel with ChangeNotifier {
   }
 
   Future<void> Alert(
-    context,
+    BuildContext context,
     title, {
     String purpose = "",
     String content1 = "",
@@ -275,9 +280,6 @@ class MypageViewModel with ChangeNotifier {
                       } else if (accounttext == "") {
                         Alert(context, "수정 오류", content1: "변경 내용을 작성해주세요.");
                       } else {
-                        // alert 끄기
-                        Navigator.pop(context);
-
                         if (purpose == "deactivate" &&
                             accounttext == "탈퇴합니다.") {
                           Alert(context, "회원 탈퇴", content1: "회원 탈퇴되었습니다.");
@@ -299,8 +301,6 @@ class MypageViewModel with ChangeNotifier {
                         // 비밀번호 수정
                         else if (purpose == "password") {
                           await changePassword(context); // 비밀번호 변경
-
-                          Alert(context, "수정 완료", content1: "변경되었습니다.");
                         }
 
                         // 휴대폰 수정
@@ -308,6 +308,9 @@ class MypageViewModel with ChangeNotifier {
                           Alert(context, "수정 완료", content1: "변경되었습니다.");
                           changePhone(context);
                         }
+
+                        // alert 끄기
+                        Navigator.pop(context);
                       }
                     },
                     child: Container(
