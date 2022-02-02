@@ -44,6 +44,30 @@
       },
       "oauth_client": [
         {
+          "client_id": "922495838488-e9jcddmqbi41ekfa8q9thptit5hitvg4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.todaydinner.www",
+            "certificate_hash": "3cf2074342a6f00f550fe656c705c0d96d308a88"
+          }
+        },
+        {
+          "client_id": "922495838488-lobdpcmnmq1hiigo7vorsdtqb19n6d14.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.todaydinner.www",
+            "certificate_hash": "9682897a2efd8d87b9596bc6b10f5dd70ff34f7a"
+          }
+        },
+        {
+          "client_id": "922495838488-ucp91nj5d98u3i98o7mc1c72nml9vdvr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.todaydinner.www",
+            "certificate_hash": "917ec330ced4bf26cf8a460d11775874cdf495ff"
+          }
+        },
+        {
           "client_id": "922495838488-m28kia8418ubecvvlbip5fc0eb7a87fs.apps.googleusercontent.com",
           "client_type": 3
         }
