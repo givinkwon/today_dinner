@@ -59,7 +59,7 @@ class VideoScreen extends StatelessWidget {
                   );
 
                   // 하단 BottomNav UI 변경
-                  context.read<VideoViewModel>().ChangeBottomIndex(1);
+                  context.read<VideoViewModel>().ChangeBottomIndex(0);
 
                   // 비디오 중지
                   context.read<VideoViewModel>().controller.pause();
@@ -72,9 +72,17 @@ class VideoScreen extends StatelessWidget {
               bottom: 120,
               right: 20,
               child: IconButton(
-                icon: Icon(Icons.shortcut_outlined,
-                    size: 36.0, color: Colors.white),
+                icon: Icon(
+                  Icons.shortcut_outlined,
+                  size: 36.0,
+                  color: Color.fromRGBO(255, 102, 53, 1),
+                ),
                 onPressed: () async {
+                  // 레시피 텍스트 설정
+                  SearchController.text = context
+                      .read<VideoViewModel>()
+                      .Data[context.read<VideoViewModel>().index]['search'];
+
                   // 페이지 이동
                   Navigator.push(
                     context,
@@ -103,9 +111,10 @@ class VideoScreen extends StatelessWidget {
               child: Text(
                 "레시피보기",
                 style: TextStyle(
-                    fontSize: 9,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white),
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                  color: Color.fromRGBO(255, 102, 53, 1),
+                ),
               ),
             ),
           ]),

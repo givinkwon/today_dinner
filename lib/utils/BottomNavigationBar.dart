@@ -18,12 +18,12 @@ class BottomNavBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return BottomNavigationBar(
         currentIndex: context.watch<VideoViewModel>().bottom_index,
-        backgroundColor: context.read<VideoViewModel>().bottom_index == 0
+        backgroundColor: context.read<VideoViewModel>().bottom_index == 2
             ? Colors.black.withOpacity(0.1)
             : Colors.white,
         elevation: 0,
         selectedItemColor: Color.fromRGBO(201, 92, 57, 1),
-        unselectedItemColor: context.read<VideoViewModel>().bottom_index == 0
+        unselectedItemColor: context.read<VideoViewModel>().bottom_index == 2
             ? Colors.white
             : Colors.grey,
         type: BottomNavigationBarType.fixed,
@@ -34,15 +34,6 @@ class BottomNavBar extends StatelessWidget {
               // 레시피
               if (index == 0)
                 {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => VideoScreen()),
-                  ),
-                },
-
-              // 레시피
-              if (index == 1)
-                {
                   // 데이터 로딩
                   context.read<RecipeViewModel>().load_data(),
                   // 페이지 이동
@@ -52,8 +43,8 @@ class BottomNavBar extends StatelessWidget {
                   ),
                 },
 
-              // 스크랩
-              if (index == 2)
+              // 레시피
+              if (index == 1)
                 {
                   if (auth.currentUser != null)
                     {
@@ -89,6 +80,16 @@ class BottomNavBar extends StatelessWidget {
                     }
                 },
 
+              // 스크랩
+              if (index == 2)
+                {
+                  context.read<VideoViewModel>().play_video(),
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => VideoScreen()),
+                  ),
+                },
+
               // 마이페이지
               if (index == 3)
                 {
@@ -101,19 +102,19 @@ class BottomNavBar extends StatelessWidget {
         items: [
           new BottomNavigationBarItem(
             icon: Icon(Icons.home),
-            title: Text('홈'),
-          ),
-          new BottomNavigationBarItem(
-            icon: Icon(Icons.food_bank),
-            title: Text('레시피'),
+            label: '홈',
           ),
           new BottomNavigationBarItem(
             icon: Icon(Icons.bookmark),
-            title: Text('스크랩'),
+            label: '스크랩',
+          ),
+          new BottomNavigationBarItem(
+            icon: Icon(Icons.food_bank),
+            label: '오늘 뭐먹지?',
           ),
           new BottomNavigationBarItem(
             icon: Icon(Icons.person),
-            title: Text('마이페이지'),
+            label: '마이페이지',
           )
         ]);
   }

@@ -8,13 +8,16 @@ import 'package:today_dinner/utils/BottomNavigationBar.dart';
 import 'package:today_dinner/utils/Loading.dart';
 import 'package:today_dinner/utils/NoResult.dart';
 
+// 검색 text controller
+var SearchController = TextEditingController();
+
 class RecipeScreen extends StatefulWidget {
   @override
   _RecipeScreen createState() => _RecipeScreen();
 }
 
 class _RecipeScreen extends State<RecipeScreen> {
-  // 현재 pixel 확인
+// 현재 pixel 확인
   ScrollController _scrollController = new ScrollController();
 
   void _scrollToTop() {
@@ -25,6 +28,10 @@ class _RecipeScreen extends State<RecipeScreen> {
   @override
   void initState() {
     super.initState();
+
+    // 컨트롤러 전달
+    context.read<RecipeViewModel>().SetController(_scrollController);
+
     //  데이터 가져오기
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
@@ -52,7 +59,20 @@ class _RecipeScreen extends State<RecipeScreen> {
           color: Color.fromRGBO(255, 255, 255, 1),
           child: Column(
             children: <Widget>[
-              Search(context, _scrollController),
+              // 검색창
+              Search(),
+              // 필터
+              Filter(context),
+              // 경계선
+              Container(
+                decoration: BoxDecoration(
+                  border: Border(
+                    top: BorderSide(
+                        width: 1, color: Color.fromRGBO(221, 227, 233, 1)),
+                  ),
+                ),
+              ),
+              // 레시피
               Expanded(
                 child: ListView.builder(
                     controller: _scrollController,
@@ -77,36 +97,122 @@ class _RecipeScreen extends State<RecipeScreen> {
 }
 
 // 검색창
-Widget Search(BuildContext context, _scrollController) {
-  return Row(
-    children: <Widget>[
-      Expanded(
-        child: TextFormField(
-          decoration: InputDecoration(
-            hintText: "레시피를 검색해보세요.",
-            hintStyle: TextStyle(
-              color: Color.fromRGBO(40, 40, 40, 1).withAlpha(120),
-            ),
-            border: InputBorder.none,
-          ),
-          initialValue: context.read<RecipeViewModel>().search_text,
-          onChanged: (text) {
-            context.read<RecipeViewModel>().search_text = text;
-          },
-        ),
+class Search extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(
+        top: 4,
+        left: MediaQuery.of(context).size.width * 0.044,
+        right: MediaQuery.of(context).size.width * 0.044,
+        bottom: 20,
       ),
-      GestureDetector(
+      width: MediaQuery.of(context).size.width,
+      height: 40,
+      decoration: BoxDecoration(
+        color: Color.fromRGBO(241, 244, 246, 1),
+        borderRadius: BorderRadius.circular(4),
+      ),
+      child: Row(children: [
+        Expanded(
+          child: Container(
+            margin: EdgeInsets.only(left: 12),
+            child: TextField(
+              decoration: InputDecoration(
+                hintText: "레시피를 검색해보세요.",
+                hintStyle: TextStyle(
+                  color: Color.fromRGBO(129, 128, 128, 1),
+                ),
+                border: InputBorder.none,
+              ),
+              controller: SearchController,
+              style: TextStyle(fontSize: 16),
+              onChanged: (text) {
+                context.read<RecipeViewModel>().search_text = text;
+              },
+              onSubmitted: (value) {
+                // Enter 누르기
+                context.read<RecipeViewModel>().Search();
+              },
+              textInputAction: TextInputAction.search,
+            ),
+          ),
+        ),
+        // 검색 버튼
+        GestureDetector(
           onTap: () async {
             context.read<RecipeViewModel>().Search();
-            //스크롤 상단으로
-            _scrollController.animateTo(0.0,
-                duration: Duration(seconds: 3), curve: Curves.linear);
           },
-          child: Icon(
-            Icons.search,
-            color: Color.fromRGBO(40, 40, 40, 1).withAlpha(120),
-          )),
-    ],
+          child: Container(
+              margin: EdgeInsets.only(right: 12),
+              child: Icon(Icons.search, color: Colors.black)),
+        ),
+      ]),
+    );
+  }
+}
+
+// 필터
+Widget Filter(BuildContext context) {
+  var Filter = {
+    "전체": 'all',
+    "아이 반찬": 'child',
+    "밑반찬": 'side_dish',
+    "메인요리": 'main_dish',
+    "간단 국": 'soup',
+    "간단 한끼": 'meal',
+    "냉털": 'inventory',
+    "간식": 'snack'
+  };
+
+  return SingleChildScrollView(
+    scrollDirection: Axis.horizontal,
+    child: Container(
+      margin: EdgeInsets.only(
+          left: MediaQuery.of(context).size.width * 0.044, bottom: 17),
+      child: Row(
+        children: [
+          for (String key in Filter.keys)
+            GestureDetector(
+              onTap: () async {
+                SearchController.text = "";
+                await context.read<RecipeViewModel>().SelectFilter(key);
+              },
+              child: Container(
+                margin: EdgeInsets.only(right: 10),
+                child: Stack(children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(6.0),
+                    child:
+                        // 필터 이미지
+                        Image.asset(
+                      'assets/recipe/${Filter[key]}.jpg',
+                      width: 100,
+                      height: 64,
+                    ),
+                  ),
+                  // 필터 텍스트
+                  Positioned(
+                    bottom: 0,
+                    child: Container(
+                        alignment: Alignment.center,
+                        width: 92,
+                        height: 22,
+                        decoration: BoxDecoration(
+                          color: Color.fromRGBO(36, 39, 43, 0.7),
+                        ),
+                        margin: EdgeInsets.only(left: 4, right: 4, bottom: 5),
+                        child: Text(
+                          key,
+                          style: TextStyle(fontSize: 12, color: Colors.white),
+                        )),
+                  ),
+                ]),
+              ),
+            ),
+        ],
+      ),
+    ),
   );
 }
 
@@ -215,6 +321,43 @@ class _RecipeState extends State<Recipe> {
                   },
                 ),
               ),
+
+            // 레시피 조리 시간
+            Positioned(
+              top: 16,
+              right: 32,
+              child: Container(
+                  decoration: BoxDecoration(
+                    color: Color.fromRGBO(255, 102, 53, 1),
+                    borderRadius: BorderRadius.circular(7),
+                  ),
+                  height: 24,
+                  width: MediaQuery.of(context).size.width * 0.23,
+                  padding:
+                      EdgeInsets.only(left: 8, right: 8, top: 4, bottom: 4),
+                  child: Center(
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            margin: EdgeInsets.only(right: 3.3),
+                            child: Icon(
+                              Icons.watch_later_outlined,
+                              size: 13.3,
+                              color: Colors.white,
+                            ),
+                          ),
+                          Text(
+                            context.read<RecipeViewModel>().Data[widget.index]
+                                ['spendtime'],
+                            style: TextStyle(
+                                fontSize: 13,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          )
+                        ]),
+                  )),
+            ),
           ],
         ),
 

@@ -25,8 +25,8 @@ class RecipeRepo {
       firestore.collection("Recipe"); // 호출할 Query를 저장하고 마지막에 호출
 
   // 데이터 호출 : 필터 / 개수 / 검색 / activity(Home / Scrap / Mypage)
-  Future<void> get_data(
-      {List<dynamic>? Filter,
+  Future<dynamic> get_data(
+      {String Filter = "전체",
       int Limit = 10,
       String Search = "",
       String Activity = "Home",
@@ -53,8 +53,8 @@ class RecipeRepo {
     }
 
     // Filter가 있는 경우
-    if (Filter != null) {
-      Firebase_Query = Firebase_Query.where('filter', arrayContainsAny: Filter);
+    if (Filter != "전체") {
+      Firebase_Query = Firebase_Query.where('filter', arrayContains: Filter);
     }
 
     // Search가 있는 경우
@@ -71,15 +71,17 @@ class RecipeRepo {
     //호출
     await Firebase_Query.get().then((QuerySnapshot querySnapshot) async {
       // 데이터 있는 지 체크
+      print(1);
       if (querySnapshot.docs.length > 0) {
         // 마지막 doc 체크
         Data_last_doc = querySnapshot.docs.last;
-
+        print(3);
         for (var RecipeDoc in querySnapshot.docs) {
           Data.add(RecipeDoc.data());
         }
       }
     });
+    return Data;
   }
 
   // 데이터 create

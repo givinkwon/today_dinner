@@ -28,6 +28,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 
 // auth
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:today_dinner/screens/Recipe/index.dart';
 import 'package:today_dinner/screens/Video/index.dart';
 
 FirebaseAuth auth = FirebaseAuth.instance;
@@ -127,7 +128,7 @@ class _MyAppState extends State<MyApp> {
 
       // debug 띠 없애기
       debugShowCheckedModeBanner: false,
-      home: auth.currentUser != null ? VideoScreen() : LoginIndexScreen(),
+      home: auth.currentUser != null ? RecipeScreen() : LoginIndexScreen(),
     );
   }
 }

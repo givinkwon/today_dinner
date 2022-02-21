@@ -53,11 +53,13 @@ class VideoRepo {
       if (querySnapshot.docs.length > 0) {
         // 마지막 doc 체크
         Data_last_doc = querySnapshot.docs.last;
-
+        print(2);
         for (var VideoDoc in querySnapshot.docs) {
           Data.add(VideoDoc.data());
+          print(VideoDoc.data());
         }
       } else {
+        print(3);
         // 데이터가 없다면 => 데이터 끝 => 0부터 새로 가져오기
         await get_data();
       }

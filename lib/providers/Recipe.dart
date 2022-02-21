@@ -21,15 +21,14 @@ class RecipeViewModel with ChangeNotifier {
   // 생성자
   RecipeViewModel() {
     _RecipeRepo = RecipeRepo();
+    load_data();
   }
 
   // data 호출
   Future<void> load_data() async {
     // 검색어 초기화
     search_text = "";
-
-    await _RecipeRepo.get_data();
-    Data = _RecipeRepo.Data;
+    Data = await _RecipeRepo.get_data();
     data_loading = true;
 
     // 구독 widget에게 변화 알려서 re-build
@@ -38,8 +37,8 @@ class RecipeViewModel with ChangeNotifier {
 
   // 스크롤 하단에 도착해서 추가 데이터 호출
   Future<void> add_data({Search: ""}) async {
-    await _RecipeRepo.get_data(Add: true, Search: Search);
-    Data = _RecipeRepo.Data;
+    Data =
+        await _RecipeRepo.get_data(Add: true, Search: Search, Filter: Filter);
     // 구독 widget에게 변화 알려서 re-build
     notifyListeners();
   }
@@ -59,6 +58,9 @@ class RecipeViewModel with ChangeNotifier {
     await _RecipeRepo.get_data(Search: search_text);
     Data = _RecipeRepo.Data;
     data_loading = true;
+
+    //스크롤 상단으로
+    ScrollTop();
 
     notifyListeners();
   }
@@ -109,6 +111,28 @@ class RecipeViewModel with ChangeNotifier {
   // 레시피 클릭 시
   Future<void> SearchRecipe(data) async {
     search_text = data;
+    notifyListeners();
+  }
+
+  // 스크롤 전달
+  var RecipeController;
+  SetController(var controller) {
+    RecipeController = controller;
+  }
+
+  ScrollTop() {
+    RecipeController.animateTo(0.0,
+        duration: Duration(seconds: 1), curve: Curves.linear);
+  }
+
+  // 필터 클릭 시
+  String Filter = "전체";
+
+  Future<void> SelectFilter(data) async {
+    Filter = data;
+    search_text = ""; // 초기화
+    Data = await _RecipeRepo.get_data(Filter: Filter);
+    ScrollTop();
     notifyListeners();
   }
 }

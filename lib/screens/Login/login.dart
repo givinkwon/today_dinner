@@ -7,6 +7,7 @@ import 'package:today_dinner/providers/Login.dart';
 import 'package:today_dinner/providers/Signup.dart';
 import 'package:today_dinner/screens/Login/findid.dart';
 import 'package:today_dinner/screens/Login/findpassword.dart';
+import 'package:today_dinner/screens/Recipe/index.dart';
 import 'package:today_dinner/screens/Signup/index.dart';
 import 'package:today_dinner/screens/Video/index.dart';
 import 'package:today_dinner/main.dart';
@@ -56,7 +57,7 @@ class LoginScreen extends StatelessWidget {
             context.read<LoginViewModel>().Data[0]['password']);
         // 페이지 이동
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => VideoScreen()));
+            context, MaterialPageRoute(builder: (context) => RecipeScreen()));
       }
     } catch (e) {
       context
@@ -98,7 +99,7 @@ class LoginScreen extends StatelessWidget {
       // 데이터가 있다면 본 페이지로 이동
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => VideoScreen()),
+        MaterialPageRoute(builder: (context) => RecipeScreen()),
       );
     }
   }
@@ -417,80 +418,80 @@ class LoginScreen extends StatelessWidget {
           ),
         ),
 
-        // login
-        Center(
-          child: Container(
-            width: MediaQuery.of(context).size.width * 0.545,
-            child: Row(
-              children: [
-                // kakao login
-                GestureDetector(
-                  onTap: () {
-                    context.read<LoginViewModel>().Alert(context, "준비중입니다.",
-                        content1: "빠른 시일 내로 준비하도록 할게요.");
-                  },
-                  child: Container(
-                    padding: EdgeInsets.all(12),
-                    width: 44,
-                    height: 44,
-                    margin: EdgeInsets.only(
-                        right: MediaQuery.of(context).size.width * 0.0889),
-                    decoration: BoxDecoration(
-                      color: Color.fromRGBO(249, 224, 1, 1),
-                      borderRadius: BorderRadius.circular(44),
-                    ),
-                    child: Image.asset(
-                      'assets/login/ic_kakao.png',
-                    ),
-                  ),
-                ),
+        // // login
+        // Center(
+        //   child: Container(
+        //     width: MediaQuery.of(context).size.width * 0.545,
+        //     child: Row(
+        //       children: [
+        //         // // kakao login
+        //         // GestureDetector(
+        //         //   onTap: () {
+        //         //     context.read<LoginViewModel>().Alert(context, "준비중입니다.",
+        //         //         content1: "빠른 시일 내로 준비하도록 할게요.");
+        //         //   },
+        //         //   child: Container(
+        //         //     padding: EdgeInsets.all(12),
+        //         //     width: 44,
+        //         //     height: 44,
+        //         //     margin: EdgeInsets.only(
+        //         //         right: MediaQuery.of(context).size.width * 0.0889),
+        //         //     decoration: BoxDecoration(
+        //         //       color: Color.fromRGBO(249, 224, 1, 1),
+        //         //       borderRadius: BorderRadius.circular(44),
+        //         //     ),
+        //         //     child: Image.asset(
+        //         //       'assets/login/ic_kakao.png',
+        //         //     ),
+        //         //   ),
+        //         // ),
 
-                // naver login
-                GestureDetector(
-                  onTap: () {
-                    context.read<LoginViewModel>().Alert(context, "준비중입니다.",
-                        content1: "빠른 시일 내로 준비하도록 할게요.");
-                  },
-                  child: Container(
-                    padding: EdgeInsets.all(12),
-                    width: 44,
-                    height: 44,
-                    margin: EdgeInsets.only(
-                        right: MediaQuery.of(context).size.width * 0.0889),
-                    decoration: BoxDecoration(
-                      color: Color.fromRGBO(3, 199, 90, 1),
-                      borderRadius: BorderRadius.circular(44),
-                    ),
-                    child: Image.asset(
-                      'assets/login/ic_naver.png',
-                    ),
-                  ),
-                ),
+        //         // // naver login
+        //         // GestureDetector(
+        //         //   onTap: () {
+        //         //     context.read<LoginViewModel>().Alert(context, "준비중입니다.",
+        //         //         content1: "빠른 시일 내로 준비하도록 할게요.");
+        //         //   },
+        //         //   child: Container(
+        //         //     padding: EdgeInsets.all(12),
+        //         //     width: 44,
+        //         //     height: 44,
+        //         //     margin: EdgeInsets.only(
+        //         //         right: MediaQuery.of(context).size.width * 0.0889),
+        //         //     decoration: BoxDecoration(
+        //         //       color: Color.fromRGBO(3, 199, 90, 1),
+        //         //       borderRadius: BorderRadius.circular(44),
+        //         //     ),
+        //         //     child: Image.asset(
+        //         //       'assets/login/ic_naver.png',
+        //         //     ),
+        //         //   ),
+        //         // ),
 
-                // email login
-                GestureDetector(
-                  onTap: () {
-                    _signupButtonPressed(context);
-                  },
-                  child: Container(
-                    padding: EdgeInsets.all(12),
-                    width: 44,
-                    height: 44,
-                    decoration: BoxDecoration(
-                      color: Color.fromRGBO(255, 255, 255, 1),
-                      borderRadius: BorderRadius.circular(44),
-                      border:
-                          Border.all(color: Color.fromRGBO(210, 210, 210, 1)),
-                    ),
-                    child: Image.asset(
-                      'assets/login/ic_mail.png',
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
+        //         // email login
+        //         GestureDetector(
+        //           onTap: () {
+        //             _signupButtonPressed(context);
+        //           },
+        //           child: Container(
+        //             padding: EdgeInsets.all(12),
+        //             width: 44,
+        //             height: 44,
+        //             decoration: BoxDecoration(
+        //               color: Color.fromRGBO(255, 255, 255, 1),
+        //               borderRadius: BorderRadius.circular(44),
+        //               border:
+        //                   Border.all(color: Color.fromRGBO(210, 210, 210, 1)),
+        //             ),
+        //             child: Image.asset(
+        //               'assets/login/ic_mail.png',
+        //             ),
+        //           ),
+        //         ),
+        //       ],
+        //     ),
+        //   ),
+        // ),
       ]),
     );
   }

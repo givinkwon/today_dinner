@@ -16,6 +16,7 @@ class VideoViewModel with ChangeNotifier {
   int Video_length = 0; // 현재 video_list length
   bool data_loading = false; // data patch 중에 로딩
   bool change_loading = false; // change 시에 로딩
+  var init = true;
 
   // 생성자
   VideoViewModel() {
@@ -28,7 +29,7 @@ class VideoViewModel with ChangeNotifier {
     await _VideoRepo.get_data(Init: true);
     Data = _VideoRepo.Data;
     Video_length = _VideoRepo.Data.length; // 가져온 비디오 리스트의 길이
-    set_data(index);
+    await set_data(index);
     data_loading = true;
     change_loading = true;
   }
@@ -42,6 +43,7 @@ class VideoViewModel with ChangeNotifier {
 
   // video 설정
   Future<void> set_data(index) async {
+    print("1 ${_VideoRepo.Data[index]['url']}");
     var index_url = _VideoRepo.Data[index]['url']; // 현재 index의 영상 url
     // 현재 index의 영상 url build
     controller = VideoPlayerController.network(index_url);
@@ -50,7 +52,11 @@ class VideoViewModel with ChangeNotifier {
     change_loading = true;
     notifyListeners();
     // video 재생
-    play_video();
+    if (init == false) {
+      play_video();
+    } else {
+      init = false;
+    }
   }
 
   // video 재생

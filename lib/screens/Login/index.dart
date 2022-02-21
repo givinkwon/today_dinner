@@ -7,7 +7,7 @@ import 'package:today_dinner/providers/Login.dart';
 import 'package:today_dinner/providers/Signup.dart';
 import 'package:today_dinner/screens/Login/login.dart';
 import 'package:today_dinner/screens/Signup/index.dart';
-import 'package:today_dinner/screens/Video/index.dart';
+import 'package:today_dinner/screens/Recipe/index.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 
 // 로그인 기본 class
@@ -117,7 +117,7 @@ class LoginIndexScreen extends StatelessWidget {
   _nologinButtonPressed(BuildContext context) async {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => VideoScreen()),
+      MaterialPageRoute(builder: (context) => RecipeScreen()),
     );
   }
 
@@ -265,77 +265,125 @@ class LoginIndexScreen extends StatelessWidget {
             ),
           ),
 
-          // login
-          Container(
-            width: MediaQuery.of(context).size.width * 0.545,
-            child: Row(
-              children: [
-                // kakao login
-                GestureDetector(
-                  onTap: () {
-                    context.read<LoginViewModel>().Alert(context, "준비중입니다.",
-                        content1: "빠른 시일 내로 준비하도록 할게요.");
-                  },
-                  child: Container(
-                    padding: EdgeInsets.all(12),
-                    width: 44,
-                    height: 44,
+          // email login
+          GestureDetector(
+            onTap: () {
+              _EmailLoginButtonPressed(context);
+            },
+            child: Container(
+              width: MediaQuery.of(context).size.width * 0.75,
+              height: MediaQuery.of(context).size.height * 0.061,
+              decoration: BoxDecoration(
+                  color: Color.fromRGBO(255, 255, 255, 1),
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: Color.fromRGBO(210, 210, 210, 1))),
+              child: Row(
+                children: [
+                  // email login logo
+                  Container(
                     margin: EdgeInsets.only(
-                        right: MediaQuery.of(context).size.width * 0.0889),
-                    decoration: BoxDecoration(
-                      color: Color.fromRGBO(249, 224, 1, 1),
-                      borderRadius: BorderRadius.circular(44),
+                      left: 14,
+                      right: 0,
+                      top: MediaQuery.of(context).size.height * 0.017,
+                      bottom: MediaQuery.of(context).size.height * 0.017,
                     ),
-                    child: Image.asset(
-                      'assets/login/ic_kakao.png',
-                    ),
+                    child: Image.asset('assets/login/ic_mail.png'),
                   ),
-                ),
-                // naver login
-                GestureDetector(
-                  onTap: () {
-                    context.read<LoginViewModel>().Alert(context, "준비중입니다.",
-                        content1: "빠른 시일 내로 준비하도록 할게요.");
-                  },
-                  child: Container(
-                    padding: EdgeInsets.all(12),
-                    width: 44,
-                    height: 44,
-                    margin: EdgeInsets.only(
-                        right: MediaQuery.of(context).size.width * 0.0889),
-                    decoration: BoxDecoration(
-                      color: Color.fromRGBO(3, 199, 90, 1),
-                      borderRadius: BorderRadius.circular(44),
-                    ),
-                    child: Image.asset(
-                      'assets/login/ic_naver.png',
-                    ),
-                  ),
-                ),
 
-                // email login
-                GestureDetector(
-                  onTap: () {
-                    _EmailLoginButtonPressed(context);
-                  },
-                  child: Container(
-                    padding: EdgeInsets.all(12),
-                    width: 44,
-                    height: 44,
-                    decoration: BoxDecoration(
-                      color: Color.fromRGBO(255, 255, 255, 1),
-                      borderRadius: BorderRadius.circular(44),
-                      border:
-                          Border.all(color: Color.fromRGBO(210, 210, 210, 1)),
+                  // email login text
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.526,
+                    margin: EdgeInsets.only(
+                      left: 18,
+                      right: 0,
+                      top: MediaQuery.of(context).size.height * 0.017,
+                      bottom: MediaQuery.of(context).size.height * 0.017,
                     ),
-                    child: Image.asset(
-                      'assets/login/ic_mail.png',
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        "이메일로 시작하기",
+                        style: TextStyle(
+                            fontSize: 15, fontWeight: FontWeight.bold),
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
+
+          // login
+          // Container(
+          //   width: MediaQuery.of(context).size.width * 0.545,
+          //   child: Row(
+          //     children: [
+          //       // // kakao login
+          //       // GestureDetector(
+          //       //   onTap: () {
+          //       //     context.read<LoginViewModel>().Alert(context, "준비중입니다.",
+          //       //         content1: "빠른 시일 내로 준비하도록 할게요.");
+          //       //   },
+          //       //   child: Container(
+          //       //     padding: EdgeInsets.all(12),
+          //       //     width: 44,
+          //       //     height: 44,
+          //       //     margin: EdgeInsets.only(
+          //       //         right: MediaQuery.of(context).size.width * 0.0889),
+          //       //     decoration: BoxDecoration(
+          //       //       color: Color.fromRGBO(249, 224, 1, 1),
+          //       //       borderRadius: BorderRadius.circular(44),
+          //       //     ),
+          //       //     child: Image.asset(
+          //       //       'assets/login/ic_kakao.png',
+          //       //     ),
+          //       //   ),
+          //       // ),
+          //       // // naver login
+          //       // GestureDetector(
+          //       //   onTap: () {
+          //       //     context.read<LoginViewModel>().Alert(context, "준비중입니다.",
+          //       //         content1: "빠른 시일 내로 준비하도록 할게요.");
+          //       //   },
+          //       //   child: Container(
+          //       //     padding: EdgeInsets.all(12),
+          //       //     width: 44,
+          //       //     height: 44,
+          //       //     margin: EdgeInsets.only(
+          //       //         right: MediaQuery.of(context).size.width * 0.0889),
+          //       //     decoration: BoxDecoration(
+          //       //       color: Color.fromRGBO(3, 199, 90, 1),
+          //       //       borderRadius: BorderRadius.circular(44),
+          //       //     ),
+          //       //     child: Image.asset(
+          //       //       'assets/login/ic_naver.png',
+          //       //     ),
+          //       //   ),
+          //       // ),
+
+          //       // email login
+          //       GestureDetector(
+          //         onTap: () {
+          //           _EmailLoginButtonPressed(context);
+          //         },
+          //         child: Container(
+          //           padding: EdgeInsets.all(12),
+          //           width: 44,
+          //           height: 44,
+          //           decoration: BoxDecoration(
+          //             color: Color.fromRGBO(255, 255, 255, 1),
+          //             borderRadius: BorderRadius.circular(44),
+          //             border:
+          //                 Border.all(color: Color.fromRGBO(210, 210, 210, 1)),
+          //           ),
+          //           child: Image.asset(
+          //             'assets/login/ic_mail.png',
+          //           ),
+          //         ),
+          //       ),
+          //     ],
+          //   ),
+          // ),
 
           // no login
           GestureDetector(
