@@ -8,6 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:today_dinner/repo/User.dart';
 
 import 'package:today_dinner/screens/Login/login.dart';
+import 'package:today_dinner/screens/Recipe/index.dart';
 import 'package:today_dinner/screens/Video/index.dart';
 
 class LoginViewModel with ChangeNotifier {
@@ -101,7 +102,7 @@ class LoginViewModel with ChangeNotifier {
                   // 페이지 이동
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => VideoScreen()),
+                    MaterialPageRoute(builder: (context) => RecipeScreen()),
                   )
                 });
       } on FirebaseAuthException catch (e) {

@@ -176,7 +176,7 @@ class SignupViewModel with ChangeNotifier {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (context) => VideoScreen(),
+        builder: (context) => RecipeScreen(),
       ),
     );
   }
